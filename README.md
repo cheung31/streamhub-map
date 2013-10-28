@@ -1,4 +1,4 @@
-streamhub-map
-=============
+streamhub-app-skeleton
+======================
 
-A map visualization for content with a geographic context
+A starting point for building your StreamHub application for the Livefyre App Gallery.

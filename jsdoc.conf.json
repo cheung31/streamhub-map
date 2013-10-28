@@ -1,0 +1,23 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": ["src"],
+    },
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": true,
+        "default": {
+            "outputSourceFiles": true
+        }
+    },
+    "plugins": [ "plugins/markdown" ],
+    "opts": {
+        "destination": "./docs",
+        "recurse": true
+    },
+    "markdown": {
+        "parser": "gfm"
+    }
+}

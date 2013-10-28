@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StreamHub App Test Example</title>
+    <link rel="stylesheet" type="text/css" href="../lib/jasmine/lib/jasmine-core/jasmine.css">
+</head>
+<body>
+<!-- Scripts -->
+<script type="text/javascript">
+    var require = { urlArgs : "cb=" + Date.now() };
+</script>
+<script src="../lib/requirejs/require.js"
+            data-main="../requirejs.conf"
+            type="text/javascript"></script>
+<script type="text/javascript">
+// Now to load the example
+require(['tests/test.js']);
+</script>
+</body>
+</html>

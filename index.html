@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StreamHub SDK Example</title>
+    <script src="lib/requirejs/require.js" type="text/javascript"></script>
+    <script src="requirejs.conf.js" type="text/javascript"></script>
+    
+    <link rel="stylesheet" type="text/css" href="lib/streamhub-sdk/src/css/style.css">
+    <style>
+    body {
+        color: #222;
+        font: 14px sans-serif;
+        line-height: 1.25;
+        background-color: #eee;
+    }
+    .hub-item {
+        padding:0;
+        margin: 0;
+        cursor: pointer;
+        width:215px;
+        display:inline-block;
+        vertical-align:bottom;
+        white-space:normal;
+    }
+    
+    .hub-item .item-feed-view {
+        height:400px;
+        width:200px;
+        overflow-y:hidden;
+        overflow-x:hidden;
+        position:relative;
+    }
+
+    .hub-item .item-content-view {
+        height:100px;
+        width:200px;
+        overflow:hidden;
+        background-color:white;
+        padding:0;
+        margin:0;
+        vertical-align:top;
+    }
+
+    .hub-feed-item {
+        height:100px;
+        width:100px;
+        overflow:hidden;
+        background-color:white;
+        padding:0;
+        margin:0;
+        vertical-align:top;
+        position:relative;
+    }
+    .hub-feed-item-holder {
+        max-height:400px;
+        width:200px;
+        position:absolute;
+        bottom:0px;
+        overflow-y:scroll;
+        overflow-x:hidden;
+    }
+    .content {
+        position:relative;
+    }
+    .sort-links a, .filter-links a {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    #example {
+        white-space:nowrap;
+        height:515px;
+        overflow-x:scroll;
+        overflow-y:hidden;
+    }
+    #tickerHolder {
+        height:500px;
+        overflow:hidden;
+    }
+    </style>
+</head>
+<body>
+  <div id="container">
+    <h3>StreamHub Ticker</h3>
+    <div>
+      <button id='pauseButton'>Pause</button><br/>
+      User token: <input id='userToken' value='eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJkb21haW4iOiAibGFicy10NDAyLmZ5cmUuY28iLCAiZXhwaXJlcyI6IDEzNTkzNzM4NDkuNzUyMzY0LCAidXNlcl9pZCI6ICJzeXN0ZW0ifQ.S7uGf48ufOQ9wkwSk-SLlNt8SMJpNPHLFp9X4u4mHUE'></input>
+      Message: <input id='newMessage' /><br/>
+
+      <input type="radio" name="colSelect" value="main" checked="checked">Main</input>
+      <input type="radio" name="colSelect" value="feed">Feed</input>
+
+      <button id='postMessage'>Post</button><br/>
+      <span id='status'>NA</span>
+    </div>
+    <div id="tickerHolder">
+      <div id="example"></div>
+      </div>
+    </div>
+  
+  <script type="text/javascript">
+    // Now to load the example
+    require(['streamhub-sdk', 'streamhub-ticker/views/TickerView', 'jquery'],
+    function(Hub, View, $) {
+        var opts = {
+            network: "labs-t402.fyre.co",
+            siteId: "303827",
+            articleId: "labs_tumblr_demo", 
+            environment: "t402.livefyre.com"
+        };
+        var feedOpts = {
+            network: "labs-t402.fyre.co",
+            siteId: "303827",
+            articleId: "labs_demo_fire",
+            environment: "t402.livefyre.com"
+        };
+        var streams = Hub.StreamManager.create.livefyreStreams(opts);
+        var feedStreams = Hub.StreamManager.create.livefyreStreams(feedOpts);
+
+        var tickerView = window.view = new View({
+            el: document.getElementById("example")
+        });
+        streams.bind(tickerView.main).start();
+        feedStreams.bind(tickerView.feed).start();
+
+        $('#postMessage').click(function() {
+            $('#status').text('Submitting...');
+            var stream = $('input[name=colSelect]:checked').val() == "feed" ? feedStreams : streams;
+   
+            stream.get('main').write(
+                $('#newMessage').val(),
+                {
+                    lftoken: $('#userToken').val()
+                },
+                function(err, data) {
+                    if (err) {
+                        $('#status').text('Failed: ' + JSON.stringify(data));
+                    } else {
+                        $('#status').text('Success: ' + JSON.stringify(data));
+                        $('#newMessage').val('');
+                    }
+                }
+            );
+             
+            return false;
+        });
+            
+        $('#pauseButton').click(function() {
+            view.paused = !view.paused;
+            $('#pauseButton').text(view.paused ? 'Start': 'Pause');
+        });
+
+    });
+  </script>
+</body>
+</html>
