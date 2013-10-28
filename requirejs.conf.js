@@ -8,9 +8,12 @@ requirejs.config({
     text: 'lib/requirejs-text/text',
     hgn: 'lib/requirejs-hogan-plugin/hgn',
     hogan: 'lib/hogan/web/builds/2.0.0/hogan-2.0.0.amd',
+    json: 'lib/requirejs-plugins/src/json',
     base64: 'lib/base64/base64',
     'event-emitter': 'lib/event-emitter/src/event-emitter',
-    inherits: 'lib/inherits/inherits'
+    inherits: 'lib/inherits/inherits',
+    d3: 'lib/d3/d3',
+    topojson: 'lib/topojson/topojson'
   },
   packages: [{
     name: "streamhub-sdk",
@@ -29,7 +32,7 @@ requirejs.config({
     location: "lib/streamhub-sdk/src/modal"
   },{
     name: "streamhub-sdk-tests",
-    location: "lib/streamhub-sdk/src/streamhub-sdk/tests/"
+    location: "lib/streamhub-sdk/tests/"
   },{
     name: "stream",
     location: "lib/stream/src"
@@ -56,6 +59,12 @@ requirejs.config({
     },
     jquery: {
         exports: '$'
+    },
+    d3: {
+        exports: 'd3'
+    },
+    topojson: {
+        exports: 'topojson'
     }
   },
   urlArgs: "_=" +  (new Date()).getTime()

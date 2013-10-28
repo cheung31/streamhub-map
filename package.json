@@ -4,15 +4,16 @@
   "author": {
     "name": "cheung31"
   },
-  "version": "0.0.0",
+  "version": "0.0.1",
   "devDependencies": {
     "bower": "~1.0.0",
     "http-server": "*",
     "requirejs": "*",
-    "phantom": "*",
     "less": "~1.3.3",
     "jshint": "~1.1.0",
-    "jsdoc": "git://github.com/jsdoc3/jsdoc.git"
+    "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
+    "jasmine-node": "*",
+    "world-atlas": "git://github.com/mbostock/world-atlas.git"
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install",
