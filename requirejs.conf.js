@@ -37,6 +37,9 @@ requirejs.config({
 	name: "streamhub-map",
   	location: "./src"
   },{
+    name: "streamhub-map-resources",
+    location: "./resources/"
+  },{
     name: 'streamhub-map-tests',
     location: './tests/'
   }],
