@@ -10,7 +10,7 @@ define([
     // (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
     var MapView = function (opts) {
         var opts = opts || {};
-        this._projection = opts.projection || d3.geo.mercator();
+        this._projection = opts.projection ? d3.geo[opts.projection]() : d3.geo.mercator();
         this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
         this._pathColor = opts.pathColor || '#000';
@@ -32,7 +32,11 @@ define([
     MapView.prototype._drawMap = function () {
         var width = this.$el.width(),
             height = this.$el.height();
-        console.log(width, height);
+
+        // Country ids map to ISO 3166-1 code
+        // (http://en.wikipedia.org/wiki/ISO_3166-1_numeric)
+        var countries = topojson.feature(WorldJson, WorldJson.objects.countries).features;
+            //.filter(function (d) { return d.id !== 10; }); // Filter out Antartica
 
         // Create a unit projection and its path
         this._projection = this._projection.scale(1).translate([0,0]);
@@ -59,7 +63,6 @@ define([
         path = d3.geo.path().projection(this._projection);
 
         // Draw the path of the map in SVG.
-        var countries = topojson.feature(WorldJson, WorldJson.objects.countries).features;
         svg.selectAll('.hub-map-country')
            .data(countries)
            .enter()

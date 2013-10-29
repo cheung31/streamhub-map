@@ -64,8 +64,9 @@
         ], function (MapView, MockAttachmentsStream) {
             var feed1 = window.view = new MapView({
                 el: document.getElementById("feed1")
+                //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
+                //,boundingBox: [[], []] // Bounding box in degrees
             });
-
             (new MockAttachmentsStream()).pipe(feed1);
         });
         </script>
