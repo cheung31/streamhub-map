@@ -19,12 +19,11 @@ define([
     inherits(SolarTerminatorOverlayView, AnimatedOverlayView);
 
     SolarTerminatorOverlayView.prototype.tick = function () {
-        console.log(new Date());
-        this._night.datum(this._circle.origin(this.antipode(this.solarPosition(new Date)))).attr("d", this._path);
+        this._night.datum(this._circle.origin(this.antipode(this.solarPosition(new Date))))
+            .attr("d", this._path);
     };
 
     SolarTerminatorOverlayView.prototype.render = function () {
-debugger;
         this._night = this._svg.append("path")
             .attr("class", "night")
             .attr("d", this._path);
