@@ -1,10 +1,11 @@
 define([
     'streamhub-sdk/content/views/content-list-view',
+    'streamhub-map/marker',
     'json!streamhub-map-resources/world-50m.json',
     'd3',
     'topojson',
     'inherits'
-], function (ContentListView, WorldJson, d3, topojson, inherits) {
+], function (ContentListView, Marker, WorldJson, d3, topojson, inherits) {
 
     // A list of supported projections:
     // (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
@@ -17,16 +18,52 @@ define([
         this._foregroundColor = opts.foregroundColor || '#FFF';
         this._graticuleColor = opts.graticuleColor || '#DDD';
 
+        this._markers = [];
+        this._overlays = [];
+        this._animatedOverlays = [];
+
         ContentListView.call(this, opts);
 
-        this._drawMap();
+        this._draw();
 
         var self = this;
         $(window).on('resize', function (e) {
-            self._drawMap();
+            self._draw();
         });
     };
     inherits(MapView, ContentListView);
+
+    MapView.prototype._draw = function () {
+        this._drawMap();
+        this._drawOverlays();
+    };
+
+    MapView.prototype._drawOverlays = function () {
+        for (var i=0; i < this._overlays.length; i++) {
+            this._overlays[i].setDrawingContext({ path: this._mapPath, svg: this._mapEl });
+            this._overlays[i].render();
+        }
+        for (var i=0; i < this._animatedOverlays.length; i++) {
+            //if (! this._animatedOverlays[i].isAnimating()) {
+            this._animatedOverlays[i].setDrawingContext({ path: this._mapPath, svg: this._mapEl });
+            this._animatedOverlays[i].render();
+            //}
+        }
+
+        this._drawMarkers();
+    };
+
+    MapView.prototype._drawMarkers = function () {
+        // Draw markers
+        for (var i=0; i < this._markers.length; i++) {
+            // TODO: Marker view?
+
+            this._mapEl.append("path")
+                .datum({ type: 'Point', 'coordinates': this._markers[i].getCoordinates() })
+                .attr("d", this._mapPath)
+                .attr("class", "place");
+        }
+    };
 
     // Scale the map (http://stackoverflow.com/a/14691788)
     MapView.prototype._drawMap = function () {
@@ -36,11 +73,13 @@ define([
         // Country ids map to ISO 3166-1 code
         // (http://en.wikipedia.org/wiki/ISO_3166-1_numeric)
         var countries = topojson.feature(WorldJson, WorldJson.objects.countries).features;
-            //.filter(function (d) { return d.id !== 10; }); // Filter out Antartica
+
+        // TODO: Check this._boundingBox?
 
         // Create a unit projection and its path
         this._projection = this._projection.scale(1).translate([0,0]);
         var path = d3.geo.path().projection(this._projection);
+        this._mapPath = path;
 
         // Compute the bounds
         var bounds = path.bounds(topojson.mesh(WorldJson));
@@ -86,6 +125,28 @@ define([
                 .attr("class", "hub-map-foreground")
                 .attr("d", path);
         }
+    };
+
+    MapView.prototype.addMarker = function (lat, lon, opts) {
+        if (!this._mapEl) {
+            return;
+        }
+
+        var marker = new Marker({ lat: lat, lon: lon });
+        this._markers.push(marker);
+
+        this._drawMarkers();
+    };
+
+    MapView.prototype.addOverlay = function (overlayView) {
+        overlayView.setDrawingContext({ path: this._mapPath, svg: this._mapEl });
+        this._overlays.push(overlayView);
+    };
+
+    MapView.prototype.addAnimatedOverlay = function (animatedOverlayView) {
+        animatedOverlayView.setDrawingContext({ path: this._mapPath, svg: this._mapEl });
+        this._animatedOverlays.push(animatedOverlayView);
+        this._drawOverlays();
     };
 
     return MapView;
