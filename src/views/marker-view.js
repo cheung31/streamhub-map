@@ -1,28 +1,28 @@
 define([
     'streamhub-map/views/overlay-view',
+    'streamhub-map/views/info-window-overlay-view',
     'inherits'
 ],
-function (OverlayView, inherits) {
+function (OverlayView, InfoWindowView, inherits) {
 
     var MarkerView = function (point, opts) {
         opts = opts || {};
+
+        this._point = point;
+        this._infoWindowView = new InfoWindowView(opts);
+
         if (typeof opts === 'string') {
             this._label = opts;
+            return;
         }
-        this._point = point;
-        this._infoWindowContentView = opts.infoWindowContentView;
 
         if (opts.mapContext) {
+            this._mapEl = opts.mapContext.el;
             this._path = opts.mapContext.path;
             this._svg = opts.mapContext.svg;
         }
     };
     inherits(MarkerView, OverlayView);
-
-    MarkerView.prototype.setMapContext = function (mapContext) {
-        this._path = mapContext.path;
-        this._svg = mapContext.svg;
-    };
 
     MarkerView.prototype.render = function () {
         this.el = this._svg.append("path")
@@ -31,8 +31,10 @@ function (OverlayView, inherits) {
             .attr("class", "place");
 
         var self = this;
-        this.el.on('click', function (e) {
-            alert(self._label);
+        this.el.on('click', function (datum, index) {
+            self._infoWindowView.setMapContext({ el: self._mapEl });
+            self._infoWindowView.render();
+            self._infoWindowView.position(d3.event.target);
         });
     };
 

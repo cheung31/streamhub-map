@@ -20,6 +20,7 @@ define([
     var MapView = function (opts) {
         var opts = opts || {};
         this._projection = opts.projection ? d3.geo[opts.projection]() : d3.geo.mercator();
+        this._mapCenter = opts.mapCenter;
         this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
         this._pathColor = opts.pathColor || '#000';
@@ -44,6 +45,8 @@ define([
     };
     inherits(MapView, ContentListView);
 
+    MapView.prototype.className = 'hub-map-view';
+
     MapView.prototype._draw = function () {
         this._drawMap();
         this._drawOverlays();
@@ -51,7 +54,7 @@ define([
 
     MapView.prototype._drawOverlays = function () {
         for (var i=0; i < this._overlayViews.length; i++) {
-            this._overlayViews[i].setMapContext({ path: this._mapPath, svg: this._mapEl });
+            this._overlayViews[i].setMapContext({ el: this.el, path: this._mapPath, svg: this._mapEl });
             this._overlayViews[i].render();
         }
     };
@@ -69,6 +72,9 @@ define([
 
         // Create a unit projection and its path
         this._projection = this._projection.scale(1).translate([0,0]);
+        if (this._mapCenter) {
+            this._projection.rotate([0, 0, 0]);
+        }
         var path = d3.geo.path().projection(this._projection);
         this._mapPath = path;
 
