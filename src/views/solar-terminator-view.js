@@ -24,6 +24,9 @@ define([
     };
 
     SolarTerminatorOverlayView.prototype.render = function () {
+        if (this._animating) {
+            return;
+        }
         this._night = this._svg.append("path")
             .attr("class", "night")
             .attr("d", this._path);

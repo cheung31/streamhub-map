@@ -64,17 +64,31 @@
         <script>
         require([
             'streamhub-map',
+            'streamhub-map/point',
+            'streamhub-map/views/marker-view',
             'streamhub-map/views/solar-terminator-view',
             'streamhub-sdk-tests/mocks/mock-attachments-stream'
-        ], function (MapView, SolarTerminatorOverlayView, MockAttachmentsStream) {
+        ], function (MapView, Point, MarkerView, SolarTerminatorOverlayView, MockAttachmentsStream) {
             var mapView = window.view = new MapView({
                 el: document.getElementById('feed1')
-                //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
+                //,projection: 'equirectangular' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
                 //,boundingBox: [[], []] // Bounding box in degrees
             });
             (new MockAttachmentsStream()).pipe(mapView);
 
-            view.addAnimatedOverlay(new SolarTerminatorOverlayView());
+            var myLocation = new Point({ lat: 37.7749295, lon: -122.4194155 });
+            var usaCentroid = new Point({ lat: 37.09024, lon: -95.712891 });
+            var europeCentroid = new Point({ lat: 54.5259614, lon: 15.2551187 });
+            var southAmericaCentroid = new Point({ lat: -8.783195, lon: -55.491477 });
+            var indiaCentroid = new Point({ lat: 20.593684, lon: 78.96288 });
+            var indonesiaCentroid = new Point({ lat: -0.789275, lon: 113.921327 });
+            view.addOverlay(new SolarTerminatorOverlayView());
+            view.addOverlay(new MarkerView(myLocation))
+                .addOverlay(new MarkerView(usaCentroid, 'USA'))
+                .addOverlay(new MarkerView(southAmericaCentroid, 'South America'))
+                .addOverlay(new MarkerView(europeCentroid, 'Europe'))
+                .addOverlay(new MarkerView(indiaCentroid, 'India'))
+                .addOverlay(new MarkerView(indonesiaCentroid, 'Indonesia'));
         });
         </script>
     </body>

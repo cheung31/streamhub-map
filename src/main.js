@@ -1,11 +1,19 @@
 define([
+    'streamhub-map/views/overlay-view',
     'streamhub-sdk/content/views/content-list-view',
-    'streamhub-map/marker',
+    'streamhub-map/views/marker-view',
     'json!streamhub-map-resources/world-50m.json',
     'd3',
     'topojson',
     'inherits'
-], function (ContentListView, Marker, WorldJson, d3, topojson, inherits) {
+], function (
+    OverlayView,
+    ContentListView,
+    MarkerView,
+    WorldJson,
+    d3,
+    topojson,
+    inherits) {
 
     // A list of supported projections:
     // (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
@@ -18,9 +26,7 @@ define([
         this._foregroundColor = opts.foregroundColor || '#FFF';
         this._graticuleColor = opts.graticuleColor || '#DDD';
 
-        this._markers = [];
-        this._overlays = [];
-        this._animatedOverlays = [];
+        this._overlayViews = [];
 
         ContentListView.call(this, opts);
 
@@ -28,6 +34,11 @@ define([
 
         var self = this;
         $(window).on('resize', function (e) {
+            for (var i=0; i < self._overlayViews.length; i++) {
+                if (self._overlayViews[i]._animating) {
+                    self._overlayViews[i]._animating = false;
+                }
+            }
             self._draw();
         });
     };
@@ -39,29 +50,9 @@ define([
     };
 
     MapView.prototype._drawOverlays = function () {
-        for (var i=0; i < this._overlays.length; i++) {
-            this._overlays[i].setDrawingContext({ path: this._mapPath, svg: this._mapEl });
-            this._overlays[i].render();
-        }
-        for (var i=0; i < this._animatedOverlays.length; i++) {
-            //if (! this._animatedOverlays[i].isAnimating()) {
-            this._animatedOverlays[i].setDrawingContext({ path: this._mapPath, svg: this._mapEl });
-            this._animatedOverlays[i].render();
-            //}
-        }
-
-        this._drawMarkers();
-    };
-
-    MapView.prototype._drawMarkers = function () {
-        // Draw markers
-        for (var i=0; i < this._markers.length; i++) {
-            // TODO: Marker view?
-
-            this._mapEl.append("path")
-                .datum({ type: 'Point', 'coordinates': this._markers[i].getCoordinates() })
-                .attr("d", this._mapPath)
-                .attr("class", "place");
+        for (var i=0; i < this._overlayViews.length; i++) {
+            this._overlayViews[i].setMapContext({ path: this._mapPath, svg: this._mapEl });
+            this._overlayViews[i].render();
         }
     };
 
@@ -127,26 +118,10 @@ define([
         }
     };
 
-    MapView.prototype.addMarker = function (lat, lon, opts) {
-        if (!this._mapEl) {
-            return;
-        }
-
-        var marker = new Marker({ lat: lat, lon: lon });
-        this._markers.push(marker);
-
-        this._drawMarkers();
-    };
-
     MapView.prototype.addOverlay = function (overlayView) {
-        overlayView.setDrawingContext({ path: this._mapPath, svg: this._mapEl });
-        this._overlays.push(overlayView);
-    };
-
-    MapView.prototype.addAnimatedOverlay = function (animatedOverlayView) {
-        animatedOverlayView.setDrawingContext({ path: this._mapPath, svg: this._mapEl });
-        this._animatedOverlays.push(animatedOverlayView);
+        this._overlayViews.push(overlayView);
         this._drawOverlays();
+        return this;
     };
 
     return MapView;
