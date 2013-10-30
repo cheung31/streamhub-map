@@ -6,7 +6,6 @@ define([
 
         var self = this;
         $(window).on('resize', function (e) {
-            console.log('<<< intervalId', self._intervalId);
             if (self._intervalId) {
                 clearInterval(self._intervalId);
             }
