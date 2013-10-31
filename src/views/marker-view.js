@@ -25,10 +25,17 @@ function (OverlayView, InfoWindowView, inherits) {
     inherits(MarkerView, OverlayView);
 
     MarkerView.prototype.render = function () {
+        // Notifier
+        this.notifierEl = this._svg.append("path")
+            .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
+            .attr("d", this._path.pointRadius(10))
+            .attr("class", "hub-place-notifier");
+        // Marker
         this.el = this._svg.append("path")
             .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
-            .attr("d", this._path)
-            .attr("class", "place");
+            .attr("d", this._path.pointRadius(10))
+            .attr("class", "hub-place");
+
 
 
         // If infoWindow was preivously rendered, check for its visible state
@@ -38,8 +45,23 @@ function (OverlayView, InfoWindowView, inherits) {
 
         var self = this;
         this.el.on('click', function (datum, index) {
-            self.openInfoWindow();
+            self.notify();
+            //self.openInfoWindow();
         });
+    };
+
+    MarkerView.prototype.notify = function () {
+        var self = this;
+        this.notifierEl.transition()
+            .each('end', function (datum, index) {
+                self.notifierEl
+                    .attr('d', self._path.pointRadius(10))
+                    .style('opacity', 1);
+            })
+            .duration(1000)
+            .attr('d', this._path.pointRadius(50))
+            .style('fill', 'steelblue')
+            .style('opacity', 0);
     };
 
     MarkerView.prototype.openInfoWindow = function () {
