@@ -60,7 +60,7 @@ define([
           + 4 * e * y * Math.sin(m) * Math.cos(2 * l)
           - 0.5 * y * y * Math.sin(4 * l)
           - 1.25 * e * e * Math.sin(2 * m);
-    }
+    };
 
     SolarTerminatorOverlayView.prototype.solarDeclination = function (centuries) {
       return Math.asin(Math.sin(this.obliquityCorrection(centuries)) * Math.sin(this.solarApparentLongitude(centuries)));
@@ -100,7 +100,7 @@ define([
 
     SolarTerminatorOverlayView.prototype.eccentricityEarthOrbit = function (centuries) {
       return 0.016708634 - centuries * (0.000042037 + 0.0000001267 * centuries);
-    }
+    };
 
     return SolarTerminatorOverlayView;
 });

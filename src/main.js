@@ -90,16 +90,19 @@ define([
         if (this._mapEl) {
             this._mapEl.remove();
         }
-        var svg = d3.select(this.listElSelector.trim()).append("svg")
+
+        var svg = d3.select(this.listElSelector.trim()).append('svg');
+        this._mapEl = svg.append('svg:g')
+                .call(d3.behavior.zoom().on('zoom', this._handleZoom.bind(this)))
                 .attr("width", width)
                 .attr("height", height)
-                .attr('class', 'hub-map');
-        this._mapEl = svg;
+                .attr('class', 'hub-map')
+                .attr('transform', 'scale(1)');
 
         path = d3.geo.path().projection(this._projection);
 
         // Draw the path of the map in SVG.
-        svg.selectAll('.hub-map-country')
+        this._mapEl.selectAll('.hub-map-country')
            .data(countries)
            .enter()
            .insert("path", ".hub-map-country-foreground")
@@ -111,17 +114,23 @@ define([
             var graticule = d3.geo.graticule();
 
             // Draw the path for the graticule
-            svg.append("path")
+            this._mapEl.append("path")
                 .attr("class", "hub-map-graticule")
                 .datum(graticule)
                 .attr("d", path);
 
             // Draw the path for the bounding outline of the graticule
-            svg.append("path")
+            this._mapEl.append("path")
                 .datum(graticule.outline)
                 .attr("class", "hub-map-foreground")
                 .attr("d", path);
         }
+    };
+
+    MapView.prototype._handleZoom = function () {
+        this._mapEl.attr("transform",
+              "translate(" + d3.event.translate + ")"
+              + " scale(" + d3.event.scale + ")");
     };
 
     MapView.prototype.addOverlay = function (overlayView) {
