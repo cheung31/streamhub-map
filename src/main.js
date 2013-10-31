@@ -93,7 +93,7 @@ define([
 
         var svg = d3.select(this.listElSelector.trim()).append('svg');
         this._mapEl = svg.append('svg:g')
-                .call(d3.behavior.zoom().on('zoom', this._handleZoom.bind(this)))
+                .call(d3.behavior.zoom().scaleExtent([1, 2.5]).on('zoom', this._handleZoom.bind(this)))
                 .attr("width", width)
                 .attr("height", height)
                 .attr('class', 'hub-map')
