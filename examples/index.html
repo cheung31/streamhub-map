@@ -36,13 +36,14 @@
             'streamhub-map/views/solar-terminator-view',
             'streamhub-sdk-tests/mocks/mock-attachments-stream'
         ], function (MapView, Point, MarkerView, SolarTerminatorOverlayView, MockAttachmentsStream) {
+
             var mapView = window.view = new MapView({
                 el: document.getElementById('feed1')
                 //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
                 ,mapCenter: { lat: 37.09024, lon: -95.712891 }
                 //,boundingBox: [[], []] // Bounding box in degrees
             });
-            (new MockAttachmentsStream()).pipe(mapView);
+            //(new MockAttachmentsStream()).pipe(mapView);
 
             var myLocation = new Point({ lat: 37.7749295, lon: -122.4194155 });
             var usaCentroid = new Point({ lat: 37.09024, lon: -95.712891 });

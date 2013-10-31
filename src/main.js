@@ -1,15 +1,15 @@
 define([
     'streamhub-map/views/overlay-view',
-    'streamhub-sdk/content/views/content-list-view',
     'streamhub-map/views/marker-view',
+    'streamhub-sdk/views/list-view',
     'json!streamhub-map-resources/world-50m.json',
     'd3',
     'topojson',
     'inherits'
 ], function (
     OverlayView,
-    ContentListView,
     MarkerView,
+    ListView,
     WorldJson,
     d3,
     topojson,
@@ -29,7 +29,7 @@ define([
 
         this._overlayViews = [];
 
-        ContentListView.call(this, opts);
+        ListView.call(this, opts);
 
         this._draw();
 
@@ -43,7 +43,7 @@ define([
             self._draw();
         });
     };
-    inherits(MapView, ContentListView);
+    inherits(MapView, ListView);
 
     MapView.prototype.className = 'hub-map-view';
 
@@ -90,7 +90,7 @@ define([
         if (this._mapEl) {
             this._mapEl.remove();
         }
-        var svg = d3.select('.'+this.elClass.trim()).append("svg")
+        var svg = d3.select(this.listElSelector.trim()).append("svg")
                 .attr("width", width)
                 .attr("height", height)
                 .attr('class', 'hub-map');
