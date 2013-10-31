@@ -7,6 +7,8 @@ function (OverlayView, InfoWindowTemplate, inherits) {
 
     var InfoWindowView = function (opts) {
         opts = opts || {};
+        this._visible = false;
+
         OverlayView.call(this, opts);
         this.setElement(this.template());
     };
@@ -30,6 +32,21 @@ function (OverlayView, InfoWindowTemplate, inherits) {
 
     InfoWindowView.prototype.render = function () {
         $(this._mapEl).append(this.$el);
+        this.show();
+    };
+
+    InfoWindowView.prototype.show = function () {
+        this.$el.show();
+        this._visible = true;
+    };
+
+    InfoWindowView.prototype.hide = function () {
+        this.$el.hide();
+        this._visible = false;
+    };
+
+    InfoWindowView.prototype.isVisible = function () {
+        return this._visible;
     };
 
     InfoWindowView.prototype.position = function (target) {

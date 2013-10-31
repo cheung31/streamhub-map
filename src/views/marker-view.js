@@ -30,12 +30,22 @@ function (OverlayView, InfoWindowView, inherits) {
             .attr("d", this._path)
             .attr("class", "place");
 
+
+        // If infoWindow was preivously rendered, check for its visible state
+        if (this._infoWindowView && this._infoWindowView.isVisible()) {
+            this.openInfoWindow(); 
+        }
+
         var self = this;
         this.el.on('click', function (datum, index) {
-            self._infoWindowView.setMapContext({ el: self._mapEl });
-            self._infoWindowView.render();
-            self._infoWindowView.position(d3.event.target);
+            self.openInfoWindow();
         });
+    };
+
+    MarkerView.prototype.openInfoWindow = function () {
+        this._infoWindowView.setMapContext({ el: this._mapEl });
+        this._infoWindowView.render();
+        this._infoWindowView.position(this.el[0][0]);
     };
 
     return MarkerView;
