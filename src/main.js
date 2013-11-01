@@ -103,16 +103,14 @@ define([
         this._mapSvg = d3.select('.hub-map-svg');
         if (! this._mapSvg[0][0]) {
             this._mapSvg = d3.select(this.listElSelector).append('svg')
+                .call(d3.behavior.zoom().size([width, height]).scaleExtent([1, 2.5]).on('zoom', this._handleZoom.bind(this)))
                 .attr('class', 'hub-map-svg')
-                .attr('width', width)
-                .attr('height', height);
         }
         // Append the SVG element with which the map will be drawn on.
         if (this._mapEl) {
             this._mapEl.remove();
         }
         this._mapEl = this._mapSvg.append('svg:g')
-                .call(d3.behavior.zoom().size([width, height]).scaleExtent([1, 2.5]).on('zoom', this._handleZoom.bind(this)))
                 .attr('class', 'hub-map');
 
         // Draw the path of the map in SVG.
@@ -143,6 +141,9 @@ define([
 
     MapView.prototype._handleZoom = function () {
         this._mapEl.attr("transform",
+              "translate(" + d3.event.translate + ")"
+              + " scale(" + d3.event.scale + ")");
+        this._mapOverlayEl.attr("transform",
               "translate(" + d3.event.translate + ")"
               + " scale(" + d3.event.scale + ")");
     };
