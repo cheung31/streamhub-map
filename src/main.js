@@ -115,14 +115,6 @@ define([
                 .call(d3.behavior.zoom().size([width, height]).scaleExtent([1, 2.5]).on('zoom', this._handleZoom.bind(this)))
                 .attr('class', 'hub-map');
 
-        // Compute the bounds
-        //var bounds = this._mapEl.bounds();
-        //var scale = 1 / Math.max( (bounds[1][0] - bounds[0][0]) / width, (bounds[1][1] - bounds[0][1]) / height);
-        //var translate = [(width - scale * (bounds[1][0] + bounds[0][0])) / 2, (height - scale * (bounds[1][1] + bounds[0][1])) / 2];
-
-        // Update projection with computed scale and translation
-        //this._projection.scale(scale).translate(translate);
-
         // Draw the path of the map in SVG.
         this._mapEl.selectAll('.hub-map-country')
            .data(countries)
