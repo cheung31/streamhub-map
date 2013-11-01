@@ -19,13 +19,15 @@ define([
     // (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
     var MapView = function (opts) {
         var opts = opts || {};
-        this._projection = opts.projection ? d3.geo[opts.projection]() : d3.geo.mercator();
+        this._projectionType = opts.projection || 'mercator';
+        this._projection = new d3.geo[this._projectionType]();
         this._mapCenter = opts.mapCenter;
         this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
         this._pathColor = opts.pathColor || '#000';
         this._foregroundColor = opts.foregroundColor || '#FFF';
         this._graticuleColor = opts.graticuleColor || '#DDD';
+        this._includeAntarctica = opts.includeAntarctica || false;
 
         this._overlayViews = [];
 
@@ -53,10 +55,31 @@ define([
     };
 
     MapView.prototype._drawOverlays = function () {
+        if (! this._overlaysPath) {
+            this._overlaysPath = this._getPathForProjection();
+        }
+
+        // Append the SVG element with which the map will be drawn on.
+        if (this._mapOverlayEl) {
+            this._mapOverlayEl.remove();
+        }
+        this._mapOverlayEl = this._mapSvg.append('svg:g')
+            .attr('class', 'hub-map-overlays');
         for (var i=0; i < this._overlayViews.length; i++) {
-            this._overlayViews[i].setMapContext({ el: this.el, path: this._mapPath, svg: this._mapEl });
+            this._overlayViews[i].setMapContext({ el: this.el, path: this._overlaysPath, svg: this._mapOverlayEl });
             this._overlayViews[i].render();
         }
+    };
+
+    MapView.prototype._getPathForProjection = function () {
+        var width = this.$el.width(),
+            height = this.$el.height();
+        this._projection
+            .scale((width + 1) / 2 / Math.PI)
+            .center([0, this._includeAntarctica ? 0 :27.55]) // Update center of map when Antarctica is removed
+            .translate([width / 2, height / 2]); // Place the center, and the midpoint of the container
+
+        return d3.geo.path().projection(this._projection)
     };
 
     // Scale the map (http://stackoverflow.com/a/14691788)
@@ -67,39 +90,38 @@ define([
         // Country ids map to ISO 3166-1 code
         // (http://en.wikipedia.org/wiki/ISO_3166-1_numeric)
         var countries = topojson.feature(WorldJson, WorldJson.objects.countries).features;
-
-        // TODO: Check this._boundingBox?
-
-        // Create a unit projection and its path
-        this._projection = this._projection.scale(1).translate([0,0]);
-        if (this._mapCenter) {
-            this._projection.rotate([0, 0, 0]);
+        if (! this._includeAntarctica) {
+            countries = countries.filter(function (feature) {
+                if (feature.id === 10) {
+                    delete feature;
+                }
+                return feature.id !== 10;
+            });
         }
-        var path = d3.geo.path().projection(this._projection);
-        this._mapPath = path;
-
-        // Compute the bounds
-        var bounds = path.bounds(topojson.mesh(WorldJson));
-        var scale = 1 / Math.max( (bounds[1][0] - bounds[0][0]) / width, (bounds[1][1] - bounds[0][1]) / height);
-        var translate = [(width - scale * (bounds[1][0] + bounds[0][0])) / 2, (height - scale * (bounds[1][1] + bounds[0][1])) / 2];
-
-        // Update projection with computed scale and translation
-        this._projection.scale(scale).translate(translate);
-
+        
+        this._mapPath = this._getPathForProjection();
+        this._mapSvg = d3.select('.hub-map-svg');
+        if (! this._mapSvg[0][0]) {
+            this._mapSvg = d3.select(this.listElSelector).append('svg')
+                .attr('class', 'hub-map-svg')
+                .attr('width', width)
+                .attr('height', height);
+        }
         // Append the SVG element with which the map will be drawn on.
         if (this._mapEl) {
             this._mapEl.remove();
         }
+        this._mapEl = this._mapSvg.append('svg:g')
+                .call(d3.behavior.zoom().size([width, height]).scaleExtent([1, 2.5]).on('zoom', this._handleZoom.bind(this)))
+                .attr('class', 'hub-map');
 
-        var svg = d3.select(this.listElSelector.trim()).append('svg');
-        this._mapEl = svg.append('svg:g')
-                .call(d3.behavior.zoom().scaleExtent([1, 2.5]).on('zoom', this._handleZoom.bind(this)))
-                .attr("width", width)
-                .attr("height", height)
-                .attr('class', 'hub-map')
-                .attr('transform', 'scale(1)');
+        // Compute the bounds
+        //var bounds = this._mapEl.bounds();
+        //var scale = 1 / Math.max( (bounds[1][0] - bounds[0][0]) / width, (bounds[1][1] - bounds[0][1]) / height);
+        //var translate = [(width - scale * (bounds[1][0] + bounds[0][0])) / 2, (height - scale * (bounds[1][1] + bounds[0][1])) / 2];
 
-        path = d3.geo.path().projection(this._projection);
+        // Update projection with computed scale and translation
+        //this._projection.scale(scale).translate(translate);
 
         // Draw the path of the map in SVG.
         this._mapEl.selectAll('.hub-map-country')
@@ -107,7 +129,7 @@ define([
            .enter()
            .insert("path", ".hub-map-country-foreground")
            .attr("class", "hub-map-country")
-           .attr("d", path); 
+           .attr("d", this._mapPath); 
 
         // Draw graticule
         if (this._graticule) {
@@ -117,13 +139,13 @@ define([
             this._mapEl.append("path")
                 .attr("class", "hub-map-graticule")
                 .datum(graticule)
-                .attr("d", path);
+                .attr("d", this._mapPath);
 
             // Draw the path for the bounding outline of the graticule
             this._mapEl.append("path")
                 .datum(graticule.outline)
                 .attr("class", "hub-map-foreground")
-                .attr("d", path);
+                .attr("d", this._mapPath);
         }
     };
 
