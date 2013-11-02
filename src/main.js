@@ -42,6 +42,7 @@ define([
                     self._overlayViews[i]._animating = false;
                 }
             }
+            self._clearOverlays();
             self._draw();
         });
     };
@@ -54,32 +55,30 @@ define([
         this._drawOverlays();
     };
 
+    MapView.prototype._clearOverlays = function () {
+        for (var i=0; i < this._overlayViews.length; i++) {
+            var overlayView = this._overlayViews[i];
+            overlayView.destroy();
+        }
+    };
+
     MapView.prototype._drawOverlays = function () {
         if (! this._overlaysPath) {
             this._overlaysPath = this._getPathForProjection();
         }
 
         // Append the SVG element with which the map will be drawn on.
-        if (this._mapOverlayEl) {
-            this._mapOverlayEl.remove();
+        if (! this._mapOverlayEl) {
+            this._mapOverlayEl = this._mapSvg.append('svg:g')
+                .attr('class', 'hub-map-overlays');
         }
-        this._mapOverlayEl = this._mapSvg.append('svg:g')
-            .attr('class', 'hub-map-overlays');
         for (var i=0; i < this._overlayViews.length; i++) {
-            this._overlayViews[i].setMapContext({ el: this.el, path: this._overlaysPath, svg: this._mapOverlayEl });
-            this._overlayViews[i].render();
+            var overlayView = this._overlayViews[i];
+            if (! overlayView._rendered) {
+                this._overlayViews[i].setMapContext({ el: this.el, path: this._overlaysPath, svg: this._mapOverlayEl });
+                this._overlayViews[i].render();
+            }
         }
-    };
-
-    MapView.prototype._getPathForProjection = function () {
-        var width = this.$el.width(),
-            height = this.$el.height();
-        this._projection
-            .scale((width + 1) / 2 / Math.PI)
-            .center([0, this._includeAntarctica ? 0 :27.55]) // Update center of map when Antarctica is removed
-            .translate([width / 2, height / 2]); // Place the center, and the midpoint of the container
-
-        return d3.geo.path().projection(this._projection)
     };
 
     // Scale the map (http://stackoverflow.com/a/14691788)
@@ -102,16 +101,26 @@ define([
         this._mapPath = this._getPathForProjection();
         this._mapSvg = d3.select('.hub-map-svg');
         if (! this._mapSvg[0][0]) {
+            this._mapZoomBehavior = d3.behavior.zoom();
             this._mapSvg = d3.select(this.listElSelector).append('svg')
-                .call(d3.behavior.zoom().size([width, height]).scaleExtent([1, 2.5]).on('zoom', this._handleZoom.bind(this)))
+                .call(this._mapZoomBehavior
+                    .size([width, height])
+                    .scaleExtent([1, 2.5])
+                    .on('zoom', this._handleZoom.bind(this)))
                 .attr('class', 'hub-map-svg')
         }
         // Append the SVG element with which the map will be drawn on.
         if (this._mapEl) {
             this._mapEl.remove();
         }
-        this._mapEl = this._mapSvg.append('svg:g')
+        if (this._mapOverlayEl) {
+            this._mapEl = d3.select('.hub-map-svg')
+                .insert('svg:g', '.hub-map-overlays')
                 .attr('class', 'hub-map');
+        } else {
+            this._mapEl = this._mapSvg.append('svg:g')
+                .attr('class', 'hub-map');
+        }
 
         // Draw the path of the map in SVG.
         this._mapEl.selectAll('.hub-map-country')
@@ -139,13 +148,28 @@ define([
         }
     };
 
+    MapView.prototype._getPathForProjection = function () {
+        var width = this.$el.width(),
+            height = this.$el.height();
+        this._projection
+            .scale((width + 1) / 2 / Math.PI)
+            .center([0, this._includeAntarctica ? 0 :27.55]) // Update center of map when Antarctica is removed
+            .translate([width / 2, height / 2]); // Place the center, and the midpoint of the container
+
+        return d3.geo.path().projection(this._projection)
+    };
+
     MapView.prototype._handleZoom = function () {
+        var scale = d3.event.scale;
+        var translate = d3.event.translate;
+        t = translate;
+
         this._mapEl.attr("transform",
-              "translate(" + d3.event.translate + ")"
-              + " scale(" + d3.event.scale + ")");
+              "translate(" + translate + ")"
+              + " scale(" + scale + ")");
         this._mapOverlayEl.attr("transform",
-              "translate(" + d3.event.translate + ")"
-              + " scale(" + d3.event.scale + ")");
+              "translate(" + translate + ")"
+              + " scale(" + scale + ")");
     };
 
     MapView.prototype.addOverlay = function (overlayView) {

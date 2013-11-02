@@ -36,8 +36,6 @@ function (OverlayView, InfoWindowView, inherits) {
             .attr("d", this._path.pointRadius(10))
             .attr("class", "hub-place");
 
-
-
         // If infoWindow was preivously rendered, check for its visible state
         if (this._infoWindowView && this._infoWindowView.isVisible()) {
             this.openInfoWindow(); 
@@ -48,6 +46,15 @@ function (OverlayView, InfoWindowView, inherits) {
             self.notify();
             //self.openInfoWindow();
         });
+
+        OverlayView.prototype.render.call(this);
+    };
+
+    MarkerView.prototype.destroy = function () {
+        $(this.notifierEl[0][0]).remove();
+        $(this.el[0][0]).remove();
+
+        OverlayView.prototype.destroy.call(this);
     };
 
     MarkerView.prototype.notify = function () {

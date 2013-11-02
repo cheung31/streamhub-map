@@ -12,14 +12,14 @@ define([
     // // http://www.esrl.noaa.gov/gmd/grad/solcalc/
     var SolarTerminatorOverlayView = function (opts) {
         this._circle = d3.geo.circle().angle(90);
-        this._night;
+        this.el;
 
         AnimatedOverlayView.call(this, opts);
     };
     inherits(SolarTerminatorOverlayView, AnimatedOverlayView);
 
     SolarTerminatorOverlayView.prototype.tick = function () {
-        this._night.datum(this._circle.origin(this.antipode(this.solarPosition(new Date))))
+        this.el.datum(this._circle.origin(this.antipode(this.solarPosition(new Date))))
             .attr("d", this._path);
     };
 
@@ -27,13 +27,15 @@ define([
         if (this._animating) {
             return;
         }
-        this._night = this._svg.append("path")
+        this.el = this._svg.append("path")
             .attr("class", "night")
             .attr("d", this._path);
 
         this._animating = true;
         this.tick();
-        this._intervalId = setInterval(this.tick.bind(this), 1000);
+        this._intervalId = setInterval(this.tick.bind(this), 1000*60);
+
+        AnimatedOverlayView.prototype.render.call(this);
     };
 
     SolarTerminatorOverlayView.prototype.antipode = function (position) {

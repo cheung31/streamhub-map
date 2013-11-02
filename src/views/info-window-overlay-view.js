@@ -33,6 +33,7 @@ function (OverlayView, InfoWindowTemplate, inherits) {
     InfoWindowView.prototype.render = function () {
         $(this._mapEl).append(this.$el);
         this.show();
+        OverlayView.prototype.render.call(this);
     };
 
     InfoWindowView.prototype.show = function () {
