@@ -15,8 +15,19 @@ define([
     topojson,
     inherits) {
 
-    // A list of supported projections:
-    // (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
+    /**
+     * A view to visualize StreamHub content on a map
+     * @constructor
+     * @param [opts] {Object} Configuration options for the MapView
+     * @param [opts.projection] {String} A map projection supported by the D3 library (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
+     * @param [opts.mapCenter] {Array} The lat/lon coordinates of the center of the map
+     * @param [opts.boundingBox] {Array} The NW and SE coordinates of the bounding box that defines the scope of the visible map
+     * @param [opts.graticule] {Boolean} Whether to display the map graticule
+     * @param [opts.graticuleColor] {String} The color of the graticule
+     * @param [opts.pathColor] {String} The background colour of the map
+     * @param [opts.foregroundColor] {String} The foreground colour of the map
+     * @param [opts.includeAntarctica] {Boolean} Whether to include the continent of Antarctica on the map
+     */
     var MapView = function (opts) {
         var opts = opts || {};
         this._projectionType = opts.projection || 'mercator';
