@@ -1,3 +1,9 @@
+// Variables
+@mapBackgroundColor: #FFF;
+@mapLandColor: #333;
+@mapLandStroke: #DDD;
+
+// Overlays
 .hub-place {
     fill: red;
     stroke: none;
@@ -6,37 +12,36 @@
     fill: steelblue;
     stroke: none;
 }
-.streamhub-list-view {
-    float: left;
-    width: 50%;
-}
-path {
-    fill: none;
-    stroke: #000;
-}
-.hub-map-graticule {
-    fill: none;
-    stroke: #ccc;
-    stroke-width: 0.5px;
-}
-.hub-map-foreground {
-    fill: none;
-    stroke: #333;
-    stroke-width: 1.5px;
-}
-.hub-map-country {
-    fill: #333;
-    stroke: #DDD;
-}
 .night {
   stroke: none;
   fill: steelblue;
   fill-opacity: .3;
 }
 
+// Map Land
+.hub-map-land {
+    fill: @mapLandColor;
+    stroke: @mapLandStroke;
+    stroke-width: 1px;
+}
+
+// Map Background / Water
+.hub-map-svg,
+.hub-map-bg,
+.hub-map-water {
+    fill: #888;
+    background: #888;
+}
 svg.hub-map {
     position: absolute;
     z-index: 1;
+}
+
+// Graticule
+.hub-map-graticule {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 0.5px;
 }
 
 .hub-map-info-window {

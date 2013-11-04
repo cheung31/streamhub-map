@@ -19,14 +19,13 @@ define([
      * A view to visualize StreamHub content on a map
      * @constructor
      * @param [opts] {Object} Configuration options for the MapView
-     * @param [opts.projection] {String} A map projection supported by the D3 library (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
+     * @param [opts.projection='mercator'] {String} A map projection supported by the D3 library (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
      * @param [opts.mapCenter] {Array} The lat/lon coordinates of the center of the map
      * @param [opts.boundingBox] {Array} The NW and SE coordinates of the bounding box that defines the scope of the visible map
-     * @param [opts.graticule] {Boolean} Whether to display the map graticule
+     * @param [opts.graticule=false] {Boolean} Whether to display the map graticule
      * @param [opts.graticuleColor] {String} The color of the graticule
-     * @param [opts.pathColor] {String} The background colour of the map
-     * @param [opts.foregroundColor] {String} The foreground colour of the map
-     * @param [opts.includeAntarctica] {Boolean} Whether to include the continent of Antarctica on the map
+     * @param [opts.landColor] {String} The foreground colour of the map
+     * @param [opts.includeAntarctica=false] {Boolean} Whether to include the continent of Antarctica on the map
      */
     var MapView = function (opts) {
         var opts = opts || {};
@@ -35,9 +34,8 @@ define([
         this._mapCenter = opts.mapCenter;
         this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
-        this._pathColor = opts.pathColor || '#000';
-        this._foregroundColor = opts.foregroundColor || '#FFF';
-        this._graticuleColor = opts.graticuleColor || '#DDD';
+        this._landColor = opts.landColor;
+        this._graticuleColor = opts.graticuleColor;
         this._includeAntarctica = opts.includeAntarctica || false;
 
         this._overlayViews = [];
@@ -118,7 +116,7 @@ define([
                     .size([width, height])
                     .scaleExtent([1, 2.5])
                     .on('zoom', this._handleZoom.bind(this)))
-                .attr('class', 'hub-map-svg')
+                .attr('class', 'hub-map-svg');
         }
         // Append the SVG element with which the map will be drawn on.
         if (this._mapEl) {
@@ -134,11 +132,11 @@ define([
         }
 
         // Draw the path of the map in SVG.
-        this._mapEl.selectAll('.hub-map-country')
+        this._mapEl.selectAll('.hub-map-land')
            .data(countries)
            .enter()
-           .insert("path", ".hub-map-country-foreground")
-           .attr("class", "hub-map-country")
+           .insert("path")
+           .attr("class", "hub-map-land")
            .attr("d", this._mapPath); 
 
         // Draw graticule
@@ -154,7 +152,7 @@ define([
             // Draw the path for the bounding outline of the graticule
             this._mapEl.append("path")
                 .datum(graticule.outline)
-                .attr("class", "hub-map-foreground")
+                .attr("class", "hub-map-land")
                 .attr("d", this._mapPath);
         }
     };
