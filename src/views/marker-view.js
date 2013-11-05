@@ -9,7 +9,6 @@ function (OverlayView, InfoWindowView, inherits) {
         opts = opts || {};
 
         this._point = point;
-        this._infoWindowView = new InfoWindowView(opts);
 
         if (typeof opts === 'string') {
             this._label = opts;
@@ -36,15 +35,12 @@ function (OverlayView, InfoWindowView, inherits) {
             .attr("d", this._path.pointRadius(10))
             .attr("class", "hub-place");
 
-        // If infoWindow was preivously rendered, check for its visible state
-        if (this._infoWindowView && this._infoWindowView.isVisible()) {
-            this.openInfoWindow(); 
-        }
-
         var self = this;
         this.el.on('click', function (datum, index) {
             self.notify();
-            //self.openInfoWindow();
+            if (self._infoWindowView) {
+                self.openInfoWindow();
+            }
         });
 
         OverlayView.prototype.render.call(this);

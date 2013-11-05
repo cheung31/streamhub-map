@@ -18,8 +18,7 @@ function (jasmine, jasmineJQuery, $) {
 	var specs = [];
 
     // Add your tests here
-	//specs.push('tests/spec/MyView');
-	//specs.push('tests/spec/MyOtherView');
+	specs.push('tests/spec/main');
 
 	$(function(){
 		require(specs, function(){

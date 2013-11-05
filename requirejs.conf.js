@@ -42,9 +42,6 @@ requirejs.config({
   },{
     name: "streamhub-map-resources",
     location: "./resources/"
-  },{
-    name: 'streamhub-map-tests',
-    location: './tests/'
   }],
   shim: {
     jasmine: {

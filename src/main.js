@@ -1,6 +1,6 @@
 define([
     'streamhub-map/views/overlay-view',
-    'streamhub-map/views/marker-view',
+    'streamhub-map/views/overlay-factory',
     'streamhub-sdk/views/list-view',
     'json!streamhub-map-resources/world-50m.json',
     'd3',
@@ -8,7 +8,7 @@ define([
     'inherits'
 ], function (
     OverlayView,
-    MarkerView,
+    OverlayViewFactory,
     ListView,
     WorldJson,
     d3,
@@ -38,7 +38,9 @@ define([
         this._graticuleColor = opts.graticuleColor;
         this._includeAntarctica = opts.includeAntarctica || false;
 
+        this._overlayViewFactory = new OverlayViewFactory();
         this._overlayViews = [];
+        this._dataPoints = [];
 
         ListView.call(this, opts);
 
@@ -57,37 +59,44 @@ define([
     };
     inherits(MapView, ListView);
 
+    MapView.prototype.mapClassName = 'hub-map';
+    MapView.prototype.mapOverlayLayerClassName = 'hub-map-overlays';
+    MapView.prototype.mapLayerClassName = 'hub-map-layer';
+    MapView.prototype.mapLandClassName = 'hub-map-land';
+    MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
+
     MapView.prototype.className = 'hub-map-view';
 
+    MapView.prototype.getMapContext = function () {
+        return this._mapContext;
+    };
+
+    MapView.prototype.addLayer = function (name) {
+        return this._mapContext.svg.append('svg:g')
+            .attr('class', this.mapLayerClassName)
+            .attr('class', name);
+    };
+
+    MapView.prototype.addDataPoint = function (dataPoint) {
+        var overlayView = this._createOverlayView(dataPoint);
+    };
+
+    MapView.prototype._createOverlayView = function (dataPoint) {
+        return this._overlayViewFactory.createOverlayView(dataPoint);
+    };
+
+    MapView.prototype._createMapContext = function () {
+        return {
+            el: this.el,
+            path: this._getPathForProjection(),
+            svg: d3.select(this.listElSelector).append('svg')
+        };
+    };
+
     MapView.prototype._draw = function () {
+        this._mapContext = this._createMapContext();
         this._drawMap();
         this._drawOverlays();
-    };
-
-    MapView.prototype._clearOverlays = function () {
-        for (var i=0; i < this._overlayViews.length; i++) {
-            var overlayView = this._overlayViews[i];
-            overlayView.destroy();
-        }
-    };
-
-    MapView.prototype._drawOverlays = function () {
-        if (! this._overlaysPath) {
-            this._overlaysPath = this._getPathForProjection();
-        }
-
-        // Append the SVG element with which the map will be drawn on.
-        if (! this._mapOverlayEl) {
-            this._mapOverlayEl = this._mapSvg.append('svg:g')
-                .attr('class', 'hub-map-overlays');
-        }
-        for (var i=0; i < this._overlayViews.length; i++) {
-            var overlayView = this._overlayViews[i];
-            if (! overlayView._rendered) {
-                this._overlayViews[i].setMapContext({ el: this.el, path: this._overlaysPath, svg: this._mapOverlayEl });
-                this._overlayViews[i].render();
-            }
-        }
     };
 
     // Scale the map (http://stackoverflow.com/a/14691788)
@@ -107,27 +116,25 @@ define([
             });
         }
         
-        this._mapPath = this._getPathForProjection();
-        this._mapSvg = d3.select('.hub-map-svg');
-        if (! this._mapSvg[0][0]) {
+        if (! this._mapContext.svg[0][0]) {
             this._mapZoomBehavior = d3.behavior.zoom();
-            this._mapSvg = d3.select(this.listElSelector).append('svg')
+            this._mapContext.svg
                 .call(this._mapZoomBehavior
                     .size([width, height])
                     .scaleExtent([1, 2.5])
-                    .on('zoom', this._handleZoom.bind(this)))
-                .attr('class', 'hub-map-svg');
+                    .on('zoom', this._handleZoom.bind(this)));
         }
+
         // Append the SVG element with which the map will be drawn on.
         if (this._mapEl) {
             this._mapEl.remove();
         }
         if (this._mapOverlayEl) {
-            this._mapEl = d3.select('.hub-map-svg')
+            this._mapEl = this._mapContext.svg
                 .insert('svg:g', '.hub-map-overlays')
                 .attr('class', 'hub-map');
         } else {
-            this._mapEl = this._mapSvg.append('svg:g')
+            this._mapEl = this._mapContext.svg.append('svg:g')
                 .attr('class', 'hub-map');
         }
 
@@ -137,7 +144,7 @@ define([
            .enter()
            .insert("path")
            .attr("class", "hub-map-land")
-           .attr("d", this._mapPath); 
+           .attr("d", this._mapContext.path); 
 
         // Draw graticule
         if (this._graticule) {
@@ -147,13 +154,38 @@ define([
             this._mapEl.append("path")
                 .attr("class", "hub-map-graticule")
                 .datum(graticule)
-                .attr("d", this._mapPath);
+                .attr("d", this._mapContext.path);
 
             // Draw the path for the bounding outline of the graticule
             this._mapEl.append("path")
                 .datum(graticule.outline)
                 .attr("class", "hub-map-land")
-                .attr("d", this._mapPath);
+                .attr("d", this._mapContext.path);
+        }
+    };
+
+    MapView.prototype._clearOverlays = function () {
+        for (var i=0; i < this._overlayViews.length; i++) {
+            var overlayView = this._overlayViews[i];
+            overlayView.destroy();
+        }
+    };
+
+    MapView.prototype._drawOverlays = function () {
+        if (! this._overlaysPath) {
+            this._overlaysPath = this._getPathForProjection();
+        }
+
+        // Append the SVG element with which the map will be drawn on.
+        if (! this._mapOverlayEl) {
+            this._mapOverlayEl = this.addLayer('hub-map-overlays');
+        }
+        for (var i=0; i < this._overlayViews.length; i++) {
+            var overlayView = this._overlayViews[i];
+            if (! overlayView._rendered) {
+                this._overlayViews[i].setMapContext({ el: this.el, path: this._overlaysPath, svg: this._mapOverlayEl });
+                this._overlayViews[i].render();
+            }
         }
     };
 
