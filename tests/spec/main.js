@@ -1,22 +1,24 @@
 define([
-    'streamhub-sdk/jquery',
     'streamhub-map',
     'streamhub-map/point',
     'streamhub-map/collections/collection-point',
     'streamhub-map/views/overlay-factory',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/marker-view',
+    'streamhub-sdk/collection',
+    'streamhub-sdk/jquery',
     'jasmine',
     'jasmine-jquery'
 ],
 function (
-    $,
     MapView,
     Point,
     CollectionPoint,
     OverlayViewFactory,
     OverlayView,
-    MarkerView
+    MarkerView,
+    Collection,
+    $
 ) {
     'use strict';
 
@@ -95,7 +97,7 @@ function (
             });
 
             it ('given a CollectionPoint instance', function () {
-                var overlayView = factory.createOverlayView(new CollectionPoint());
+                var overlayView = factory.createOverlayView(new CollectionPoint(new Collection()));
                 expect(overlayView instanceof MarkerView).toBe(true);
             });
         });

@@ -20,7 +20,8 @@
   "devDependencies": {
     "jasmine": "*",
     "jasmine-jquery": "*",
-    "almond": "~0.2.5"
+    "almond": "~0.2.5",
+    "streamhub-hot-collections": "git://github.com/Livefyre/streamhub-hot-collections.git"
   },
   "streamhub": {
     "icon": "",

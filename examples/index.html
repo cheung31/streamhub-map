@@ -33,16 +33,16 @@
         require([
             'streamhub-map',
             'streamhub-map/point',
-            'streamhub-map/collections/collection-point',
-            'streamhub-map/views/marker-view',
+            'streamhub-map/collections/collection-point-transform',
             'streamhub-map/views/solar-terminator-view',
-            'streamhub-sdk-tests/mocks/mock-attachments-stream'
+            'streamhub-sdk-tests/mocks/mock-attachments-stream',
+            'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections'
         ], function (MapView,
                      Point,
-                     CollectionPoint,
-                     MarkerView,
+                     CollectionPointTransform,
                      SolarTerminatorOverlayView,
-                     MockAttachmentsStream) {
+                     MockAttachmentsStream,
+                     MockHotCollectionsStream) {
 
             var mapView = window.view = new MapView({
                 el: document.getElementById('feed1')
@@ -51,29 +51,42 @@
                 ,mapCenter: { lat: 37.09024, lon: -95.712891 }
             });
 
-            var myLocation = new Point({ lat: 37.7749295, lon: -122.4194155 });
-            var usaCentroid = new Point({ lat: 37.09024, lon: -95.712891 });
-            var europeCentroid = new Point({ lat: 54.5259614, lon: 15.2551187 });
-            var southAmericaCentroid = new Point({ lat: -8.783195, lon: -55.491477 });
-            var indiaCentroid = new Point({ lat: 20.593684, lon: 78.96288 });
-            var indonesiaCentroid = new Point({ lat: -0.789275, lon: 113.921327 });
+            var sfLatLon = { lat: 37.7749295, lon: -122.4194155 };
+            var usaLatLon = { lat: 37.09024, lon: -95.712891 };
+            var europeLatLon = { lat: 54.5259614, lon: 15.2551187 };
+            var southAmericaLatLon = { lat: -8.783195, lon: -55.491477 };
+            var indiaLatLon = { lat: 20.593684, lon: 78.96288 };
+            var indonesiaLatLon = { lat: -0.789275, lon: 113.921327 };
+
+            var myLocation = new Point(sfLatLon);
+            var usaCentroid = new Point(usaLatLon);
+            var europeCentroid = new Point(europeLatLon);
+            var southAmericaCentroid = new Point(southAmericaLatLon);
+            var indiaCentroid = new Point(indiaLatLon);
+            var indonesiaCentroid = new Point(indonesiaLatLon);
 
             // The Overlay API
+debugger;
             mapView.addOverlay(new SolarTerminatorOverlayView());
-            //mapView.addOverlay(new MarkerView(myLocation))
-            //    .addOverlay(new MarkerView(usaCentroid, 'USA'))
-            //    .addOverlay(new MarkerView(southAmericaCentroid, 'South America'))
-            //    .addOverlay(new MarkerView(europeCentroid, 'Europe'))
-            //    .addOverlay(new MarkerView(indiaCentroid, 'India'))
-            //    .addOverlay(new MarkerView(indonesiaCentroid, 'Indonesia'));
 
-            // The Data-to-Location API
-            var cp1 = new CollectionPoint({
-                lat: 37.7749295, 
-                lon: -122.4194155,
-                collection: new MockAttachmentsStream()
+            // Collection to Location Mapping
+            //TODO(ryanc): collectionId -> lat/lon or articleId -> lat/lon
+            var collectionToLocation = {
+                47993636: sfLatLon,
+                48084932: usaLatLon,
+                48078130: europeLatLon,
+                48081257: southAmericaLatLon,
+                48089894: indiaLatLon,
+                48103282: indonesiaLatLon
+            };
+            var collectionPointTransform = new CollectionPointTransform(collectionToLocation);
+
+            var hotCollectionsStream = new MockHotCollectionsStream({
+                network: 'livefyre.com'
             });
-            mapView.addDataPoint(cp1);
+            hotCollectionsStream
+                .pipe(collectionPointTransform)
+                .pipe(mapView);
         });
         </script>
     </body>
