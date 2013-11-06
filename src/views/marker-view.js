@@ -1,12 +1,17 @@
 define([
+    'streamhub-map/point',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/info-window-overlay-view',
     'inherits'
 ],
-function (OverlayView, InfoWindowView, inherits) {
+function (Point, OverlayView, InfoWindowView, inherits) {
 
     var MarkerView = function (point, opts) {
         opts = opts || {};
+
+        if (point === undefined || ! (point instanceof Point)) {
+            throw new Error('A MarkerView expects a Point instance as an argument');
+        }
 
         this._point = point;
 
@@ -16,7 +21,6 @@ function (OverlayView, InfoWindowView, inherits) {
         }
 
         if (opts.mapContext) {
-            this._mapEl = opts.mapContext.el;
             this._path = opts.mapContext.path;
             this._svg = opts.mapContext.svg;
         }
@@ -68,7 +72,6 @@ function (OverlayView, InfoWindowView, inherits) {
     };
 
     MarkerView.prototype.openInfoWindow = function () {
-        this._infoWindowView.setMapContext({ el: this._mapEl });
         this._infoWindowView.render();
         this._infoWindowView.position(this.el[0][0]);
     };

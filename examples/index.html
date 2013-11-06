@@ -11,10 +11,6 @@
             height: 100%;
             margin: 0;
         }
-        #contentListView {
-            width: 100%;
-            height: 100px;
-        }
         #feed1 {
             position: absolute;
             width: 100%;
@@ -29,7 +25,6 @@
 </head>
     <body>
         <h2>A stream showcasing various types of attachments</h2>
-        <div id="contentListView"></div>
         <div id="feed1"></div>
 
         <script src="../../lib/requirejs/require.js" type="text/javascript"></script>
@@ -38,11 +33,13 @@
         require([
             'streamhub-map',
             'streamhub-map/point',
+            'streamhub-map/collections/collection-point',
             'streamhub-map/views/marker-view',
             'streamhub-map/views/solar-terminator-view',
             'streamhub-sdk-tests/mocks/mock-attachments-stream'
         ], function (MapView,
                      Point,
+                     CollectionPoint,
                      MarkerView,
                      SolarTerminatorOverlayView,
                      MockAttachmentsStream) {
@@ -71,13 +68,12 @@
             //    .addOverlay(new MarkerView(indonesiaCentroid, 'Indonesia'));
 
             // The Data-to-Location API
-            var collection1 = new MockAttachmentsStream();
-            var collection2 = new MockAttachmentsStream();
-            mapView.addDataPoint(collection1, usaCentroid)
-            mapView.addDataPoint(collection2, indiaCentroid);
-
-            // Proportional symbols
-            view.symbols();
+            var cp1 = new CollectionPoint({
+                lat: 37.7749295, 
+                lon: -122.4194155,
+                collection: new MockAttachmentsStream()
+            });
+            mapView.addDataPoint(cp1);
         });
         </script>
     </body>

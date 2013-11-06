@@ -37,14 +37,15 @@ define([
         this._landColor = opts.landColor;
         this._graticuleColor = opts.graticuleColor;
         this._includeAntarctica = opts.includeAntarctica || false;
-
-        this._overlayViewFactory = new OverlayViewFactory();
         this._overlayViews = [];
         this._dataPoints = [];
 
         ListView.call(this, opts);
 
         this._draw();
+        this._overlayViewFactory = new OverlayViewFactory({
+            mapContext: this.getMapContext()
+        });
 
         var self = this;
         $(window).on('resize', function (e) {
@@ -64,7 +65,6 @@ define([
     MapView.prototype.mapLayerClassName = 'hub-map-layer';
     MapView.prototype.mapLandClassName = 'hub-map-land';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
-
     MapView.prototype.className = 'hub-map-view';
 
     MapView.prototype.getMapContext = function () {
@@ -79,6 +79,7 @@ define([
 
     MapView.prototype.addDataPoint = function (dataPoint) {
         var overlayView = this._createOverlayView(dataPoint);
+        this.addOverlay(overlayView);
     };
 
     MapView.prototype._createOverlayView = function (dataPoint) {
@@ -86,10 +87,14 @@ define([
     };
 
     MapView.prototype._createMapContext = function () {
+        var mapSvg = d3.select('.hub-map-svg');
+        if (! mapSvg[0][0]) {
+            mapSvg = d3.select(this.listElSelector).append('svg')
+                .attr('class', 'hub-map-svg');
+        }
         return {
-            el: this.el,
             path: this._getPathForProjection(),
-            svg: d3.select(this.listElSelector).append('svg')
+            svg: mapSvg
         };
     };
 
@@ -139,11 +144,11 @@ define([
         }
 
         // Draw the path of the map in SVG.
-        this._mapEl.selectAll('.hub-map-land')
+        this._mapEl.selectAll('.'+this.mapLandClassName)
            .data(countries)
            .enter()
            .insert("path")
-           .attr("class", "hub-map-land")
+           .attr("class", this.mapLandClassName)
            .attr("d", this._mapContext.path); 
 
         // Draw graticule
@@ -159,7 +164,7 @@ define([
             // Draw the path for the bounding outline of the graticule
             this._mapEl.append("path")
                 .datum(graticule.outline)
-                .attr("class", "hub-map-land")
+                .attr("class", this.mapLandClassName)
                 .attr("d", this._mapContext.path);
         }
     };

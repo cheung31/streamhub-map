@@ -1,8 +1,9 @@
 define([
+    'streamhub-map/point',
     'streamhub-map/collections/collection-point',
     'streamhub-map/views/marker-view'
 ],
-function (CollectionPoint, MarkerView) {
+function (Point, CollectionPoint, MarkerView) {
 
     var OverlayViewFactory = function (opts) {
         opts = opts || {};
@@ -10,6 +11,7 @@ function (CollectionPoint, MarkerView) {
     };
 
     OverlayViewFactory.prototype.overlayRegistry = [
+        { type: Point, view: MarkerView},
         { type: CollectionPoint, view: MarkerView }
     ];
 
@@ -31,8 +33,8 @@ function (CollectionPoint, MarkerView) {
     };
 
     OverlayViewFactory.prototype.createOverlayView = function (point) {
-        var OverlayViewType = this._getViewTypeForOverlay(point);
-        return new OverlayViewType({ mapContext: this._mapContext });
+        var OverlayViewType = this._getViewTypeForPoint(point);
+        return new OverlayViewType(point, { mapContext: this._mapContext });
     };
 
     return OverlayViewFactory;
