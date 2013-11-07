@@ -85,7 +85,6 @@ define([
     MapView.prototype.addDataPoint = function (dataPoint) {
         this._dataPoints.push(dataPoint);
         var overlayView = this._createOverlayView(dataPoint);
-console.log(dataPoint._collection.heatIndex);
         this.addOverlay(overlayView);
     };
 
