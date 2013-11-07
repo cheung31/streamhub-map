@@ -31,7 +31,7 @@ function (Point, MarkerView, inherits, d3, colorbrewer) {
 
         var getColor = d3.scale.quantize()
             .domain(this.getDomain())
-            .range(colorbrewer.YlOrRd[9]);
+            .range(colorbrewer.YlOrRd[5]);
         this.el.attr('fill', getColor(this.getValue()));
     };
 
