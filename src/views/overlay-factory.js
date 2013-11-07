@@ -1,9 +1,15 @@
 define([
     'streamhub-map/point',
     'streamhub-map/collections/collection-point',
-    'streamhub-map/views/marker-view'
+    'streamhub-map/views/marker-view',
+    'streamhub-map/views/symbol-view'
 ],
-function (Point, CollectionPoint, MarkerView) {
+function (
+    Point,
+    CollectionPoint,
+    MarkerView,
+    SymbolView
+) {
 
     var OverlayViewFactory = function (opts) {
         opts = opts || {};
@@ -20,6 +26,10 @@ function (Point, CollectionPoint, MarkerView) {
             var current = this.overlayRegistry[i];
             if (!(point instanceof current.type)) {
                 continue;
+            }
+
+            if (point instanceof CollectionPoint && point._collection.heatIndex !== undefined) {
+                return SymbolView;
             }
 
             var currentType;

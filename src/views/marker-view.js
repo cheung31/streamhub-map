@@ -7,18 +7,21 @@ define([
 function (Point, OverlayView, InfoWindowView, inherits) {
 
     var MarkerView = function (point, opts) {
-        opts = opts || {};
-
         if (point === undefined || ! (point instanceof Point)) {
             throw new Error('A MarkerView expects a Point instance as an argument');
         }
 
+        opts = opts || {};
+
         this._point = point;
+        this._defaultRadius = 10;
 
         if (typeof opts === 'string') {
             this._label = opts;
             return;
         }
+
+        //TODO(ryanc): opts.clickCb
 
         if (opts.mapContext) {
             this._path = opts.mapContext.path;
@@ -29,16 +32,18 @@ function (Point, OverlayView, InfoWindowView, inherits) {
     };
     inherits(MarkerView, OverlayView);
 
-    MarkerView.prototype.render = function () {
+    MarkerView.prototype.render = function (radius) {
+        radius = radius || this._defaultRadius;
+
         // Notifier
         this.notifierEl = this._svg.append("path")
             .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
-            .attr("d", this._path.pointRadius(10))
+            .attr("d", this._path.pointRadius(radius))
             .attr("class", "hub-place-notifier");
         // Marker
         this.el = this._svg.append("path")
             .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
-            .attr("d", this._path.pointRadius(10))
+            .attr("d", this._path.pointRadius(radius))
             .attr("class", "hub-place");
 
         var self = this;
@@ -61,14 +66,15 @@ function (Point, OverlayView, InfoWindowView, inherits) {
 
     MarkerView.prototype.notify = function () {
         var self = this;
+        var radius = this.getRadius();
         this.notifierEl.transition()
             .each('end', function (datum, index) {
                 self.notifierEl
-                    .attr('d', self._path.pointRadius(10))
+                    .attr('d', self._path.pointRadius(radius))
                     .style('opacity', 1);
             })
             .duration(1000)
-            .attr('d', this._path.pointRadius(50))
+            .attr('d', this._path.pointRadius(4*radius))
             .style('fill', 'steelblue')
             .style('opacity', 0);
     };

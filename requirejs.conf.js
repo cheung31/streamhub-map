@@ -13,6 +13,7 @@ requirejs.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     d3: 'lib/d3/d3',
+    colorbrewer: 'lib/colorbrewer/colorbrewer',
     topojson: 'lib/topojson/topojson'
   },
   packages: [{
@@ -48,6 +49,9 @@ requirejs.config({
   },{
     name: "streamhub-hot-collections-tests",
     location: "lib/streamhub-hot-collections/tests"
+  },{
+    name: "streamhub-metrics",
+    location: "lib/streamhub-metrics/src/"
   }],
   shim: {
     jasmine: {
@@ -65,6 +69,9 @@ requirejs.config({
     },
     d3: {
         exports: 'd3'
+    },
+    colorbrewer: {
+        exports: 'colorbrewer'
     },
     topojson: {
         exports: 'topojson'

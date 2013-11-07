@@ -1,7 +1,9 @@
 define([
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/overlay-factory',
+    'streamhub-map/views/symbol-view',
     'streamhub-sdk/views/list-view',
+    'streamhub-hot-collections/streams/collection-to-heat-metric',
     'json!streamhub-map-resources/world-50m.json',
     'd3',
     'topojson',
@@ -9,11 +11,14 @@ define([
 ], function (
     OverlayView,
     OverlayViewFactory,
+    SymbolView,
     ListView,
+    CollectionToHeatMetric,
     WorldJson,
     d3,
     topojson,
-    inherits) {
+    inherits
+) {
 
     /**
      * A view to visualize StreamHub content on a map
@@ -65,7 +70,7 @@ define([
     MapView.prototype.mapLayerClassName = 'hub-map-layer';
     MapView.prototype.mapLandClassName = 'hub-map-land';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
-    MapView.prototype.className = 'hub-map-view';
+    MapView.prototype.elClass = 'hub-map-view';
 
     MapView.prototype.getMapContext = function () {
         return this._mapContext;
@@ -83,8 +88,31 @@ define([
         this.addOverlay(overlayView);
     };
 
-    MapView.prototype._createOverlayView = function (dataPoint) {
-        return this._overlayViewFactory.createOverlayView(dataPoint);
+    MapView.prototype._createOverlayView = (function () {
+        var maxMetricValue = 0;
+
+        return function (dataPoint) {
+            if (! this.isCollectionPoint(dataPoint)) {
+                var overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
+                return overlayView;
+            }
+            var collection = dataPoint.getCollection();
+            var metric = CollectionToHeatMetric.transform(collection);
+            var metricValue = metric.getValue();
+            if (metricValue > maxMetricValue) {
+                maxMetricValue = metricValue;
+            }
+            var overlayView = new SymbolView(dataPoint, {
+                mapContext: this._mapContext,
+                maxMetricValue: function () { return maxMetricValue; }
+            });
+
+            return overlayView;
+        };
+    }());
+
+    MapView.prototype.isCollectionPoint = function (dataPoint) {
+        return dataPoint._collection !== undefined;
     };
 
     MapView.prototype._createMapContext = function () {

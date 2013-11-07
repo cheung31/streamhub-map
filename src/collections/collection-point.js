@@ -13,5 +13,9 @@ function (Point, inherits) {
     };
     inherits(CollectionPoint, Point);
 
+    CollectionPoint.prototype.getCollection = function () {
+        return this._collection;
+    };
+
     return CollectionPoint;
 });

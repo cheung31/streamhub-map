@@ -6,6 +6,7 @@
   ],
   "dependencies": {
     "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#v2.1.1",
+    "streamhub-hot-collections": "git://github.com/Livefyre/streamhub-hot-collections.git",
     "jquery": "~1.10.1",
     "hogan": "latest",
     "requirejs": "~2.1.5",
@@ -15,13 +16,13 @@
     "event-emitter": "git://github.com/Livefyre/event-emitter.git",
     "inherits": "git://github.com/Livefyre/inherits.git",
     "d3": "*",
+    "colorbrewer": "*",
     "topojson": "*"
   },
   "devDependencies": {
     "jasmine": "*",
     "jasmine-jquery": "*",
-    "almond": "~0.2.5",
-    "streamhub-hot-collections": "git://github.com/Livefyre/streamhub-hot-collections.git"
+    "almond": "~0.2.5"
   },
   "streamhub": {
     "icon": "",
