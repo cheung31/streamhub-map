@@ -29,7 +29,6 @@ define([
      */
     var MapView = function (opts) {
         var opts = opts || {};
-
         this._projectionType = opts.projection || 'mercator';
         this._projection = new d3.geo[this._projectionType]();
         this._mapCenter = opts.mapCenter;
@@ -67,7 +66,6 @@ define([
     MapView.prototype.mapLandClassName = 'hub-map-land';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
     MapView.prototype.className = 'hub-map-view';
-    MapView.prototype.dataPointAddedEventName = 'hub.mapDataAdded';
 
     MapView.prototype.getMapContext = function () {
         return this._mapContext;
@@ -79,13 +77,10 @@ define([
             .attr('class', name);
     };
 
-    MapView.prototype.setElement = function (element) {
-        ListView.prototype.setElement.call(this, element);
-
-        var self = this;
-        this.$el.on(this.dataPointAddedEventName, function (e) {
-            self.drawDataPoints();
-        });
+    MapView.prototype.addDataPoint = function (dataPoint) {
+        this._dataPoints.push(dataPoint);
+        var overlayView = this._createOverlayView(dataPoint);
+        this.addOverlay(overlayView);
     };
 
     MapView.prototype._createOverlayView = function (dataPoint) {
@@ -177,18 +172,6 @@ define([
         this.addDataPoint(point);
     };
 
-    MapView.prototype.addDataPoint = function (dataPoint) {
-        this._dataPoints.push(dataPoint);
-        this.$el.trigger(this.dataPointAddedEventName);
-    };
-
-    MapView.prototype.drawDataPoints = function () {
-        for (var i=0; i < this._dataPoints.length; i++) {
-            this._insertOverlay(this._overlayViewFactory.createOverlayView(this._dataPoints[i]));
-        }
-        this._drawOverlays();
-    };
-
     MapView.prototype._drawOverlays = function () {
         if (! this._overlaysPath) {
             this._overlaysPath = this._getPathForProjection();
@@ -218,13 +201,8 @@ define([
         return d3.geo.path().projection(this._projection)
     };
 
-    MapView.prototype._insertOverlay = function (overlayView) {
-        this._overlayViews.push(overlayView);
-        return this;
-    };
-
     MapView.prototype.addOverlay = function (overlayView) {
-        this._insertOverlay(overlayView);
+        this._overlayViews.push(overlayView);
         this._drawOverlays();
         return this;
     };

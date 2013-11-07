@@ -24,6 +24,8 @@ function (Point, OverlayView, InfoWindowView, inherits) {
             this._path = opts.mapContext.path;
             this._svg = opts.mapContext.svg;
         }
+
+        OverlayView.call(this, opts);
     };
     inherits(MarkerView, OverlayView);
 
