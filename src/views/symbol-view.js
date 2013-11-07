@@ -17,7 +17,7 @@ function (Point, MarkerView, inherits, d3, colorbrewer) {
 
     SymbolView.prototype.getRadius = function () {
         var getSize = d3.scale.linear()
-            .domain([0, this._maxMetricValue()])
+            .domain(this.getDomain())
             .range([7.5, 25]);
         return getSize(this.getValue());
     };
@@ -29,10 +29,14 @@ function (Point, MarkerView, inherits, d3, colorbrewer) {
     SymbolView.prototype.render = function () {
         MarkerView.prototype.render.call(this, this.getRadius());
 
-        var getColor = d3.scale.linear()
-            .domain([0, this._maxMetricValue()])
-            .range(colorbrewer.YlOrRd[3]);
+        var getColor = d3.scale.quantize()
+            .domain(this.getDomain())
+            .range(colorbrewer.YlOrRd[9]);
         this.el.attr('fill', getColor(this.getValue()));
+    };
+
+    SymbolView.prototype.getDomain = function () {
+        return [0, this._maxMetricValue()];
     };
 
     return SymbolView;
