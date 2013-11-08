@@ -1,6 +1,6 @@
 define(function(require) {
     var View = require('streamhub-map');
-    var CollectionPointTransform = require('streamhub-sdk/collections/collection-point-transform');
+    var CollectionPointTransform = require('streamhub-map/collections/collection-point-transform');
     var SolarTerminatorOverlayView = require('streamhub-map/views/solar-terminator-view');
     var MockHotCollectionsStream = require('streamhub-hot-collections-tests/mocks/streams/mock-hot-collections');
 
