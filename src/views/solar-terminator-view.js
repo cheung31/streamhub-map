@@ -4,9 +4,9 @@ define([
     'inherits'
 ], function (AnimatedOverlayView, d3, inherits) {
 
-    var π = Math.PI,
-        radians = π / 180,
-        degrees = 180 / π;
+    var pi = Math.PI,
+        radians = pi / 180,
+        degrees = 180 / pi;
 
     // Equations based on NOAA’s Solar Calculator; all angles in radians.
     // // http://www.esrl.noaa.gov/gmd/grad/solcalc/
@@ -82,7 +82,7 @@ define([
 
     SolarTerminatorOverlayView.prototype.solarGeometricMeanLongitude = function (centuries) {
       var l = (280.46646 + centuries * (36000.76983 + centuries * 0.0003032)) % 360;
-      return (l < 0 ? l + 360 : l) / 180 * π;
+      return (l < 0 ? l + 360 : l) / 180 * pi;
     };
 
     SolarTerminatorOverlayView.prototype.solarEquationOfCenter = function (centuries) {
