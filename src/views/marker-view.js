@@ -16,6 +16,13 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
 
         this._point = point;
         this._defaultRadius = 10;
+        this._notifyStream = opts.notifyStream;
+        var self = this;
+        if (this._notifyStream) {
+            this._notifyStream.on('data', function () {
+                self.notify();
+            });
+        }
 
         if (typeof opts === 'string') {
             this._label = opts;

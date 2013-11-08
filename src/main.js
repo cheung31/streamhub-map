@@ -104,7 +104,8 @@ define([
             }
             var overlayView = new SymbolView(dataPoint, {
                 mapContext: this._mapContext,
-                maxMetricValue: function () { return maxMetricValue; }
+                maxMetricValue: function () { return maxMetricValue; },
+                notifyStream: dataPoint.getCollection()
             });
 
             return overlayView;

@@ -220,7 +220,7 @@ function (
                 var view = new MapView({
                     el: $('#hub-map-view')
                 });
-                view.addDataPoint(new CollectionPoint({
+                view.addDataPoint(new CollectionPoint(new Collection(), {
                     lat: 49,
                     lon: -30
                 }));
