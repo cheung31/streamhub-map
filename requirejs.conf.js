@@ -45,10 +45,10 @@ requirejs.config({
     location: "lib/stream/src"
   },{
 	name: "streamhub-map",
-  	location: "./src"
+  	location: "src"
   },{
     name: "streamhub-map-resources",
-    location: "./resources/"
+    location: "resources/"
   },{
     name: "streamhub-hot-collections",
     location: "lib/streamhub-hot-collections/src/"
