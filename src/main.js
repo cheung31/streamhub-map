@@ -1,4 +1,5 @@
 define([
+    'streamhub-sdk/jquery',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/overlay-factory',
     'streamhub-map/views/symbol-view',
@@ -9,6 +10,7 @@ define([
     'topojson',
     'inherits'
 ], function (
+    $,
     OverlayView,
     OverlayViewFactory,
     SymbolView,

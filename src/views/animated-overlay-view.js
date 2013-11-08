@@ -1,7 +1,8 @@
 define([
+    'streamhub-sdk/jquery',
     'streamhub-map/views/overlay-view',
     'inherits'
-], function (OverlayView, inherits) {
+], function ($, OverlayView, inherits) {
 
     var AnimatedOverlayView = function (opts) {
         OverlayView.call(this, opts);

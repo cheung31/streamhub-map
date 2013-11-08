@@ -13,7 +13,7 @@
   pragmasOnSave: {
     excludeHogan: true
   },
-  optimize: "uglify2",
+  optimize: "none",
   uglify2: {
     compress: {
       unsafe: true

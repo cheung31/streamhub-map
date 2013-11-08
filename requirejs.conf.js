@@ -1,5 +1,11 @@
 requirejs.config({
   baseUrl: '/',
+  include: [
+    'streamhub-wall',
+    'streamhub-multiview',
+    'streamhub-map/views/solar-terminator-view',
+    'streamhub-map/collections/collection-point-transform',
+    'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections'],
   paths: {
     jquery: 'lib/jquery/jquery',
 	jasmine: 'lib/jasmine/lib/jasmine-core/jasmine',
