@@ -52,6 +52,12 @@ requirejs.config({
   },{
     name: "streamhub-metrics",
     location: "lib/streamhub-metrics/src/"
+  },{
+    name: "streamhub-multiview",
+    location: "lib/streamhub-multiview/src/"
+  },{
+    name: "streamhub-wall",
+    location: "lib/streamhub-wall/src/"
   }],
   shim: {
     jasmine: {

@@ -198,6 +198,7 @@ define([
 
     MapView.prototype.add = function (point) {
         this.addDataPoint(point);
+        this.$el.trigger('addDataPoint.hub', point);
     };
 
     MapView.prototype._drawOverlays = function () {

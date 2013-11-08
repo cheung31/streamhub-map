@@ -2,9 +2,10 @@ define([
     'streamhub-map/point',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/info-window-overlay-view',
-    'inherits'
+    'inherits',
+    'streamhub-sdk/jquery'
 ],
-function (Point, OverlayView, InfoWindowView, inherits) {
+function (Point, OverlayView, InfoWindowView, inherits, $) {
 
     var MarkerView = function (point, opts) {
         if (point === undefined || ! (point instanceof Point)) {
@@ -49,9 +50,7 @@ function (Point, OverlayView, InfoWindowView, inherits) {
         var self = this;
         this.el.on('click', function (datum, index) {
             self.notify();
-            if (self._infoWindowView) {
-                self.openInfoWindow();
-            }
+            $(self.el[0][0]).trigger('focusDataPoint.hub', self._point);
         });
 
         OverlayView.prototype.render.call(this);
