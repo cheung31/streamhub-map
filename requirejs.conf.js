@@ -5,7 +5,8 @@ requirejs.config({
     'streamhub-multiview',
     'streamhub-map/views/solar-terminator-view',
     'streamhub-map/collections/collection-point-transform',
-    'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections'],
+    'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections',
+    'json!streamhub-hot-collections-tests/mocks/clients/hot-collections-response.json'],
   paths: {
     jquery: 'lib/jquery/jquery',
 	jasmine: 'lib/jasmine/lib/jasmine-core/jasmine',
