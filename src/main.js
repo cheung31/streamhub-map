@@ -6,6 +6,7 @@ define([
     'streamhub-sdk/views/list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'json!streamhub-map-resources/world-50m.json',
+    'text!streamhub-map/css/style.css',
     'd3',
     'topojson',
     'inherits'
@@ -17,10 +18,13 @@ define([
     ListView,
     CollectionToHeatMetric,
     WorldJson,
+    MapViewCss,
     d3,
     topojson,
     inherits
 ) {
+
+    var STYLE_EL;
 
     /**
      * A view to visualize StreamHub content on a map
@@ -53,6 +57,10 @@ define([
         this._overlayViewFactory = new OverlayViewFactory({
             mapContext: this.getMapContext()
         });
+
+        if (!STYLE_EL) {
+            $('<style></style>').text(MapViewCss).prependTo('head');
+        }
 
         var self = this;
         $(window).on('resize', function (e) {
