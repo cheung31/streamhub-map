@@ -27,13 +27,11 @@
     "streamhub-wall": "git://github.com/Livefyre/streamhub-wall.git"
   },
   "streamhub": {
-    "icon": "",
-    "iconHover": "",
+    "icon": "http://i.imgur.com/9JokhRs.png",
+    "iconHover": "http://i.imgur.com/9JokhRs.png",
     "background": "",
     "sampleImages": [
-      "",
-      "",
-      ""
+      "http://i.imgur.com/dkdzBkB.png"
     ]
   }
 }
