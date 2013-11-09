@@ -55,7 +55,7 @@ requirejs.config({
     location: "lib/streamhub-hot-collections/src/"
   },{
     name: "streamhub-hot-collections-tests",
-    location: "lib/streamhub-hot-collections/tests"
+    location: "lib/streamhub-hot-collections/tests/"
   },{
     name: "streamhub-metrics",
     location: "lib/streamhub-metrics/src/"
