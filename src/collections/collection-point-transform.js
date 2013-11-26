@@ -12,7 +12,6 @@ define([
     inherits(CollectionPointTransform, Transform);
 
     CollectionPointTransform.prototype._transform = function (collection, done) {
-        var self = this;
         if (collection.id in this._collectionToLocation) {
             this.push(new CollectionPoint(collection, this._collectionToLocation[collection.id]));
             return done();
