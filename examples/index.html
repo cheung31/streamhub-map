@@ -31,12 +31,10 @@
             'streamhub-map',
             'streamhub-map/point',
             'streamhub-map/collections/collection-point-transform',
-            'streamhub-map/views/solar-terminator-view',
             'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections'
         ], function (MapView,
                      Point,
                      CollectionPointTransform,
-                     SolarTerminatorOverlayView,
                      MockHotCollectionsStream) {
 
             var mapView = window.view = new MapView({
@@ -59,9 +57,6 @@
             var southAmericaCentroid = new Point(southAmericaLatLon);
             var indiaCentroid = new Point(indiaLatLon);
             var indonesiaCentroid = new Point(indonesiaLatLon);
-
-            // The Overlay API
-            mapView.addOverlay(new SolarTerminatorOverlayView());
 
             // Collection to Location Mapping
             //TODO(ryanc): collectionId -> lat/lon or articleId -> lat/lon
