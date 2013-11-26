@@ -1,7 +1,7 @@
 define([
     'streamhub-map/point',
     'streamhub-map/content/content-point',
-    'streamhub-map/collections/collection-point',
+    'streamhub-map/collection/collection-point',
     'streamhub-map/views/marker-view',
     'streamhub-map/views/symbol-view'
 ],

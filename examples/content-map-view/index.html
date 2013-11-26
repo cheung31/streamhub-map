@@ -29,16 +29,10 @@
         <script>
         require([
             'streamhub-sdk/collection',
-            'streamhub-sdk/content/views/content-list-view',
-            'streamhub-map',
-            'streamhub-map/point',
-            'streamhub-map/content/content-point-transform'
+            'streamhub-map/content/content-map-view'
         ], function (
             Collection,
-            ContentListView,
-            MapView,
-            Point,
-            ContentPointTransform) {
+            ContentMapView) {
             var opts = {
                 "network": "livefyre.com",
                 "siteId": "290596",
@@ -46,7 +40,7 @@
                 "environment": "qa-ext.livefyre.com"
             };
 
-            var mapView = window.mapView = new MapView({
+            var mapView = window.mapView = new ContentMapView({
                 el: document.getElementById('feed1')
                 //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
                 //,boundingBox: [[], []] // Bounding box in degrees
@@ -54,7 +48,7 @@
             });
 
             var collection = window.collection = new Collection(opts);
-            collection.pipe(new ContentPointTransform()).pipe(mapView);
+            collection.pipe(mapView);
         });
         </script>
     </body>
