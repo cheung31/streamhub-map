@@ -52,7 +52,9 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
         this.el = this._svg.append("path")
             .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
             .attr("d", this._path.pointRadius(radius))
-            .attr("class", "hub-place");
+            .attr("class", "hub-place")
+            .attr('fill', 'red');
+        this.notify();
 
         var self = this;
         this.el.on('click', function (datum, index) {
@@ -83,6 +85,10 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
             .attr('d', this._path.pointRadius(4*radius))
             .style('fill', 'steelblue')
             .style('opacity', 0);
+    };
+
+    MarkerView.prototype.getRadius = function () {
+        return this._defaultRadius;
     };
 
     MarkerView.prototype.openInfoWindow = function () {
