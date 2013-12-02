@@ -42,8 +42,11 @@
 
             var mapView = window.mapView = new ContentMapView({
                 el: document.getElementById('feed1')
+                ,boundingBox: [
+                    { lat: 49.32512199104001, lon: -126.5625 },
+                    { lat: 24.686952411999155, lon: -65.830078125 }
+                ] // Bounding box in degrees [{ lat: x1, lon: y1 }, { lat: x2, lon: y2 }]
                 //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
-                //,boundingBox: [[], []] // Bounding box in degrees
                 //,mapCenter: { lat: 37.09024, lon: -95.712891 }
             });
 
