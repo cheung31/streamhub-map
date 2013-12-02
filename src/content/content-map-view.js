@@ -17,8 +17,7 @@ function (MapView, ContentPoint, inherits) {
         // Adapt Content to ContentPoint
         var contentPoint = new ContentPoint(content);
 
-        this.addDataPoint(contentPoint);
-        this.$el.trigger('addDataPoint.hub', contentPoint);
+        MapView.prototype.add.call(this, collectionPoint);
     };
 
     return ContentMapView;

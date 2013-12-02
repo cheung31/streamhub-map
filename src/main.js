@@ -86,13 +86,19 @@ define([
         return this._mapContext;
     };
 
+    /**
+     * Add a layer that may contain any number of views
+     * @param name {String} The name of the layer. Adds a className on the
+     *                      associated svg:g element.
+     * @returns {SVGGElement} The svg:g element representing the layer
+     */
     MapView.prototype.addLayer = function (name) {
         return this._mapContext.svg.append('svg:g')
             .attr('class', this.mapLayerClassName)
             .attr('class', name);
     };
 
-    MapView.prototype.addDataPoint = function (dataPoint) {
+    MapView.prototype._addDataPoint = function (dataPoint) {
         this._dataPoints.push(dataPoint);
         var overlayView = this._createOverlayView(dataPoint);
         this.addOverlay(overlayView);
@@ -122,6 +128,10 @@ define([
         };
     }());
 
+    /**
+     * A helper function to check whether a Point instance is of type CollectionPoint
+     * @param dataPoint {Point} The point instance to be checked
+     */
     MapView.prototype.isCollectionPoint = function (dataPoint) {
         return dataPoint._collection !== undefined;
     };
@@ -206,8 +216,12 @@ define([
         }
     };
 
+    /**
+     * Add a Point instance to be visualized on the map
+     * @param dataPoint {Point} The point to be visualized on the map
+     */
     MapView.prototype.add = function (point) {
-        this.addDataPoint(point);
+        this._addDataPoint(point);
         this.$el.trigger('addDataPoint.hub', point);
     };
 
@@ -283,6 +297,11 @@ define([
         };
     };
 
+    /**
+     * Add a OverlayView instance to the map
+     * @param overlayView {OverlayView} The OverlayView to be drawn on the map
+     * @returns {MapView} The MapView instance in case chaining is needed
+     */
     MapView.prototype.addOverlay = function (overlayView) {
         this._overlayViews.push(overlayView);
         this._drawOverlays();

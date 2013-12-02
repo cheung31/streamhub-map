@@ -20,8 +20,7 @@ function (MapView, CollectionPoint, inherits) {
         // Adapt Collection to CollectionPoint
         var collectionPoint = new CollectionPoint(collection, this._collectionToLocation[collection.id]);
 
-        this.addDataPoint(collectionPoint);
-        this.$el.trigger('addDataPoint.hub', collectionPoint);
+        MapView.prototype.add.call(this, collectionPoint);
     };
 
     return CollectionMapView;
