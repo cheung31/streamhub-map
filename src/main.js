@@ -43,7 +43,7 @@ define([
         this._projectionType = opts.projection || 'mercator';
         this._projection = new d3.geo[this._projectionType]();
         this._mapCenter = opts.mapCenter;
-        this._boundingBox = opts.boundingBox;
+        this._boundingBox = opts.boundingBox; // Bounding box in degrees [{ lat: x1, lon: y1 }, { lat: x2, lon: y2 }]
         this._graticule = opts.graticule || false;
         this._landColor = opts.landColor;
         this._graticuleColor = opts.graticuleColor;
@@ -86,13 +86,19 @@ define([
         return this._mapContext;
     };
 
+    /**
+     * Add a layer that may contain any number of views
+     * @param name {String} The name of the layer. Adds a className on the
+     *                      associated svg:g element.
+     * @returns {SVGGElement} The svg:g element representing the layer
+     */
     MapView.prototype.addLayer = function (name) {
         return this._mapContext.svg.append('svg:g')
             .attr('class', this.mapLayerClassName)
             .attr('class', name);
     };
 
-    MapView.prototype.addDataPoint = function (dataPoint) {
+    MapView.prototype._addDataPoint = function (dataPoint) {
         this._dataPoints.push(dataPoint);
         var overlayView = this._createOverlayView(dataPoint);
         this.addOverlay(overlayView);
@@ -122,6 +128,10 @@ define([
         };
     }());
 
+    /**
+     * A helper function to check whether a Point instance is of type CollectionPoint
+     * @param dataPoint {Point} The point instance to be checked
+     */
     MapView.prototype.isCollectionPoint = function (dataPoint) {
         return dataPoint._collection !== undefined;
     };
@@ -144,7 +154,6 @@ define([
         this._drawOverlays();
     };
 
-    // Scale the map (http://stackoverflow.com/a/14691788)
     MapView.prototype._drawMap = function () {
         var width = this.$el.width(),
             height = this.$el.height();
@@ -207,8 +216,12 @@ define([
         }
     };
 
+    /**
+     * Add a Point instance to be visualized on the map
+     * @param dataPoint {Point} The point to be visualized on the map
+     */
     MapView.prototype.add = function (point) {
-        this.addDataPoint(point);
+        this._addDataPoint(point);
         this.$el.trigger('addDataPoint.hub', point);
     };
 
@@ -233,14 +246,62 @@ define([
     MapView.prototype._getPathForProjection = function () {
         var width = this.$el.width(),
             height = this.$el.height();
-        this._projection
-            .scale((width + 1) / 2 / Math.PI)
-            .center([0, this._includeAntarctica ? 0 :27.55]) // Update center of map when Antarctica is removed
-            .translate([width / 2, height / 2]); // Place the center, and the midpoint of the container
 
-        return d3.geo.path().projection(this._projection)
+        this._projection.center([0, this._includeAntarctica ? 0 : 27.55]); // Update center of map when Antarctica is removed
+
+        if (! this._boundingBox) {
+            // Scale the map (http://stackoverflow.com/a/14691788)
+
+            this._projection
+                .scale((width + 1) / 2 / Math.PI)
+                .translate([width / 2, height / 2]); // Place the center, and the midpoint of the container
+
+            return d3.geo.path().projection(this._projection);
+        } else {
+            this._projection
+                .scale(1)
+                .translate([0, 0]);
+
+            var path = d3.geo.path().projection(this._projection);
+            var bboxFeature = this._getBoundingBoxFeature();
+            var b = path.bounds(bboxFeature);
+            var s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+            var t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+
+            this._projection
+                .scale(s)
+                .translate(t);
+
+            return path;
+        }
     };
 
+    MapView.prototype._getBoundingBoxFeature = function () {
+        // Bounding box in degrees [{ lat: x1, lon: y1 }, { lat: x2, lon: y2 }]
+        // GeoJSON Feature object spec: (http://geojson.org/geojson-spec.html#feature-objects)
+        return {
+            'type': 'Feature',
+            'properties': {},
+            'geometry': {
+                'type': 'Polygon',
+                'coordinates': [
+                    [
+                        [this._boundingBox[0].lon, this._boundingBox[0].lat],
+                        [this._boundingBox[1].lon, this._boundingBox[0].lat],
+                        [this._boundingBox[1].lon, this._boundingBox[1].lat],
+                        [this._boundingBox[0].lon, this._boundingBox[1].lat],
+                        [this._boundingBox[0].lon, this._boundingBox[0].lat]
+                    ]
+                ]
+            }
+        };
+    };
+
+    /**
+     * Add a OverlayView instance to the map
+     * @param overlayView {OverlayView} The OverlayView to be drawn on the map
+     * @returns {MapView} The MapView instance in case chaining is needed
+     */
     MapView.prototype.addOverlay = function (overlayView) {
         this._overlayViews.push(overlayView);
         this._drawOverlays();

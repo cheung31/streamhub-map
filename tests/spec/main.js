@@ -220,11 +220,45 @@ function (
                 var view = new MapView({
                     el: $('#hub-map-view')
                 });
-                view.addDataPoint(new CollectionPoint(new Collection(), {
+                view.add(new CollectionPoint(new Collection(), {
                     lat: 49,
                     lon: -30
                 }));
                 expect($('#hub-map-view')).toContain('.hub-place');
+            });
+        });
+
+        describe('can be bounded to a bounding box', function () {
+            beforeEach(function () {
+                setFixtures('<div id="hub-map-view"></div>');
+            });
+
+            it ("the map's projection is bounded to the boundingBox option", function () {
+                var view = new MapView({
+                    el: $('#hub-map-view'),
+                    boundingBox: [
+                        { lat: 0, lon: 0 }, // NW
+                        { lat: 1, lon: 1 } // SW
+                    ]
+                });
+
+                var bboxFeature = view._getBoundingBoxFeature();
+                expect(bboxFeature.geometry.type).toBe('Polygon');
+
+                expect(bboxFeature.geometry.coordinates[0][0][0]).toBe(0);
+                expect(bboxFeature.geometry.coordinates[0][0][1]).toBe(0);
+
+                expect(bboxFeature.geometry.coordinates[0][1][0]).toBe(1);
+                expect(bboxFeature.geometry.coordinates[0][1][1]).toBe(0);
+
+                expect(bboxFeature.geometry.coordinates[0][2][0]).toBe(1);
+                expect(bboxFeature.geometry.coordinates[0][2][1]).toBe(1);
+
+                expect(bboxFeature.geometry.coordinates[0][3][0]).toBe(0);
+                expect(bboxFeature.geometry.coordinates[0][3][1]).toBe(1);
+
+                expect(bboxFeature.geometry.coordinates[0][4][0]).toBe(0);
+                expect(bboxFeature.geometry.coordinates[0][4][1]).toBe(0);
             });
         });
     });
