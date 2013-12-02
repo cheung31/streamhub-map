@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+ARGS="${*:1}"
+
+# Directory of this script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Start an HTTP Server
+$DIR/../node_modules/http-server/bin/http-server -p 8091 > /dev/null &
+HTTP_SERVER_PID=$!
+
+# phantomjs
+$DIR/../node_modules/phantomjs/bin/phantomjs $DIR/../tests/phantom.js http://localhost:8091/tests
+EXIT_CODE=$?
+
+# Kill the webserver
+kill $HTTP_SERVER_PID
+
+exit $EXIT_CODE
