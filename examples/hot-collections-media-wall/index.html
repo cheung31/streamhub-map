@@ -114,7 +114,7 @@
         };
         var collectionPointTransform = new CollectionPointTransform(collectionToLocation);
 
-        var hotCollectionsStream = new MockHotCollectionsStream({
+        var hotCollectionsStream = window.hotCollectionsStream = new MockHotCollectionsStream({
             network: 'livefyre.com'
         });
         hotCollectionsStream

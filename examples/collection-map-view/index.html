@@ -28,23 +28,10 @@
         <script src="/requirejs.conf.js" type="text/javascript"></script>
         <script>
         require([
-            'streamhub-map',
-            'streamhub-map/point',
-            'streamhub-map/collections/collection-point-transform',
-            'streamhub-map/views/solar-terminator-view',
+            'streamhub-map/collection/collection-map-view',
             'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections'
-        ], function (MapView,
-                     Point,
-                     CollectionPointTransform,
-                     SolarTerminatorOverlayView,
+        ], function (CollectionMapView,
                      MockHotCollectionsStream) {
-
-            var mapView = window.view = new MapView({
-                el: document.getElementById('feed1')
-                //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
-                //,boundingBox: [[], []] // Bounding box in degrees
-                ,mapCenter: { lat: 37.09024, lon: -95.712891 }
-            });
 
             var sfLatLon = { lat: 37.7749295, lon: -122.4194155 };
             var usaLatLon = { lat: 37.09024, lon: -95.712891 };
@@ -52,16 +39,6 @@
             var southAmericaLatLon = { lat: -8.783195, lon: -55.491477 };
             var indiaLatLon = { lat: 20.593684, lon: 78.96288 };
             var indonesiaLatLon = { lat: -0.789275, lon: 113.921327 };
-
-            var myLocation = new Point(sfLatLon);
-            var usaCentroid = new Point(usaLatLon);
-            var europeCentroid = new Point(europeLatLon);
-            var southAmericaCentroid = new Point(southAmericaLatLon);
-            var indiaCentroid = new Point(indiaLatLon);
-            var indonesiaCentroid = new Point(indonesiaLatLon);
-
-            // The Overlay API
-            mapView.addOverlay(new SolarTerminatorOverlayView());
 
             // Collection to Location Mapping
             //TODO(ryanc): collectionId -> lat/lon or articleId -> lat/lon
@@ -73,14 +50,19 @@
                 48089894: indiaLatLon,
                 48103282: indonesiaLatLon
             };
-            var collectionPointTransform = new CollectionPointTransform(collectionToLocation);
+
+            var mapView = window.view = new CollectionMapView({
+                el: document.getElementById('feed1')
+                //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
+                //,boundingBox: [[], []] // Bounding box in degrees
+                ,mapCenter: { lat: 37.09024, lon: -95.712891 }
+                ,collectionToLocation: collectionToLocation
+            });
 
             var hotCollectionsStream = new MockHotCollectionsStream({
                 network: 'livefyre.com'
             });
-            hotCollectionsStream
-                .pipe(collectionPointTransform)
-                .pipe(mapView);
+            hotCollectionsStream.pipe(mapView);
         });
         </script>
     </body>

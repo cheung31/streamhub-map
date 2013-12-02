@@ -1,5 +1,6 @@
 define(['streamhub-map/point','inherits'],
 function (Point, inherits) {
+    'use strict';
 
     var CollectionPoint = function (collection, opts) {
         opts = opts || {};
