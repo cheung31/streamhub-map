@@ -250,7 +250,6 @@ define([
 
             var path = d3.geo.path().projection(this._projection);
             var bboxFeature = this._getBoundingBoxFeature();
-            console.log(bboxFeature);
             var b = path.bounds(bboxFeature);
             var s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
             var t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
@@ -276,7 +275,7 @@ define([
                         [this._boundingBox[0].lon, this._boundingBox[0].lat],
                         [this._boundingBox[1].lon, this._boundingBox[0].lat],
                         [this._boundingBox[1].lon, this._boundingBox[1].lat],
-                        [this._boundingBox[1].lon, this._boundingBox[1].lat],
+                        [this._boundingBox[0].lon, this._boundingBox[1].lat],
                         [this._boundingBox[0].lon, this._boundingBox[0].lat]
                     ]
                 ]
