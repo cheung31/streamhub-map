@@ -53,7 +53,7 @@ define([
 
         this._draw();
         this._overlayViewFactory = new OverlayViewFactory({
-            mapContext: this.getMapContext()
+            mapContext: this._mapContext
         });
 
         if (!STYLE_EL) {
@@ -79,10 +79,6 @@ define([
     MapView.prototype.mapLandClassName = 'hub-map-land';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
     MapView.prototype.elClass = 'hub-map-view';
-
-    MapView.prototype.getMapContext = function () {
-        return this._mapContext;
-    };
 
     /**
      * Add a layer that may contain any number of views
