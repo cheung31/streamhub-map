@@ -58,7 +58,9 @@ define([
         });
 
         if (!STYLE_EL) {
-            $('<style></style>').text('#'+this.elId+MapViewCss).prependTo('head');
+            $('<style id="'+this.elId+'-style"></style>')
+                .text('.'+this.elId+MapViewCss)
+                .prependTo('head');
         }
         this._draw();
 
@@ -84,7 +86,7 @@ define([
 
     MapView.prototype.setElement = function (el) {
         ListView.prototype.setElement.call(this, el);
-        this.$el.attr('id', this.elId);
+        this.$el.addClass(this.elId);
     };
 
     /**
