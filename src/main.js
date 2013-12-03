@@ -34,9 +34,8 @@ define([
      * @param [opts.mapCenter] {Array} The lat/lon coordinates of the center of the map
      * @param [opts.boundingBox] {Array} The NW and SE coordinates of the bounding box that defines the scope of the visible map
      * @param [opts.graticule=false] {Boolean} Whether to display the map graticule
-     * @param [opts.graticuleColor] {String} The color of the graticule
-     * @param [opts.landColor] {String} The foreground colour of the map
      * @param [opts.includeAntarctica=false] {Boolean} Whether to include the continent of Antarctica on the map
+     * @param [opts.colors] {Object} Specify colors for land, water, graticule, etc.
      */
     var MapView = function (opts) {
         var opts = opts || {};
@@ -45,8 +44,7 @@ define([
         this._mapCenter = opts.mapCenter;
         this._boundingBox = opts.boundingBox; // Bounding box in degrees [{ lat: x1, lon: y1 }, { lat: x2, lon: y2 }]
         this._graticule = opts.graticule || false;
-        this._landColor = opts.landColor;
-        this._graticuleColor = opts.graticuleColor;
+        this._colors = opts.colors;
         this._includeAntarctica = opts.includeAntarctica || false;
         this._overlayViews = [];
         this._dataPoints = [];
