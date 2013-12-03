@@ -39,6 +39,7 @@ define([
      */
     var MapView = function (opts) {
         var opts = opts || {};
+        this._id = new Date().getTime();
         this._projectionType = opts.projection || 'mercator';
         this._projection = new d3.geo[this._projectionType]();
         this._mapCenter = opts.mapCenter;
@@ -48,17 +49,18 @@ define([
         this._includeAntarctica = opts.includeAntarctica || false;
         this._overlayViews = [];
         this._dataPoints = [];
+        this.elId = this.elClass+'-'+this._id;
 
         ListView.call(this, opts);
 
-        this._draw();
         this._overlayViewFactory = new OverlayViewFactory({
             mapContext: this._mapContext
         });
 
         if (!STYLE_EL) {
-            $('<style></style>').text(MapViewCss).prependTo('head');
+            $('<style></style>').text('#'+this.elId+MapViewCss).prependTo('head');
         }
+        this._draw();
 
         var self = this;
         $(window).on('resize', function (e) {
@@ -79,6 +81,11 @@ define([
     MapView.prototype.mapLandClassName = 'hub-map-land';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
     MapView.prototype.elClass = 'hub-map-view';
+
+    MapView.prototype.setElement = function (el) {
+        ListView.prototype.setElement.call(this, el);
+        this.$el.attr('id', this.elId);
+    };
 
     /**
      * Add a layer that may contain any number of views
@@ -170,11 +177,11 @@ define([
         }
         if (this._mapOverlayEl) {
             this._mapEl = this._mapContext.svg
-                .insert('svg:g', '.hub-map-overlays')
-                .attr('class', 'hub-map');
+                .insert('svg:g', '.'+this.mapOverlayLayerClassName)
+                .attr('class', this.mapClassName);
         } else {
             this._mapEl = this._mapContext.svg.append('svg:g')
-                .attr('class', 'hub-map');
+                .attr('class', this.mapClassName);
         }
 
         // Draw the path of the map in SVG.
