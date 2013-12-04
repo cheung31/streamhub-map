@@ -5,6 +5,7 @@ define([
     'streamhub-map/views/overlay-factory',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/marker-view',
+    'json!streamhub-map/defaults.json',
     'streamhub-sdk/collection',
     'streamhub-sdk/jquery',
     'jasmine',
@@ -17,6 +18,7 @@ function (
     OverlayViewFactory,
     OverlayView,
     MarkerView,
+    DefaultsJson,
     Collection,
     $
 ) {
@@ -194,6 +196,16 @@ function (
 
                 expect($('#hub-map-view')).toContain('svg > g.hub-map');
             });
+
+            it('has a default land/color scheme', function () {
+                var view = new MapView({
+                    el: $('#hub-map-view')
+                });
+
+                expect($('.hub-map-land').attr('fill')).toBe(DefaultsJson.colors.land.fill);
+                expect($('.hub-map-land').attr('stroke')).toBe(DefaultsJson.colors.land.stroke);
+                expect($('.hub-map-water').css('background-color')).toBe('rgb(136, 136, 136)'); // #888
+            });
         });
 
         describe('can add a map layer', function () {
@@ -259,6 +271,33 @@ function (
 
                 expect(bboxFeature.geometry.coordinates[0][4][0]).toBe(0);
                 expect(bboxFeature.geometry.coordinates[0][4][1]).toBe(0);
+            });
+        });
+
+        describe('is customizable', function () {
+            beforeEach(function () {
+                setFixtures('<div id="hub-map-view"></div>');
+            });
+
+            it('the land color can be customized', function () {
+                var view = new MapView({
+                    el: $('#hub-map-view'),
+                    colors: { land: { fill: 'blue', stroke: 'red' }}
+                });
+
+                expect($('.hub-map-land').attr('fill')).toBe('blue');
+                expect($('.hub-map-land').attr('stroke')).toBe('red');
+            });
+
+            it('the water color can be customized', function () {
+                var view = new MapView({
+                    el: $('#hub-map-view'),
+                    colors: { water: { fill: 'red', stroke: 'yellow' }}
+                });
+
+                expect($('.hub-map-water').attr('fill')).toBe('red');
+                expect($('.hub-map-water').css('background-color')).toBe('rgb(255, 0, 0)'); // red
+                expect($('.hub-map-water').attr('stroke')).toBe('yellow');
             });
         });
     });

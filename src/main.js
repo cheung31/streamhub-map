@@ -146,8 +146,7 @@ define([
         var mapSvg = d3.select('.hub-map-svg');
         if (! mapSvg[0][0]) {
             mapSvg = d3.select(this.listElSelector).append('svg')
-                .attr('class', this.mapWaterClassName)
-                .attr('class', 'hub-map-svg');
+                .attr('class', this.mapWaterClassName+' hub-map-svg');
         }
         return {
             path: this._getPathForProjection(),
