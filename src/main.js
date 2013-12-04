@@ -5,6 +5,7 @@ define([
     'streamhub-map/views/symbol-view',
     'streamhub-sdk/views/list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
+    'json!streamhub-map/defaults.json',
     'json!streamhub-map-resources/world-50m.json',
     'text!streamhub-map/css/style.css',
     'd3',
@@ -17,6 +18,7 @@ define([
     SymbolView,
     ListView,
     CollectionToHeatMetric,
+    DefaultsJson,
     WorldJson,
     MapViewCss,
     d3,
@@ -32,35 +34,37 @@ define([
      * @param [opts] {Object} Configuration options for the MapView
      * @param [opts.projection='mercator'] {String} A map projection supported by the D3 library (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
      * @param [opts.mapCenter] {Array} The lat/lon coordinates of the center of the map
-     * @param [opts.boundingBox] {Array} The NW and SE coordinates of the bounding box that defines the scope of the visible map
+     * @param [opts.boundingBox] {Array} The NW and SE coordinates of the bounding box that defines the scope of the visible map. Bounding box in degrees [{ lat: x1, lon: y1 }, { lat: x2, lon: y2 }].
      * @param [opts.graticule=false] {Boolean} Whether to display the map graticule
-     * @param [opts.graticuleColor] {String} The color of the graticule
-     * @param [opts.landColor] {String} The foreground colour of the map
      * @param [opts.includeAntarctica=false] {Boolean} Whether to include the continent of Antarctica on the map
+     * @param [opts.colors] {Object} Specify colors for land, water, graticule, etc.
      */
     var MapView = function (opts) {
         var opts = opts || {};
+        this._id = new Date().getTime();
         this._projectionType = opts.projection || 'mercator';
         this._projection = new d3.geo[this._projectionType]();
         this._mapCenter = opts.mapCenter;
-        this._boundingBox = opts.boundingBox; // Bounding box in degrees [{ lat: x1, lon: y1 }, { lat: x2, lon: y2 }]
+        this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
-        this._landColor = opts.landColor;
-        this._graticuleColor = opts.graticuleColor;
+        this._colors = opts.colors;
         this._includeAntarctica = opts.includeAntarctica || false;
         this._overlayViews = [];
         this._dataPoints = [];
+        this.elId = this.elClass+'-'+this._id;
 
         ListView.call(this, opts);
 
-        this._draw();
         this._overlayViewFactory = new OverlayViewFactory({
-            mapContext: this.getMapContext()
+            mapContext: this._mapContext
         });
 
         if (!STYLE_EL) {
-            $('<style></style>').text(MapViewCss).prependTo('head');
+            $('<style id="'+this.elId+'-style"></style>')
+                .text('.'+this.elId+MapViewCss)
+                .prependTo('head');
         }
+        this._draw();
 
         var self = this;
         $(window).on('resize', function (e) {
@@ -79,11 +83,13 @@ define([
     MapView.prototype.mapOverlayLayerClassName = 'hub-map-overlays';
     MapView.prototype.mapLayerClassName = 'hub-map-layer';
     MapView.prototype.mapLandClassName = 'hub-map-land';
+    MapView.prototype.mapWaterClassName = 'hub-map-water';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
     MapView.prototype.elClass = 'hub-map-view';
 
-    MapView.prototype.getMapContext = function () {
-        return this._mapContext;
+    MapView.prototype.setElement = function (el) {
+        ListView.prototype.setElement.call(this, el);
+        this.$el.addClass(this.elId);
     };
 
     /**
@@ -140,6 +146,7 @@ define([
         var mapSvg = d3.select('.hub-map-svg');
         if (! mapSvg[0][0]) {
             mapSvg = d3.select(this.listElSelector).append('svg')
+                .attr('class', this.mapWaterClassName)
                 .attr('class', 'hub-map-svg');
         }
         return {
@@ -176,20 +183,31 @@ define([
         }
         if (this._mapOverlayEl) {
             this._mapEl = this._mapContext.svg
-                .insert('svg:g', '.hub-map-overlays')
-                .attr('class', 'hub-map');
+                .insert('svg:g', '.'+this.mapOverlayLayerClassName)
+                .attr('class', this.mapClassName);
         } else {
             this._mapEl = this._mapContext.svg.append('svg:g')
-                .attr('class', 'hub-map');
+                .attr('class', this.mapClassName);
         }
 
         // Draw the path of the map in SVG.
-        this._mapEl.selectAll('.'+this.mapLandClassName)
-           .data(countries)
+        var landElements = this._mapEl.selectAll('.'+this.mapLandClassName).data(countries);
+        landElements
            .enter()
            .insert("path")
            .attr("class", this.mapLandClassName)
-           .attr("d", this._mapContext.path); 
+           .attr("d", this._mapContext.path);
+        if (this._colors) {
+            if (this._colors.land) {
+                this._setLandColor(this._colors.land);
+            }
+            if (this._colors.water) {
+                this._setWaterColor(this._colors.water);
+            }
+        } else {
+            this._setLandColor(DefaultsJson.colors.land);
+            this._setWaterColor(DefaultsJson.colors.water);
+        }
 
         // Draw graticule
         if (this._graticule) {
@@ -206,6 +224,42 @@ define([
                 .datum(graticule.outline)
                 .attr("class", this.mapLandClassName)
                 .attr("d", this._mapContext.path);
+        }
+    };
+
+    MapView.prototype._getLandElements = function () {
+        return this._mapEl.selectAll('.'+this.mapLandClassName);
+    };
+
+    MapView.prototype._getWaterElements = function () {
+        return this._mapContext.svg;
+    };
+
+    MapView.prototype._setLandColor = function (color) {
+        var landElements = this._getLandElements();
+        if (typeof color === 'string') {
+            landElements
+                .attr("stroke", color)
+                .attr("fill", color);
+        } else if (typeof color === 'object') {
+            landElements
+                .attr("stroke", color.stroke)
+                .attr("fill", color.fill);
+        }
+    };
+
+    MapView.prototype._setWaterColor = function (color) {
+        var waterElements = this._getWaterElements();
+        if (typeof color === 'string') {
+            waterElements
+                .attr("stroke", color)
+                .attr("fill", color)
+                .style("background-color", color);
+        } else if (typeof color === 'object') {
+            waterElements
+                .attr("stroke", color.stroke)
+                .attr("fill", color.fill)
+                .style("background-color", color.fill);
         }
     };
 

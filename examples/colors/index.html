@@ -40,9 +40,12 @@
             };
 
             var mapView = window.mapView = new ContentMapView({
-                el: document.getElementById('feed1')
-                //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
-                //,mapCenter: { lat: 37.09024, lon: -95.712891 }
+                el: document.getElementById('feed1'),
+                colors: {
+                    land: { fill: 'rgb(197,217,167)', stroke: '#888' },
+                    water: 'rgb(187,222,255)',
+                    graticule: ''
+                }
             });
 
             var collection = window.collection = new Collection(opts);

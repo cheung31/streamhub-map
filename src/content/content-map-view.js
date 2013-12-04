@@ -17,7 +17,7 @@ function (MapView, ContentPoint, inherits) {
         // Adapt Content to ContentPoint
         var contentPoint = new ContentPoint(content);
 
-        MapView.prototype.add.call(this, collectionPoint);
+        MapView.prototype.add.call(this, contentPoint);
     };
 
     return ContentMapView;
