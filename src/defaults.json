@@ -1,0 +1,9 @@
+{
+    "colors": {
+        "land": {
+            "fill": "#333",
+            "stroke": "#DDD"
+        },
+        "water": "#888"
+    }
+}
