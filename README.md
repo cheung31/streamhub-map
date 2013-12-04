@@ -27,46 +27,72 @@ Optionally, include some reasonable default CSS rules for StreamHub Content. Thi
     <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.2.0/streamhub-sdk.gz.css" />
 
 ### Usage
-#### Visualizing Livefyre Hot Collections
+#### Visualizing a Livefyre Collection (```ContentMapView```)
+1. Require streamhub-sdk and ContentMapView
 
-1. Require streamhub-sdk and streamhub-map
+        var ContentMapView = Livefyre.require('streamhub-map/content/content-map-view');
+        
+1. Create a ```Collection```.
 
-        var MapView = Livefyre.require('streamhub-map');
+        var collection = new Collection({
+            "network": "livefyre.com",
+            "siteId": "290596",
+            "articleId": "172",
+            "environment": "qa-ext.livefyre.com"
+        });
+        
+1. Create a ```ContentMapView```, passing the DOMElement to render it in (```el``` option).
+
+        var view = new CollectionMapView({
+        	el: document.getElementById("myMap")
+    	});
     
-1. Your ```site``` on Livefyre keeps track of the hottest conversations. To access these hot conversations Livefyre provides ```Hot Collections```. To visualize Hot Collections on the ```MapView```:
+1. Pipe the collection's content into the ```ContentMapView```
 
-    1. **Define the mapping of ```Collection``` to ```Location```.** This requires prior knowledge of Collection ```articleId```s, and their respective latitude/longitude coordinates. (**Note**: *In the future this explicit mapping may be deprecated by allowing Collections to be geotagged through the Livefyre admin.*)
+        collection.pipe(view);
+#### Visualizing Livefyre Hot Collections (```CollectionMapView```)
+
+1. Require streamhub-sdk and CollectionMapView
+
+        var CollectionMapView = Livefyre.require('streamhub-map/collection/collection-map-view');
     
-        ```
+1. Your ```site``` on Livefyre keeps track of the hottest conversations. To access these hot conversations Livefyre provides ```Hot Collections```. To visualize Hot Collections on the ```MapView```. **Define the mapping of ```Collection``` to ```Location```.** This requires prior knowledge of Collection ```articleId```s, and their respective latitude/longitude coordinates. (**Note**: *In the future this explicit mapping may be deprecated by allowing Collections to be geotagged through the Livefyre admin.*):
+    
         // A map of articleIds from a set of Hot Collections to their respective locations
         var collectionToLocation = {
         	'articleId1': { lat: 30.52, lon: -58.23 },
         	'articleId2': { lat: 60.52, lon: 8.23 },
         	...
         };
-        ```
         
-    1. **Construct ```CollectionPointTransform```.** The MapView can consume ```Collection```s and ```Content```. A ```Transform``` is required to translate the set of Collections/Hot Collections and Location pairings into a consumbale form for the MapView.
-    
-        ```
-        var collectionPointTransform = new CollectionPointTransform(collectionToLocation);
-        ```
-        
-1. Create a MapView, passing the DOMElement to render it in (```el``` option).
+1. Create a CollectionMapView, passing the DOMElement to render it in (```el``` option).
 
-        var view = new MapView({
-        	el: document.getElementById("myMap")
+        var view = new CollectionMapView({
+        	el: document.getElementById("myMap"),
+        	collectionToLocation: collectionToLocation
     	});
     
-1. Pipe the collection's content into the ```MapView```
+1. Pipe the collection's content into the ```CollectionMapView```
 
+        hotCollections.pipe(view);
+        
+## Map Customization
+### Land/Water colors
 
-        hotCollections
-            .pipe(collectionPointTransform)
-            .pipe(view);
+The ```MapView``` constructor accepts the ```colors``` option.
 
-#### Visualizing a Livefyre Collection
-*Coming Soon - Livefyre geotagged content*
+        var view = new MapView({
+            el: document.getElementById("myMap"),
+            colors: {
+                land: {
+                    fill: 'green',
+                    stroke: 'black'
+                },
+                water {
+               	    fill: 'blue'
+                }
+            }
+        });
 
 ## Local Development
 
