@@ -25,6 +25,7 @@ define([
     topojson,
     inherits
 ) {
+    'use strict';
 
     var STYLE_EL;
 
@@ -40,7 +41,7 @@ define([
      * @param [opts.colors] {Object} Specify colors for land, water, graticule, etc.
      */
     var MapView = function (opts) {
-        var opts = opts || {};
+        opts = opts || {};
         this._id = new Date().getTime();
         this._projectionType = opts.projection || 'mercator';
         this._projection = new d3.geo[this._projectionType]();
@@ -114,8 +115,9 @@ define([
         var maxMetricValue = 0;
 
         return function (dataPoint) {
+            var overlayView;
             if (! this.isCollectionPoint(dataPoint)) {
-                var overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
+                overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
                 return overlayView;
             }
             var collection = dataPoint.getCollection();
@@ -124,7 +126,7 @@ define([
             if (metricValue > maxMetricValue) {
                 maxMetricValue = metricValue;
             }
-            var overlayView = new SymbolView(dataPoint, {
+            overlayView = new SymbolView(dataPoint, {
                 mapContext: this._mapContext,
                 maxMetricValue: function () { return maxMetricValue; },
                 notifyStream: dataPoint.getCollection()
@@ -161,17 +163,11 @@ define([
     };
 
     MapView.prototype._drawMap = function () {
-        var width = this.$el.width(),
-            height = this.$el.height();
-
         // Country ids map to ISO 3166-1 code
         // (http://en.wikipedia.org/wiki/ISO_3166-1_numeric)
         var countries = topojson.feature(WorldJson, WorldJson.objects.countries).features;
         if (! this._includeAntarctica) {
             countries = countries.filter(function (feature) {
-                if (feature.id === 10) {
-                    delete feature;
-                }
                 return feature.id !== 10;
             });
         }
@@ -318,7 +314,7 @@ define([
             var path = d3.geo.path().projection(this._projection);
             var bboxFeature = this._getBoundingBoxFeature();
             var b = path.bounds(bboxFeature);
-            var s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+            var s = 0.95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
             var t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
 
             this._projection
