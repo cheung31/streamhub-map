@@ -1,0 +1,66 @@
+// Variables
+$mapBackgroundColor: #FFF;
+$mapLandColor: #333;
+$mapLandStroke: #DDD;
+
+// Overlays
+.hub-map-view {
+  .hub-list {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .hub-place {
+    stroke: none;
+    cursor: pointer;
+  }
+  .hub-place-notifier {
+    // fill: steelblue;
+    // stroke: none;
+  }
+  .night {
+    stroke: none;
+    fill: #333;
+    fill-opacity: .5;
+  }
+
+  // Map Land
+  .hub-map-land {
+    //fill: $mapLandColor;
+    //stroke: $mapLandStroke;
+    // stroke-width: 1px;
+  }
+
+  // Map Background / Water
+  .hub-map-svg,
+  .hub-map-bg,
+  .hub-map-water {
+    width: 100%;
+    height: 100%;
+    //fill: #888;
+  }
+  svg.hub-map {
+    position: absolute;
+    z-index: 1;
+  }
+
+  // Graticule
+  .hub-map-graticule {
+    //fill: none;
+    stroke: #ccc;
+    stroke-width: 0.5px;
+  }
+
+  .hub-map-info-window {
+    position: absolute;
+    z-index: 2;
+    border: 1px solid #AAA;
+    background: rgba(255, 255, 255, 0.9);
+    color: #FFF;
+    width: 100px;
+    height: 100px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+  }
+}

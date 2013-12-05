@@ -53,7 +53,7 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
             .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
             .attr("d", this._path.pointRadius(radius))
             .attr("class", "hub-place")
-            .attr('fill', 'red');
+            .attr('fill', 'rgba(15, 152, 236, 1)');
         this.notify();
 
         var self = this;
@@ -76,15 +76,23 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
         var self = this;
         var radius = this.getRadius();
         this.notifierEl.transition()
-            .each('end', function (datum, index) {
+            .each('start', function (datum, index) {
                 self.notifierEl
                     .attr('d', self._path.pointRadius(radius))
-                    .style('opacity', 1);
+                    .style('fill', 'steelblue')
+                    .style('opacity', 1)
             })
-            .duration(1000)
-            .attr('d', this._path.pointRadius(4*radius))
+            .duration(200)
+            .attr('d', this._path.pointRadius(2.7*radius))
+            .style('opacity', .25)
             .style('fill', 'steelblue')
-            .style('opacity', 0);
+        .transition()
+            .ease('cubic-out')
+            .duration(1800)
+            .attr('d', this._path.pointRadius(3*radius))
+            .style('opacity', 0)
+            .style('fill', 'steelblue')
+            ;
     };
 
     MarkerView.prototype.getRadius = function () {
