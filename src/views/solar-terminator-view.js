@@ -28,7 +28,7 @@ define([
             return;
         }
         this.el = this._svg.append("path")
-            .attr("class", "night")
+            .attr("class", "hub-map-night")
             .attr("d", this._path);
 
         this._animating = true;
