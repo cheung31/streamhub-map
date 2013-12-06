@@ -235,10 +235,12 @@ define([
         if (typeof color === 'string') {
             landElements
                 .attr("stroke", color)
+                .attr("stroke-width", "1px")
                 .attr("fill", color);
         } else if (typeof color === 'object') {
             landElements
                 .attr("stroke", color.stroke)
+                .attr("stroke-width", color.strokeWidth)
                 .attr("fill", color.fill);
         }
     };
