@@ -40,17 +40,15 @@
     <script>
     var require = Livefyre.require;
     require([
-        'streamhub-map',
         'streamhub-map/point',
-        'streamhub-map/collections/collection-point-transform',
+        'streamhub-map/collection/collection-map-view',
         'streamhub-map/views/solar-terminator-view',
         'streamhub-multiview',
         'streamhub-wall',
         'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections',
         'streamhub-sdk/jquery'
-    ], function (MapView,
-                 Point,
-                 CollectionPointTransform,
+    ], function (Point,
+                 CollectionMapView,
                  SolarTerminatorOverlayView,
                  MultiView,
                  WallView,
@@ -79,13 +77,6 @@
             multiView.switchTo(stream);
         });
 
-        var mapView = window.view = new MapView({
-            el: document.getElementById('mapview')
-            //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
-            //,boundingBox: [[], []] // Bounding box in degrees
-            ,mapCenter: { lat: 37.09024, lon: -95.712891 }
-        });
-
         var sfLatLon = { lat: 37.7749295, lon: -122.4194155 };
         var usaLatLon = { lat: 37.09024, lon: -95.712891 };
         var europeLatLon = { lat: 54.5259614, lon: 15.2551187 };
@@ -100,9 +91,6 @@
         var indiaCentroid = new Point(indiaLatLon);
         var indonesiaCentroid = new Point(indonesiaLatLon);
 
-        // The Overlay API
-        mapView.addOverlay(new SolarTerminatorOverlayView());
-
         // Collection to Location Mapping
         //TODO(ryanc): collectionId -> lat/lon or articleId -> lat/lon
         var collectionToLocation = {
@@ -113,14 +101,22 @@
             48089894: indiaLatLon,
             48103282: indonesiaLatLon
         };
-        var collectionPointTransform = new CollectionPointTransform(collectionToLocation);
+
+        var mapView = window.view = new CollectionMapView({
+            el: document.getElementById('mapview')
+            //,projection: 'orthographic' // For a list of supported projections: https://github.com/mbostock/d3/wiki/Geo-Projections
+            //,boundingBox: [[], []] // Bounding box in degrees
+            ,mapCenter: { lat: 37.09024, lon: -95.712891 }
+            ,collectionToLocation: collectionToLocation
+        });
+
+        // The Overlay API
+        mapView.addOverlay(new SolarTerminatorOverlayView());
 
         var hotCollectionsStream = new MockHotCollectionsStream({
             network: 'livefyre.com'
         });
-        hotCollectionsStream
-            .pipe(collectionPointTransform)
-            .pipe(mapView);
+        hotCollectionsStream.pipe(mapView);
     });
     </script>
 </body>
