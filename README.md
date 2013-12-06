@@ -43,13 +43,14 @@ Optionally, include some reasonable default CSS rules for StreamHub Content. Thi
         
 1. Create a ```ContentMapView```, passing the DOMElement to render it in (```el``` option).
 
-        var view = new CollectionMapView({
+        var view = new ContentMapView({
         	el: document.getElementById("myMap")
     	});
     
 1. Pipe the collection's content into the ```ContentMapView```
 
         collection.pipe(view);
+
 #### Visualizing Livefyre Hot Collections (```CollectionMapView```)
 
 1. Require streamhub-sdk and CollectionMapView
@@ -74,9 +75,23 @@ Optionally, include some reasonable default CSS rules for StreamHub Content. Thi
     
 1. Pipe the collection's content into the ```CollectionMapView```
 
+        var hotCollectionsStream = new MockHotCollectionsStream({
+            network: 'livefyre.com'
+        });
         hotCollections.pipe(view);
         
 ## Map Customization
+### Bounding box
+The visible region can be specified with  the ```boundingBox``` option. The bounding box is represented by the North-West and South-East Lat/Lon coordinates.
+
+        var view = new MapView({
+            el: document.getElementById("myMap"),
+            boundingBox: [
+                { lat: 49.32512199104001, lon: -126.5625 }, // NW
+                { lat: 24.686952411999155, lon: -65.830078125 } // SE
+            ]
+        });
+
 ### Land/Water colors
 
 The ```MapView``` constructor accepts the ```colors``` option.
