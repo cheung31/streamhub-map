@@ -4,7 +4,8 @@ requirejs.config({
     'streamhub-wall',
     'streamhub-multiview',
     'streamhub-map/views/solar-terminator-view',
-    'streamhub-map/collections/collection-point-transform',
+    'streamhub-map/collection/collection-map-view',
+    'streamhub-map/content/content-map-view',
     'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections',
     'json!streamhub-hot-collections-tests/mocks/clients/hot-collections-response.json'],
   paths: {

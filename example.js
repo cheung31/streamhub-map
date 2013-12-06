@@ -1,16 +1,9 @@
 define(function(require) {
-    var View = require('streamhub-map');
-    var CollectionPointTransform = require('streamhub-map/collections/collection-point-transform');
+    var View = require('streamhub-map/collection/collection-map-view');
     var SolarTerminatorOverlayView = require('streamhub-map/views/solar-terminator-view');
     var MockHotCollectionsStream = require('streamhub-hot-collections-tests/mocks/streams/mock-hot-collections');
 
     return function(el) {
-        var mapView = new View({
-            el: el
-        });
-
-        // The Overlay API
-        mapView.addOverlay(new SolarTerminatorOverlayView());
 
         var sfLatLon = { lat: 37.7749295, lon: -122.4194155 };
         var usaLatLon = { lat: 37.09024, lon: -95.712891 };
@@ -29,14 +22,18 @@ define(function(require) {
             48089894: indiaLatLon,
             48103282: indonesiaLatLon
         };
-        var collectionPointTransform = new CollectionPointTransform(collectionToLocation);
+        var mapView = new View({
+            el: el,
+            collectionToLocation: collectionToLocation
+        });
+
+        // The Overlay API
+        mapView.addOverlay(new SolarTerminatorOverlayView());
 
         var hotCollectionsStream = new MockHotCollectionsStream({
             network: 'livefyre.com'
         });
-        hotCollectionsStream
-            .pipe(collectionPointTransform)
-            .pipe(mapView);
+        hotCollectionsStream.pipe(mapView);
   
         return view;
     };
