@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/src/css/style.css">
     <link rel="stylesheet" type="text/css" href="../../lib/streamhub-sdk/src/css/style.css">
     <style>
         #controls { display: none; margin: 20px 0; }
@@ -114,7 +113,7 @@
         };
         var collectionPointTransform = new CollectionPointTransform(collectionToLocation);
 
-        var hotCollectionsStream = new MockHotCollectionsStream({
+        var hotCollectionsStream = window.hotCollectionsStream = new MockHotCollectionsStream({
             network: 'livefyre.com'
         });
         hotCollectionsStream
