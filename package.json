@@ -4,7 +4,7 @@
   "author": {
     "name": "cheung31"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "devDependencies": {
     "bower": "~1.0.0",
     "http-server": "*",
