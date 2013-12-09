@@ -35,6 +35,6 @@
     ]
   },
   "resolutions": {
-    "streamhub-sdk": "~v2.3.1"
+    "streamhub-sdk": "~v2.4.1"
   }
 }
