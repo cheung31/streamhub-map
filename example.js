@@ -11,11 +11,11 @@ define(function(require) {
         };
         var collection = new Collection(opts);
 
-        var mapView = new View({
+        var view = new View({
             el: el
         });
 
-        collection.pipe(mapView);
+        collection.pipe(view);
   
         return view;
     };
