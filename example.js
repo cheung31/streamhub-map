@@ -11,7 +11,7 @@ define(function(require) {
         };
         var collection = new Collection(opts);
 
-        var mapView = new ContentMapView({
+        var mapView = new View({
             el: el
         });
 
