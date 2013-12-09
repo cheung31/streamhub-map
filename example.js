@@ -1,7 +1,6 @@
 define(function(require) {
-    var View = require('streamhub-map/collection/collection-map-view');
+    var View = require('streamhub-map/content/content-map-view');
     var Collection = require('streamhub-sdk/collection');
-    var MockHotCollectionsStream = require('streamhub-hot-collections-tests/mocks/streams/mock-hot-collections');
 
     return function(el) {
         var opts = {
@@ -12,7 +11,7 @@ define(function(require) {
         };
         var collection = new Collection(opts);
 
-        var mapView = new View({
+        var mapView = new ContentMapView({
             el: el
         });
 
