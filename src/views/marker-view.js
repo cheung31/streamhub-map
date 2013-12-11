@@ -1,11 +1,10 @@
 define([
     'streamhub-map/point',
     'streamhub-map/views/overlay-view',
-    'streamhub-map/views/info-window-overlay-view',
     'inherits',
     'streamhub-sdk/jquery'
 ],
-function (Point, OverlayView, InfoWindowView, inherits, $) {
+function (Point, OverlayView, inherits, $) {
 
     var MarkerView = function (point, opts) {
         if (point === undefined || ! (point instanceof Point)) {
@@ -15,7 +14,6 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
         opts = opts || {};
 
         this._point = point;
-        this._defaultRadius = 10;
         this._notifyStream = opts.notifyStream;
         var self = this;
         if (this._notifyStream) {
@@ -40,28 +38,7 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
     };
     inherits(MarkerView, OverlayView);
 
-    MarkerView.prototype.render = function (radius) {
-        radius = radius || this._defaultRadius;
-
-        // Notifier
-        this.notifierEl = this._svg.append("path")
-            .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
-            .attr("d", this._path.pointRadius(radius))
-            .attr("class", "hub-place-notifier");
-        // Marker
-        this.el = this._svg.append("path")
-            .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
-            .attr("d", this._path.pointRadius(radius))
-            .attr("class", "hub-place")
-            .attr('fill', 'rgba(15, 152, 236, 1)');
-        this.notify();
-
-        var self = this;
-        this.el.on('click', function (datum, index) {
-            self.notify();
-            $(self.el[0][0]).trigger('focusDataPoint.hub', self._point);
-        });
-
+    MarkerView.prototype.render = function () {
         OverlayView.prototype.render.call(this);
     };
 
@@ -73,35 +50,7 @@ function (Point, OverlayView, InfoWindowView, inherits, $) {
     };
 
     MarkerView.prototype.notify = function () {
-        var self = this;
-        var radius = this.getRadius();
-        this.notifierEl.transition()
-            .each('start', function (datum, index) {
-                self.notifierEl
-                    .attr('d', self._path.pointRadius(radius))
-                    .style('fill', 'steelblue')
-                    .style('opacity', 1)
-            })
-            .duration(200)
-            .attr('d', this._path.pointRadius(2.7*radius))
-            .style('opacity', .25)
-            .style('fill', 'steelblue')
-        .transition()
-            .ease('cubic-out')
-            .duration(1800)
-            .attr('d', this._path.pointRadius(3*radius))
-            .style('opacity', 0)
-            .style('fill', 'steelblue')
-            ;
-    };
-
-    MarkerView.prototype.getRadius = function () {
-        return this._defaultRadius;
-    };
-
-    MarkerView.prototype.openInfoWindow = function () {
-        this._infoWindowView.render();
-        this._infoWindowView.position(this.el[0][0]);
+        return;
     };
 
     return MarkerView;
