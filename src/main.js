@@ -3,7 +3,7 @@ define([
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/overlay-factory',
     'streamhub-map/views/symbol-view',
-    'streamhub-sdk/views/list-view',
+    'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'json!streamhub-map/defaults.json',
     'json!streamhub-map-resources/world-50m.json',
@@ -16,7 +16,7 @@ define([
     OverlayView,
     OverlayViewFactory,
     SymbolView,
-    ListView,
+    ContentListView,
     CollectionToHeatMetric,
     DefaultsJson,
     WorldJson,
@@ -54,10 +54,10 @@ define([
         this._dataPoints = [];
         this.elId = this.elClass+'-'+this._id;
 
-        ListView.call(this, opts);
+        ContentListView.call(this, opts);
 
         this._overlayViewFactory = new OverlayViewFactory({
-            mapContext: this._mapContext
+            mapContext: this._createMapContext()
         });
 
         if (!STYLE_EL) {
@@ -78,7 +78,7 @@ define([
             self._draw();
         });
     };
-    inherits(MapView, ListView);
+    inherits(MapView, ContentListView);
 
     MapView.prototype.mapClassName = 'hub-map';
     MapView.prototype.mapOverlayLayerClassName = 'hub-map-overlays';
@@ -89,7 +89,7 @@ define([
     MapView.prototype.elClass = 'hub-map-view';
 
     MapView.prototype.setElement = function (el) {
-        ListView.prototype.setElement.call(this, el);
+        ContentListView.prototype.setElement.call(this, el);
         this.$el.addClass(this.elId);
     };
 
@@ -152,7 +152,8 @@ define([
         }
         return {
             path: this._getPathForProjection(),
-            svg: mapSvg
+            svg: mapSvg,
+            projection: this._projection
         };
     };
 
@@ -263,7 +264,9 @@ define([
     MapView.prototype._clearOverlays = function () {
         for (var i=0; i < this._overlayViews.length; i++) {
             var overlayView = this._overlayViews[i];
-            overlayView.destroy();
+            if (overlayView._rendered) {
+                overlayView.destroy();
+            }
         }
     };
 

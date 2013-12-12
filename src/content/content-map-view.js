@@ -20,5 +20,29 @@ function (MapView, ContentPoint, inherits) {
         MapView.prototype.add.call(this, contentPoint);
     };
 
+    ContentMapView.prototype.setElement = function (el) {
+        MapView.prototype.setElement.apply(this, arguments);
+
+        var self = this;
+        this.$el.on('focusDataPoint.hub', function (e, dataPoint) {
+            console.log(dataPoint);
+            self._displayDataPointDetails(dataPoint);
+        });
+    };
+
+    ContentMapView.prototype._displayDataPointDetails = function (dataPoint) {
+        var content = dataPoint.getContent();
+        var contentView = this.getContentView(content);
+        if (! this.modal) {
+            if (contentView &&
+                contentView.attachmentsView &&
+                typeof contentView.attachmentsView.focus === 'function') {
+                contentView.attachmentsView.focus(context.attachmentToFocus);
+            }
+            return;
+        }
+        this.modal.show(content, { attachment: content.attachments[0] });
+    };
+
     return ContentMapView;
 });
