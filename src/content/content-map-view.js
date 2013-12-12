@@ -25,7 +25,6 @@ function (MapView, ContentPoint, inherits) {
 
         var self = this;
         this.$el.on('focusDataPoint.hub', function (e, dataPoint) {
-            console.log(dataPoint);
             self._displayDataPointDetails(dataPoint);
         });
     };
