@@ -32,6 +32,7 @@ function (Point, OverlayView, inherits, $) {
         if (opts.mapContext) {
             this._path = opts.mapContext.path;
             this._svg = opts.mapContext.svg;
+            this._projection = opts.mapContext.projection;
         }
 
         OverlayView.call(this, opts);
@@ -43,8 +44,9 @@ function (Point, OverlayView, inherits, $) {
     };
 
     MarkerView.prototype.destroy = function () {
-        $(this.notifierEl[0][0]).remove();
-        $(this.el[0][0]).remove();
+        if (this.notifierEl) {
+            $(this.notifierEl[0][0]).remove();
+        }
 
         OverlayView.prototype.destroy.call(this);
     };

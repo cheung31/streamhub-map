@@ -57,7 +57,7 @@ define([
         ListView.call(this, opts);
 
         this._overlayViewFactory = new OverlayViewFactory({
-            mapContext: this._mapContext
+            mapContext: this._createMapContext()
         });
 
         if (!STYLE_EL) {
@@ -152,7 +152,8 @@ define([
         }
         return {
             path: this._getPathForProjection(),
-            svg: mapSvg
+            svg: mapSvg,
+            projection: this._projection
         };
     };
 
@@ -263,7 +264,9 @@ define([
     MapView.prototype._clearOverlays = function () {
         for (var i=0; i < this._overlayViews.length; i++) {
             var overlayView = this._overlayViews[i];
-            overlayView.destroy();
+            if (overlayView._rendered) {
+                overlayView.destroy();
+            }
         }
     };
 
