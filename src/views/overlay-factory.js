@@ -21,7 +21,7 @@ function (
     };
 
     OverlayViewFactory.prototype.overlayRegistry = [
-        { type: Point, view: ContentMarkerView },
+        //{ type: Point, view: ContentMarkerView },
         { type: ContentPoint, view: ContentMarkerView },
         { type: CollectionPoint, view: DotMarkerView }
     ];
