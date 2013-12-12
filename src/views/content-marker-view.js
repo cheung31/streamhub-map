@@ -42,6 +42,7 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
         var self = this;
         this.el = this._svg.append('g')
            .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
+           .attr('class', 'hub-map-content-marker')
            .attr("transform", function (d) {
                //TODO(ryanc): Remove magic number 44
                var translation = self._projection(d.coordinates);
