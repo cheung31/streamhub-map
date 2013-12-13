@@ -5,7 +5,7 @@
     "./src/main.js"
   ],
   "dependencies": {
-    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#b1c5a2eda0eefb3d33771367a71863ca1ba1889f",
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#1c32e82b0b3eb3f69044fc64524b48a09f7d36b7",
     "streamhub-hot-collections": "git://github.com/Livefyre/streamhub-hot-collections.git",
     "jquery": "~1.10.1",
     "hogan": "latest",
