@@ -36,6 +36,11 @@ function (MapView, ContentListView, ContentPoint, inherits) {
             return;
         }
 
+        //TODO(ryanc): Toggle class instead
+        //$('body').css({
+        //    'overflow': 'hidden',
+        //    'position': 'fixed'
+        //});
         this.modal.show(content);
     };
 
