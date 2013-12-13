@@ -1,8 +1,9 @@
 define([
     'streamhub-map',
+    'streamhub-sdk/content/views/content-list-view',
     'streamhub-map/content/content-point',
     'inherits'],
-function (MapView, ContentPoint, inherits) {
+function (MapView, ContentListView, ContentPoint, inherits) {
 
     var ContentMapView = function (opts) {
         MapView.call(this, opts);
@@ -31,16 +32,11 @@ function (MapView, ContentPoint, inherits) {
 
     ContentMapView.prototype._displayDataPointDetails = function (dataPoint) {
         var content = dataPoint.getContent();
-        var contentView = this.getContentView(content);
         if (! this.modal) {
-            if (contentView &&
-                contentView.attachmentsView &&
-                typeof contentView.attachmentsView.focus === 'function') {
-                contentView.attachmentsView.focus(context.attachmentToFocus);
-            }
             return;
         }
-        this.modal.show(content, { attachment: content.attachments[0] });
+
+        this.modal.show(content);
     };
 
     return ContentMapView;
