@@ -44,7 +44,13 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
                translation[1] = translation[1] - 44;
                return "translate(" + translation + ")";
            });
-        this.el.append('use').attr('xlink:href', '#hub-map-content-marker');
+        this.el.append('use')
+            .attr('xlink:href', '#hub-map-content-marker')
+            .attr('y', '-40');
+            // .transition()
+            //     .ease('bounce')
+            //     .attr('y', '0')
+            //     .duration(500);
 
         // Update marker image
         //TODO(ryanc): Remove magic number 36
@@ -54,8 +60,21 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
                 .attr('xlink:href', markerImage)
                 .attr('width', '36')
                 .attr('height', '36')
-                .attr('transform', 'translate(4,4)');
+                // .attr('x', '4')
+                // .attr('y', '4')
+                .attr('x', '4')
+                .attr('y', '-36');
+                // .transition()
+                //     .ease('bounce')
+                //     .attr('y', '4')
+                //     .duration(500);
         }
+        function foo() {
+            $('.hub-map-content-marker').attr('class', 'hub-map-content-marker in');
+        };
+        //foo();
+        setTimeout(foo, 0);
+        
 
         this.notify();
 
