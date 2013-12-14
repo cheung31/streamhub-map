@@ -12,13 +12,11 @@
     }
     .hub-place,
     .hub-map-content-marker.in {
-        &> *  {
-            // transition: all 0.2s ease-in-out;
+        &> * {
             cursor: pointer;
             -webkit-backface-visibility: hidden;
-            -webkit-transform: rotate3d(1, 1, 1, 0deg);
             -webkit-transform: translateY(40px);
-            transition: all 0.2s cubic-bezier(0, 2, 0.1, -0.25);
+            transition: all 0.3s cubic-bezier(0, 2, 0.1, -0.25);
         }
     }
     .hub-place {
