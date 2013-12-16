@@ -204,7 +204,7 @@ function (
 
                 expect($('.hub-map-land').attr('fill')).toBe(DefaultsJson.colors.land.fill);
                 expect($('.hub-map-land').attr('stroke')).toBe(DefaultsJson.colors.land.stroke);
-                expect($('.hub-map-water').css('background-color')).toBe('rgb(136, 136, 136)'); // #888
+                expect($('.hub-map-water').css('background-color')).toBe('rgb(165, 195, 202)');
             });
         });
 

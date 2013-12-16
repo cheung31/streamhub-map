@@ -23,10 +23,10 @@ function (
     };
 
     OverlayViewFactory.prototype.overlayRegistry = [
-        //{ type: Point, view: ContentMarkerView },
         { type: Array, view: ClusteredContentMarkerView },
         { type: ContentPoint, view: ContentMarkerView },
-        { type: CollectionPoint, view: DotMarkerView }
+        { type: CollectionPoint, view: DotMarkerView },
+        { type: Point, view: ContentMarkerView }
     ];
 
     OverlayViewFactory.prototype._getViewTypeForPoint = function (point) {
