@@ -32,12 +32,6 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
     inherits(ContentMarkerView, MarkerView);
 
     ContentMarkerView.prototype.render = function () {
-        //this.notifierEl = this._svg.append("path")
-        //    .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
-        //    .attr("d", this._path)
-        //    .attr("class", "hub-place-notifier")
-        //    .attr('fill', 'red');
-
         // Marker
         var self = this;
         this.el = this._svg.append('g')
@@ -68,7 +62,7 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
         var self = this;
         this.el.on('click', function (datum, index) {
             self.notify();
-            $(self.el[0][0]).trigger('focusDataPoint.hub', self._point);
+            $(self.el[0][0]).trigger('focusDataPoint.hub', { data: self._point.getContent() });
         });
 
         MarkerView.prototype.render.call(this);

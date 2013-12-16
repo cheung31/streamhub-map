@@ -78,7 +78,11 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
         var self = this;
         this.el.on('click', function (datum, index) {
             self.notify();
-            $(self.el[0][0]).trigger('focusDataPoint.hub', self._point);
+            var contentItems = [];
+            for (var i=0; i < self._cluster.length; i++) {
+                contentItems.push(self._cluster[i].getContent());
+            }
+            $(self.el[0][0]).trigger('focusDataPoint.hub', { data: contentItems });
         });
 
         MarkerView.prototype.render.call(this);

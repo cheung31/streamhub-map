@@ -1,6 +1,6 @@
 define([
     'streamhub-sdk/jquery',
-    'streamhub-sdk/modal/views/content-view-modal',
+    'streamhub-sdk/modal/views/content-list-view-modal',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/overlay-factory',
     'streamhub-map/views/symbol-view',
@@ -14,7 +14,7 @@ define([
     'inherits'
 ], function (
     $,
-    ContentViewModal,
+    ContentListViewModal,
     OverlayView,
     OverlayViewFactory,
     SymbolView,
@@ -44,7 +44,7 @@ define([
      */
     var MapView = function (opts) {
         opts = opts || {};
-        opts.modal = opts.modal || new ContentViewModal();
+        opts.modal = opts.modal || new ContentListViewModal();
 
         this._id = new Date().getTime();
         this._projectionType = opts.projection || 'mercator';
@@ -187,7 +187,6 @@ define([
         this._mapContext = this._createMapContext();
         this._drawMap();
         var clusteredPoints = this.cluster(this._dataPoints, 75);
-        if (clusteredPoints.length == 5) debugger;
         for (var i=0; i < clusteredPoints.length; i++) {
             this.addOverlay(this._createOverlayView(clusteredPoints[i]));
         }

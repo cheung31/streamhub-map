@@ -25,13 +25,12 @@ function (MapView, ContentListView, ContentPoint, inherits) {
         MapView.prototype.setElement.apply(this, arguments);
 
         var self = this;
-        this.$el.on('focusDataPoint.hub', function (e, dataPoint) {
-            self._displayDataPointDetails(dataPoint);
+        this.$el.on('focusDataPoint.hub', function (e, focusContext) {
+            self._displayDataPointDetails(focusContext.data);
         });
     };
 
-    ContentMapView.prototype._displayDataPointDetails = function (dataPoint) {
-        var content = dataPoint.getContent();
+    ContentMapView.prototype._displayDataPointDetails = function (data) {
         if (! this.modal) {
             return;
         }
@@ -41,7 +40,7 @@ function (MapView, ContentListView, ContentPoint, inherits) {
         //    'overflow': 'hidden',
         //    'position': 'fixed'
         //});
-        this.modal.show(content);
+        this.modal.show(data);
     };
 
     return ContentMapView;
