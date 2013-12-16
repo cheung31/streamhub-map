@@ -63,8 +63,15 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
                 .attr('height', '36')
                 .attr('transform', 'translate(9,10)');
             this.el.append('use').attr('xlink:href', '#hub-map-clustered-content-marker-badge');
-            this.el.append('text').attr('xlink:href', '#hub-map-clustered-content-marker-count');
         }
+
+        // Add badge count
+        this.el.append('text')
+            .text(this._cluster.length)
+            .attr('stroke', 'white')
+            .attr('font-size', '12')
+            .attr('font-family', 'Helvetica')
+            .attr('transform', 'translate(38,12)');
 
         this.notify();
 
