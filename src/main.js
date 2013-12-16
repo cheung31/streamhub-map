@@ -415,7 +415,6 @@ define([
             }
             clustered.push(cluster);
         }
-        console.log(clustered);
 
         return clustered;
     };
