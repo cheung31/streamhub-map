@@ -33,12 +33,6 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
     inherits(ClusteredContentMarkerView, MarkerView);
 
     ClusteredContentMarkerView.prototype.render = function () {
-        //this.notifierEl = this._svg.append("path")
-        //    .datum({ type: 'Point', 'coordinates': this._point.getCoordinates() })
-        //    .attr("d", this._path)
-        //    .attr("class", "hub-place-notifier")
-        //    .attr('fill', 'red');
-
         // Marker
         var self = this;
         this.el = this._svg.append('g')
@@ -95,7 +89,7 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
         var content = this._point.getContent();
         if (content.attachments && content.attachments[0]) {
             imageUrl = content.attachments[0].thumbnail_url;
-        } else if (content.author && content.author.avatr) {
+        } else if (content.author && content.author.avatar) {
             imageUrl = content.author.avatar;
         }
 

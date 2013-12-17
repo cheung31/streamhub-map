@@ -74,7 +74,7 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
         var content = this._point.getContent();
         if (content.attachments && content.attachments[0]) {
             imageUrl = content.attachments[0].thumbnail_url;
-        } else if (content.author && content.author.avatr) {
+        } else if (content.author && content.author.avatar) {
             imageUrl = content.author.avatar;
         }
 
