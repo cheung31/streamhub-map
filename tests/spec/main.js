@@ -361,6 +361,10 @@ function (
                 };
             });
 
+            afterEach(function () {
+                $('.hub-modal').remove();
+            });
+
             it ('displays the ContentView of the clicked ContentMarkerView', function () {
                 var view = new ContentMapView({
                     el: $('#hub-map-view')
@@ -371,6 +375,53 @@ function (
 
                 expect($('body > .hub-modals')).toBe('div');
                 expect($('body > .hub-modals')).toContain('.streamhub-content-list-view');
+                expect($('body > .hub-modals .hub-content-container').length).toBe(1);
+            });
+        });
+    });
+
+    describe('ClusteredContentMarkerView', function () {
+
+        describe('can add many Content instances', function () {
+
+            var content1 = new Content();
+            var content2 = new Content();
+            var content3 = new Content();
+            beforeEach(function () {
+                setFixtures('<div id="hub-map-view"></div>');
+
+                content1.id = 1;
+                content1._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+                content2.id = 2;
+                content2._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+                content3.id = 1;
+                content3._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+            });
+
+            afterEach(function () {
+                $('.hub-modal').remove();
+            });
+
+
+            it ('draws an appropriate ClusteredContentMarkerView on the map', function () {
+                var view = new ContentMapView({
+                    el: $('#hub-map-view')
+                });
+                view.add(content1);
+                view.add(content2);
+                view.add(content3);
+
+                $('.hub-map-content-marker').trigger('focusDataPoint.hub', { data: [content1, content2, content3] });
+
+                expect($('body > .hub-modals')).toBe('div');
+                expect($('body > .hub-modals')).toContain('.streamhub-content-list-view');
+                expect($('body > .hub-modals .hub-content-container').length).toBe(3);
             });
         });
     });
