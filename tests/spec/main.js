@@ -363,6 +363,7 @@ function (
 
             afterEach(function () {
                 $('.hub-modal').remove();
+                $('svg').remove();
             });
 
             it ('displays the ContentView of the clicked ContentMarkerView', function () {
@@ -406,6 +407,7 @@ function (
 
             afterEach(function () {
                 $('.hub-modal').remove();
+                $('svg').remove();
             });
 
 
