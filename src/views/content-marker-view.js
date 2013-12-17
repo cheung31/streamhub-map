@@ -71,10 +71,11 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
     ContentMarkerView.prototype._getMarkerImageFromContent = function () {
         var imageUrl;
 
-        if (this._point._content.attachments) {
-            imageUrl = this._point._content.attachments[0].thumbnail_url;
-        } else {
-            imageUrl = this._point._content.author.avatar;
+        var content = this._point.getContent();
+        if (content.attachments && content.attachments[0]) {
+            imageUrl = content.attachments[0].thumbnail_url;
+        } else if (content.author && content.author.avatr) {
+            imageUrl = content.author.avatar;
         }
 
         return imageUrl;
