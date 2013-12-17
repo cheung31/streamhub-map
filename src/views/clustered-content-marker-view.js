@@ -68,7 +68,8 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
         // Add badge count
         this.el.append('text')
             .text(this._cluster.length)
-            .attr('stroke', 'white')
+            .attr('fill', 'white')
+            .attr('stroke-width', '0')
             .attr('font-size', '12')
             .attr('font-family', 'Helvetica')
             .attr('transform', 'translate(38,12)');

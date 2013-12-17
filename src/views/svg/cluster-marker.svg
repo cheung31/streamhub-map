@@ -23,7 +23,7 @@
         <rect id="path-8" x="0" y="0" width="20" height="14" rx="7"/>
         <g id="hub-map-clustered-content-marker-badge" transform="translate(32.000000, 1.000000)">
             <g id="Rectangle-339">
-                <use fill="#0F98EC" fill-rule="evenodd" sketch:type="MSShapeGroup" xlink:href="#path-8"/>
+                <use fill="#0F98EC" stroke-width="0" fill-rule="evenodd" sketch:type="MSShapeGroup" xlink:href="#path-8"/>
                 <use fill="none" xlink:href="#path-8"/>
             </g>
         </g>
