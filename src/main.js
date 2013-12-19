@@ -7,9 +7,9 @@ define([
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'json!streamhub-map/defaults.json',
-    'json!streamhub-map-resources/world-50m.json',
     'text!streamhub-map/css/style.css',
     'd3',
+    'd3-plugins-geo-tile',
     'topojson',
     'inherits'
 ], function (
@@ -21,9 +21,9 @@ define([
     ContentListView,
     CollectionToHeatMetric,
     DefaultsJson,
-    WorldJson,
     MapViewCss,
     d3,
+    d3tile,
     topojson,
     inherits
 ) {
@@ -61,11 +61,15 @@ define([
         this._dataPoints = [];
         this.elId = this.elClass+'-'+this._id;
 
+        this._tile = d3.geo.tile();
+        this._tileProjection = new d3.geo[this._projectionType]();
+        this._tilePath = d3.geo.path().projection(this._tileProjection);
+
         ContentListView.call(this, opts);
 
-        this._overlayViewFactory = new OverlayViewFactory({
-            mapContext: this._createMapContext()
-        });
+        //this._overlayViewFactory = new OverlayViewFactory({
+        //    mapContext: this._createMapContext()
+        //});
 
         if (!STYLE_EL) {
             $('<style id="'+this.elId+'-style"></style>')
@@ -112,6 +116,12 @@ define([
         this.$el.on('contentMarkerImageError.hub', function (e, dataPoint) {
             self._removeDataPoint(dataPoint);
         });
+    };
+
+    MapView.prototype._getMapDimensions = function () {
+        this._width = this.$el.width();
+        this._height = this.$el.height();
+        return { width: this._width, height: this._height };
     };
 
     MapView.prototype._update = function () {
@@ -211,123 +221,85 @@ define([
     };
 
     MapView.prototype._draw = function () {
-
-        // Check if the map has already been drawn
-        if (!this._mapEl) {
-            this._drawMap();
-        }
-
-        if (this._cluster) {
-            var clusteredPoints = this.cluster(this._dataPoints, this._clusterPixelDistance);
-            for (var i=0; i < clusteredPoints.length; i++) {
-                this.addOverlay(this._createOverlayView(clusteredPoints[i]));
-            }
-        } else {
-            for (var i=0; i < this._dataPoints.length; i++) {
-                this.addOverlay(this._createOverlayView(this._dataPoints[i]));
-            }
-        }
-        this._drawOverlays();
+        //this._mapContext = this._createMapContext();
+        this._drawMap();
+        //var clusteredPoints = this.cluster(this._dataPoints, 75);
+        //for (var i=0; i < clusteredPoints.length; i++) {
+        //    this.addOverlay(this._createOverlayView(clusteredPoints[i]));
+        //}
+        //this._drawOverlays();
     };
 
     MapView.prototype._drawMap = function () {
-        this._mapContext = this._createMapContext();
+        var mapDimensions = this._getMapDimensions();
+        var width = mapDimensions.width;
+        var height = mapDimensions.height;
 
-        // Country ids map to ISO 3166-1 code
-        // (http://en.wikipedia.org/wiki/ISO_3166-1_numeric)
-        var countries = topojson.feature(WorldJson, WorldJson.objects.countries).features;
-        if (! this._includeAntarctica) {
-            countries = countries.filter(function (feature) {
-                return feature.id !== 10;
+        this._tilePath = this._getPathForProjection();
+
+        this._tile = d3.geo.tile().size([width, height]);
+
+        this._attachZoomHandler();
+
+        // mapEl
+        this._mapEl = d3.select(this.listElSelector).append('div')
+            .attr('class', 'map')
+            .style('width', this._width + 'px')
+            .style('height', this._height + 'px')
+            .call(this._zoom);
+
+        this._tileLayer = this._mapEl.append('div').attr('class', 'layer');
+
+        this._handleZoom();
+    };
+
+    MapView.prototype._attachZoomHandler = function () {
+        this._zoom = d3.behavior.zoom()
+            .scale(this._projection.scale() * 2 * Math.PI)
+            .scaleExtent([ 1 << 0, 1 << 23 ])
+            .on('zoom', this._handleZoom);
+    };
+
+    MapView.prototype._handleZoom = function () {
+        var tiles = this._tile
+            .scale(this._zoom.scale())
+            .translate(this._zoom.translate())
+            ();
+
+        this._projection
+            .scale(this._zoom.scale() / 2 / Math.PI)
+            .translate(this._zoom.translate());
+
+        var prefix = '-webkit-';
+        var image = this._tileLayer
+            .style(prefix + 'transform', this._getMatrix3d(tiles.scale, tiles.translate))
+            .selectAll('.tile')
+            .data(tiles, function (d) { return d; });
+
+        image.exit()
+            .remove();
+
+        var self = this;
+        image.enter().append('svg')
+            .attr('class', 'tile')
+            .style("left", function (d) { return d[0] * 256 + "px"; })
+            .style("top", function (d) { return d[1] * 256 + "px"; })
+            .each(function (d) {
+                var svg = d3.select(this);
+                this._xhr = d3.json("http://" + ["a", "b", "c"][(d[0] * 31 + d[1]) % 3] + ".tile.openstreetmap.us/vectiles-water-areas/" + d[2] + "/" + d[0] + "/" + d[1] + ".json", function(error, json) {
+                    var k = Math.pow(2, d[2]) * 256; // size of the world in pixels
+
+                    self._tilePath.projection()
+                        .translate([k / 2 - d[0] * 256, k / 2 - d[1] * 256]) // [0°,0°] in pixels
+                        .scale(k / 2 / Math.PI);
+
+                    svg.selectAll("path")
+                        .data(json.features.sort(function(a, b) { return a.properties.sort_key - b.properties.sort_key; }))
+                      .enter().append("path")
+                        .attr("class", function(d) { return d.properties.kind; })
+                        .attr("d", self._tilePath);
+                });
             });
-        }
-
-        // Append the SVG element with which the map will be drawn on.
-        if (this._mapEl) {
-            this._mapEl.remove();
-        }
-        if (this._mapOverlayEl) {
-            this._mapEl = this._mapContext.svg
-                .insert('svg:g', '.'+this.mapOverlayLayerClassName)
-                .attr('class', this.mapClassName);
-        } else {
-            this._mapEl = this._mapContext.svg.append('svg:g')
-                .attr('class', this.mapClassName);
-        }
-
-        // Draw the path of the map in SVG.
-        var landElements = this._mapEl.selectAll('.'+this.mapLandClassName).data(countries);
-        landElements
-           .enter()
-           .insert("path")
-           .attr("class", this.mapLandClassName)
-           .attr("d", this._mapContext.path);
-        if (this._colors) {
-            if (this._colors.land) {
-                this._setLandColor(this._colors.land);
-            }
-            if (this._colors.water) {
-                this._setWaterColor(this._colors.water);
-            }
-        } else {
-            this._setLandColor(DefaultsJson.colors.land);
-            this._setWaterColor(DefaultsJson.colors.water);
-        }
-
-        // Draw graticule
-        if (this._graticule) {
-            var graticule = d3.geo.graticule();
-
-            // Draw the path for the graticule
-            this._mapEl.append("path")
-                .attr("class", "hub-map-graticule")
-                .datum(graticule)
-                .attr("d", this._mapContext.path);
-
-            // Draw the path for the bounding outline of the graticule
-            this._mapEl.append("path")
-                .datum(graticule.outline)
-                .attr("class", this.mapLandClassName)
-                .attr("d", this._mapContext.path);
-        }
-    };
-
-    MapView.prototype._getLandElements = function () {
-        return this._mapEl.selectAll('.'+this.mapLandClassName);
-    };
-
-    MapView.prototype._getWaterElements = function () {
-        return this._mapContext.svg;
-    };
-
-    MapView.prototype._setLandColor = function (color) {
-        var landElements = this._getLandElements();
-        if (typeof color === 'string') {
-            landElements
-                .attr("stroke", color)
-                .attr("stroke-width", "1px")
-                .attr("fill", color);
-        } else if (typeof color === 'object') {
-            landElements
-                .attr("stroke", color.stroke)
-                .attr("stroke-width", color.strokeWidth)
-                .attr("fill", color.fill);
-        }
-    };
-
-    MapView.prototype._setWaterColor = function (color) {
-        var waterElements = this._getWaterElements();
-        if (typeof color === 'string') {
-            waterElements
-                .attr("stroke", color)
-                .attr("fill", color)
-                .style("background-color", color);
-        } else if (typeof color === 'object') {
-            waterElements
-                .attr("stroke", color.stroke)
-                .attr("fill", color.fill)
-                .style("background-color", color.fill);
-        }
     };
 
     MapView.prototype._clearOverlays = function () {
@@ -471,6 +443,11 @@ define([
         };
 
         return distance;
+    };
+
+    MapView.prototype._getMatrix3d = function (scale, translate) {
+        var k = scale / 256, r = scale % 1 ? Number : Math.round;
+        return "matrix3d(" + [k, 0, 0, 0, 0, k, 0, 0, 0, 0, k, 0, r(translate[0] * scale), r(translate[1] * scale), 0, 1 ] + ")";
     };
 
     return MapView;

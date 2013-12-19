@@ -16,6 +16,7 @@
     "event-emitter": "git://github.com/Livefyre/event-emitter.git",
     "inherits": "git://github.com/Livefyre/inherits.git",
     "d3": "*",
+    "d3-plugins": "*",
     "colorbrewer": "*",
     "topojson": "*"
   },

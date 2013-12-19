@@ -70,6 +70,10 @@ requirejs.config({
     name: "view",
     location: "lib/view/src",
     main: "view"
+  },{
+    name: 'd3-plugins-geo-tile',
+    location: 'lib/d3-plugins/geo/tile/',
+    main: 'tile.js'
   }],
   shim: {
     jasmine: {
@@ -87,6 +91,10 @@ requirejs.config({
     },
     d3: {
         exports: 'd3'
+    },
+    'd3-plugins-geo-tile': {
+        deps: ['d3'],
+        exports: 'd3.geo.tile'
     },
     colorbrewer: {
         exports: 'colorbrewer'

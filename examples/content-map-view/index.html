@@ -16,6 +16,32 @@
             width: 100%;
             height: 100%;
         }
+.map {
+  position: relative;
+  overflow: hidden;
+}
+
+.layer {
+  position: absolute;
+}
+
+.tile {
+  position: absolute;
+  width: 256px;
+  height: 256px;
+}
+
+.tile path {
+  fill: none;
+  stroke: #000;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.tile .major_road { stroke: #776; }
+.tile .minor_road { stroke: #ccb; }
+.tile .highway { stroke: #f39; stroke-width: 1.5px; }
+.tile .rail { stroke: #7de; }
     </style>
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
