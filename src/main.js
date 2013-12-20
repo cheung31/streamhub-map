@@ -186,7 +186,7 @@ define([
     MapView.prototype._draw = function () {
         this._mapContext = this._createMapContext();
         this._drawMap();
-        var clusteredPoints = this.cluster(this._dataPoints, 75);
+        var clusteredPoints = this.cluster(this._dataPoints, 50);
         for (var i=0; i < clusteredPoints.length; i++) {
             this.addOverlay(this._createOverlayView(clusteredPoints[i]));
         }
@@ -419,9 +419,12 @@ define([
     };
 
     MapView.prototype._pixelDistance = function () {
+        var width = this.$el.width(),
+            height = this.$el.height();
+
         var p0, p1;
-        p0 = this._projection.invert([0, 0]);
-        p1 = this._projection.invert([1, 1]);
+        p0 = this._projection.invert([width / 2, height / 2]);
+        p1 = this._projection.invert([(width / 2) + 1, (height / 2) + 1]);
 
         var distance = {
             lat: Math.abs(p0[1] - p1[1]),
