@@ -1,5 +1,6 @@
 define([
     'streamhub-map',
+    'streamhub-map/content/content-map-view',
     'streamhub-map/point',
     'streamhub-map/collection/collection-point',
     'streamhub-map/views/overlay-factory',
@@ -7,12 +8,14 @@ define([
     'streamhub-map/views/marker-view',
     'json!streamhub-map/defaults.json',
     'streamhub-sdk/collection',
+    'streamhub-sdk/content',
     'streamhub-sdk/jquery',
     'jasmine',
     'jasmine-jquery'
 ],
 function (
     MapView,
+    ContentMapView,
     Point,
     CollectionPoint,
     OverlayViewFactory,
@@ -20,6 +23,7 @@ function (
     MarkerView,
     DefaultsJson,
     Collection,
+    Content,
     $
 ) {
     'use strict';
@@ -204,7 +208,7 @@ function (
 
                 expect($('.hub-map-land').attr('fill')).toBe(DefaultsJson.colors.land.fill);
                 expect($('.hub-map-land').attr('stroke')).toBe(DefaultsJson.colors.land.stroke);
-                expect($('.hub-map-water').css('background-color')).toBe('rgb(136, 136, 136)'); // #888
+                expect($('.hub-map-water').css('background-color')).toBe('rgb(165, 195, 202)');
             });
         });
 
@@ -302,4 +306,125 @@ function (
         });
     });
 
+    describe('A ContentMapView', function () {
+
+        describe('can be constructed', function () {
+            it ("with no options", function () {
+                var view = new ContentMapView();
+                expect(view).toBeDefined();
+            });
+            it ("with empty options", function () {
+                var view = new ContentMapView({});
+                expect(view).toBeDefined();
+            });
+            it ("with an el", function () {
+                setFixtures('<div id="hub-map-view"></div>');
+                var view = new MapView({
+                    el: $('#hub-map-view')
+                });
+                expect(view).toBeDefined();
+            });
+        });
+
+        describe('can add a Content instance', function () {
+
+            var content;
+            beforeEach(function () {
+                setFixtures('<div id="hub-map-view"></div>');
+                content = new Content();
+                content._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+            });
+
+            it ('draws an appropriate ContentViewMarker on the map', function () {
+                var view = new ContentMapView({
+                    el: $('#hub-map-view')
+                });
+
+                view.add(content);
+                expect($('#hub-map-view')).toContain('.hub-map-content-marker');
+            });
+        });
+    });
+
+    describe('ContentMarkerView', function () {
+
+        describe('opens a modal', function () {
+
+            var content;
+            beforeEach(function () {
+                setFixtures('<div id="hub-map-view"></div>');
+                content = new Content();
+                content._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+            });
+
+            afterEach(function () {
+                $('.hub-modal').remove();
+                $('svg').remove();
+            });
+
+            it ('displays the ContentView of the clicked ContentMarkerView', function () {
+                var view = new ContentMapView({
+                    el: $('#hub-map-view')
+                });
+                view.add(content);
+
+                $('.hub-map-content-marker').trigger('focusDataPoint.hub', { data: content });
+
+                expect($('body > .hub-modals')).toBe('div');
+                expect($('body > .hub-modals')).toContain('.streamhub-content-list-view');
+                expect($('body > .hub-modals .hub-content-container').length).toBe(1);
+            });
+        });
+    });
+
+    describe('ClusteredContentMarkerView', function () {
+
+        describe('can add many Content instances', function () {
+
+            var content1 = new Content();
+            var content2 = new Content();
+            var content3 = new Content();
+            beforeEach(function () {
+                setFixtures('<div id="hub-map-view"></div>');
+
+                content1.id = 1;
+                content1._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+                content2.id = 2;
+                content2._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+                content3.id = 1;
+                content3._annotations = { 
+                    geocode: { latitude: 37.77, longitude: -122.42 }
+                };
+            });
+
+            afterEach(function () {
+                $('.hub-modal').remove();
+                $('svg').remove();
+            });
+
+
+            it ('draws an appropriate ClusteredContentMarkerView on the map', function () {
+                var view = new ContentMapView({
+                    el: $('#hub-map-view')
+                });
+                view.add(content1);
+                view.add(content2);
+                view.add(content3);
+
+                $('.hub-map-content-marker').trigger('focusDataPoint.hub', { data: [content1, content2, content3] });
+
+                expect($('body > .hub-modals')).toBe('div');
+                expect($('body > .hub-modals')).toContain('.streamhub-content-list-view');
+                expect($('body > .hub-modals .hub-content-container').length).toBe(3);
+            });
+        });
+    });
 });

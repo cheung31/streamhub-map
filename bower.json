@@ -1,11 +1,11 @@
 {
   "name": "streamhub-map",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "main": [
     "./src/main.js"
   ],
   "dependencies": {
-    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~v2.4.0",
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~v2.5.0",
     "streamhub-hot-collections": "git://github.com/Livefyre/streamhub-hot-collections.git",
     "jquery": "~1.10.1",
     "hogan": "latest",
@@ -35,6 +35,6 @@
     ]
   },
   "resolutions": {
-    "streamhub-sdk": "~v2.4.1"
+    "streamhub-sdk": "~v2.5.0"
   }
 }

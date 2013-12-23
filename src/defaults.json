@@ -1,9 +1,9 @@
 {
     "colors": {
         "land": {
-            "fill": "#F7F8F6",
+            "fill": "#f7efe6",
             "stroke": "#DDDDDD"
         },
-        "water": "#FFFFFF"
+        "water": "#a5c3ca"
     }
 }
