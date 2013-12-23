@@ -1,5 +1,6 @@
 ({
   mainConfigFile: './requirejs.conf.js',
+  cjsTranslate: true,
   paths: {
     jquery: 'lib/jquery/jquery.min',
     almond: 'lib/almond/almond'
