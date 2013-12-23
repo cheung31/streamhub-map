@@ -1,19 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>StreamHub App Test Example</title>
+    <title>streamhub-map tests</title>
     <link rel="stylesheet" type="text/css" href="../lib/jasmine/lib/jasmine-core/jasmine.css">
 </head>
-<body>
-<!-- Scripts -->
-<script type="text/javascript">
-    var require = { urlArgs : "cb=" + Date.now() };
-</script>
-<script src="../lib/cajon/cajon.js"></script>
-<script src="../lib/requirejs/require.js" data-main="../requirejs.conf" type="text/javascript"></script>
-<script type="text/javascript">
-// Now to load the example
-require(['../tests/test.js']);
-</script>
-</body>
+    <body>
+        <script src="lib/function.bind.js"></script>
+        <script src="../lib/cajon/cajon.js" type="text/javascript"></script>
+        <script src="/requirejs.conf.js" type="text/javascript"></script>
+        
+        <script type="text/javascript">
+            requirejs.config({
+                baseUrl: '../'
+            });
+            
+            var deps = ['jasmine', 'jasmine-html', 'jquery', 'tests/spec-list'];
+            require(deps, function (jasmine, jasmineHtml, $, specList) {
+                var jasmineEnv = jasmine.getEnv();
+                jasmineEnv.updateInterval = 1000;
+                // Copy jasmine globals
+                ['spyOn', 'waitsFor', 'waits', 'runs', 'expect'].forEach(function (key) {
+                    window[key] = function () {
+                        var spec = jasmine.getEnv().currentSpec;
+                        return spec[key].apply(spec, arguments);
+                    };
+                });
+                ['beforeEach', 'afterEach', 'describe', 'it'].forEach(function (key) {
+                    window[key] = jasmineEnv[key].bind(jasmineEnv);
+                });
+                require(specList, function(){
+                    var jasmineEnv = jasmine.getEnv();
+                    jasmineEnv.updateInterval = 1000;
+                    
+                    var htmlReporter = new jasmine.HtmlReporter();
+
+                    jasmineEnv.addReporter(htmlReporter);
+                    jasmineEnv.specFilter = function(spec) {
+                        return htmlReporter.specFilter(spec);
+                    };
+
+                    $(function(){
+                        jasmineEnv.execute();
+                    });
+                });
+            });
+        </script>
+    </body>
 </html>
