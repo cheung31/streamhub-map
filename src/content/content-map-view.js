@@ -34,12 +34,6 @@ function (MapView, ContentListView, ContentPoint, inherits) {
         if (! this.modal) {
             return;
         }
-
-        //TODO(ryanc): Toggle class instead
-        //$('body').css({
-        //    'overflow': 'hidden',
-        //    'position': 'fixed'
-        //});
         this.modal.show(data);
     };
 
