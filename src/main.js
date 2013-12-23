@@ -1,9 +1,10 @@
 define([
     'streamhub-sdk/jquery',
+    'streamhub-sdk/modal/views/content-list-view-modal',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/overlay-factory',
     'streamhub-map/views/symbol-view',
-    'streamhub-sdk/views/list-view',
+    'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'json!streamhub-map/defaults.json',
     'json!streamhub-map-resources/world-50m.json',
@@ -13,10 +14,11 @@ define([
     'inherits'
 ], function (
     $,
+    ContentListViewModal,
     OverlayView,
     OverlayViewFactory,
     SymbolView,
-    ListView,
+    ContentListView,
     CollectionToHeatMetric,
     DefaultsJson,
     WorldJson,
@@ -42,6 +44,8 @@ define([
      */
     var MapView = function (opts) {
         opts = opts || {};
+        opts.modal = opts.modal || new ContentListViewModal();
+
         this._id = new Date().getTime();
         this._projectionType = opts.projection || 'mercator';
         this._projection = new d3.geo[this._projectionType]();
@@ -54,10 +58,10 @@ define([
         this._dataPoints = [];
         this.elId = this.elClass+'-'+this._id;
 
-        ListView.call(this, opts);
+        ContentListView.call(this, opts);
 
         this._overlayViewFactory = new OverlayViewFactory({
-            mapContext: this._mapContext
+            mapContext: this._createMapContext()
         });
 
         if (!STYLE_EL) {
@@ -74,11 +78,10 @@ define([
                     self._overlayViews[i]._animating = false;
                 }
             }
-            self._clearOverlays();
-            self._draw();
+            self.$el.trigger('mapUpdated.hub');
         });
     };
-    inherits(MapView, ListView);
+    inherits(MapView, ContentListView);
 
     MapView.prototype.mapClassName = 'hub-map';
     MapView.prototype.mapOverlayLayerClassName = 'hub-map-overlays';
@@ -89,8 +92,18 @@ define([
     MapView.prototype.elClass = 'hub-map-view';
 
     MapView.prototype.setElement = function (el) {
-        ListView.prototype.setElement.call(this, el);
+        ContentListView.prototype.setElement.call(this, el);
         this.$el.addClass(this.elId);
+
+        var self = this;
+        this.$el.on('mapUpdated.hub', function (e) {
+            self._update();
+        });
+    };
+
+    MapView.prototype._update = function () {
+        this._clearOverlays();
+        this._draw();
     };
 
     /**
@@ -107,8 +120,7 @@ define([
 
     MapView.prototype._addDataPoint = function (dataPoint) {
         this._dataPoints.push(dataPoint);
-        var overlayView = this._createOverlayView(dataPoint);
-        this.addOverlay(overlayView);
+        this.$el.trigger('mapUpdated.hub');
     };
 
     MapView.prototype._createOverlayView = (function () {
@@ -116,10 +128,24 @@ define([
 
         return function (dataPoint) {
             var overlayView;
+
+            // Check if it is cluster set
+            if (dataPoint.length) {
+                if (dataPoint.length > 1) {
+                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
+                } else {
+                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint[0]);
+                }
+                return overlayView;
+            }
+
+            // Check if it is not a CollectionPoint
             if (! this.isCollectionPoint(dataPoint)) {
                 overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
                 return overlayView;
             }
+
+            // Otherwise it's a CollectionPoint
             var collection = dataPoint.getCollection();
             var metric = CollectionToHeatMetric.transform(collection);
             var metricValue = metric.getValue();
@@ -152,13 +178,18 @@ define([
         }
         return {
             path: this._getPathForProjection(),
-            svg: mapSvg
+            svg: mapSvg,
+            projection: this._projection
         };
     };
 
     MapView.prototype._draw = function () {
         this._mapContext = this._createMapContext();
         this._drawMap();
+        var clusteredPoints = this.cluster(this._dataPoints, 50);
+        for (var i=0; i < clusteredPoints.length; i++) {
+            this.addOverlay(this._createOverlayView(clusteredPoints[i]));
+        }
         this._drawOverlays();
     };
 
@@ -265,6 +296,7 @@ define([
             var overlayView = this._overlayViews[i];
             overlayView.destroy();
         }
+        this._overlayViews = [];
     };
 
     /**
@@ -357,6 +389,49 @@ define([
         this._overlayViews.push(overlayView);
         this._drawOverlays();
         return this;
+    };
+
+    MapView.prototype.cluster = function (elements, distance) {
+        var currentElements = elements.slice(0);
+        var pixelDistance = this._pixelDistance();
+        var distLat = distance * pixelDistance.lat;
+        var distLon = distance * pixelDistance.lon;
+
+        var clustered = [];
+
+        while (currentElements.length > 0) {
+            var marker = currentElements.shift();
+            var cluster = [];
+            cluster.push(marker);
+            var i = 0;
+            while ( i < currentElements.length) {
+                if (Math.abs(currentElements[i].lat - marker.lat) < distLat && Math.abs(currentElements[i].lon - marker.lon) < distLon) {
+                    var aMarker = currentElements.splice(i, 1);
+                    cluster.push(aMarker[0]);
+                    i--;
+                }
+                i++;
+            }
+            clustered.push(cluster);
+        }
+
+        return clustered;
+    };
+
+    MapView.prototype._pixelDistance = function () {
+        var width = this.$el.width(),
+            height = this.$el.height();
+
+        var p0, p1;
+        p0 = this._projection.invert([width / 2, height / 2]);
+        p1 = this._projection.invert([(width / 2) + 1, (height / 2) + 1]);
+
+        var distance = {
+            lat: Math.abs(p0[1] - p1[1]),
+            lon: Math.abs(p0[0] - p1[0])
+        };
+
+        return distance;
     };
 
     return MapView;

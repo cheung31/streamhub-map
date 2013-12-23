@@ -2,14 +2,18 @@ define([
     'streamhub-map/point',
     'streamhub-map/content/content-point',
     'streamhub-map/collection/collection-point',
-    'streamhub-map/views/marker-view',
+    'streamhub-map/views/dot-marker-view',
+    'streamhub-map/views/content-marker-view',
+    'streamhub-map/views/clustered-content-marker-view',
     'streamhub-map/views/symbol-view'
 ],
 function (
     Point,
     ContentPoint,
     CollectionPoint,
-    MarkerView,
+    DotMarkerView,
+    ContentMarkerView,
+    ClusteredContentMarkerView,
     SymbolView
 ) {
 
@@ -19,9 +23,10 @@ function (
     };
 
     OverlayViewFactory.prototype.overlayRegistry = [
-        { type: Point, view: MarkerView },
-        { type: ContentPoint, view: MarkerView },
-        { type: CollectionPoint, view: MarkerView }
+        { type: Array, view: ClusteredContentMarkerView },
+        { type: ContentPoint, view: ContentMarkerView },
+        { type: CollectionPoint, view: DotMarkerView },
+        { type: Point, view: ContentMarkerView }
     ];
 
     OverlayViewFactory.prototype._getViewTypeForPoint = function (point) {
