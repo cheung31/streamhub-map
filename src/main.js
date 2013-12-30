@@ -53,6 +53,8 @@ define([
         this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
         this._colors = opts.colors;
+        this._cluster = opts.cluster || true;
+        this._clusterPixelDistance = opts.clusterPixelDistance || 50;
         this._includeAntarctica = opts.includeAntarctica || false;
         this._overlayViews = [];
         this._dataPoints = [];
@@ -78,7 +80,7 @@ define([
                     self._overlayViews[i]._animating = false;
                 }
             }
-            self.$el.trigger('mapUpdated.hub');
+            self.$el.trigger('mapResize.hub');
         });
     };
     inherits(MapView, ContentListView);
@@ -98,6 +100,11 @@ define([
         var self = this;
         this.$el.on('mapUpdated.hub', function (e) {
             self._update();
+        });
+
+        this.$el.on('mapResize.hub', function (e) {
+            self._drawMap();
+            self.$el.trigger('mapUpdated.hub');
         });
     };
 
@@ -184,16 +191,28 @@ define([
     };
 
     MapView.prototype._draw = function () {
-        this._mapContext = this._createMapContext();
-        this._drawMap();
-        var clusteredPoints = this.cluster(this._dataPoints, 50);
-        for (var i=0; i < clusteredPoints.length; i++) {
-            this.addOverlay(this._createOverlayView(clusteredPoints[i]));
+
+        // Check if the map has already been drawn
+        if (!this._mapEl) {
+            this._drawMap();
+        }
+
+        if (this._cluster) {
+            var clusteredPoints = this.cluster(this._dataPoints, this._clusterPixelDistance);
+            for (var i=0; i < clusteredPoints.length; i++) {
+                this.addOverlay(this._createOverlayView(clusteredPoints[i]));
+            }
+        } else {
+            for (var i=0; i < this._dataPoints.length; i++) {
+                this.addOverlay(this._createOverlayView(this._dataPoints[i]));
+            }
         }
         this._drawOverlays();
     };
 
     MapView.prototype._drawMap = function () {
+        this._mapContext = this._createMapContext();
+
         // Country ids map to ISO 3166-1 code
         // (http://en.wikipedia.org/wiki/ISO_3166-1_numeric)
         var countries = topojson.feature(WorldJson, WorldJson.objects.countries).features;
