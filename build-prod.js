@@ -13,6 +13,7 @@
   pragmasOnSave: {
     excludeHogan: true
   },
+  cjsTranslate: true,
   optimize: "uglify2",
   uglify2: {
     compress: {
