@@ -64,9 +64,10 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
             .text(this._cluster.length)
             .attr('fill', 'white')
             .attr('stroke-width', '0')
+            .attr('text-anchor', 'middle')
             .attr('font-size', '12')
             .attr('font-family', 'Helvetica')
-            .attr('transform', 'translate(38,12)');
+            .attr('transform', 'translate(42,12.5)'); //TODO(ryanc): Remove magic numbers
 
         this.notify();
 
