@@ -106,6 +106,10 @@ define([
             self._drawMap();
             self.$el.trigger('mapUpdated.hub');
         });
+
+        this.$el.on('contentMarkerImageError.hub', function (e, dataPoint) {
+            self._removeDataPoint(dataPoint);
+        });
     };
 
     MapView.prototype._update = function () {
@@ -128,6 +132,14 @@ define([
     MapView.prototype._addDataPoint = function (dataPoint) {
         this._dataPoints.push(dataPoint);
         this.$el.trigger('mapUpdated.hub');
+    };
+
+    MapView.prototype._removeDataPoint = function (dataPoint) {
+        var index = this._dataPoints.indexOf(dataPoint);
+        if (index >= 0) {
+            this._dataPoints.splice(index, 1);
+            this.$el.trigger('mapUpdated.hub');
+        }
     };
 
     MapView.prototype._createOverlayView = (function () {

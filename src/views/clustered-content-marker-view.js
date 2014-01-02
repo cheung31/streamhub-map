@@ -51,11 +51,15 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
         //TODO(ryanc): Remove magic number 36
         var markerImage = this._getMarkerImageFromContent();
         if (markerImage) {
-            this.el.append('image')
+            var img = this.el.append('image')
                 .attr('xlink:href', markerImage)
                 .attr('width', '36')
                 .attr('height', '36')
                 .attr('transform', 'translate(9,10)');
+            img[0][0].addEventListener('error', function (e) {
+                $(self._svg[0][0]).trigger('contentMarkerImageError.hub', self._point);
+            });
+
             this.el.append('use').attr('xlink:href', '#hub-map-clustered-content-marker-badge');
         }
 
