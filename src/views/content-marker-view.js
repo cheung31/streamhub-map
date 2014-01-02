@@ -31,6 +31,7 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
     };
     inherits(ContentMarkerView, MarkerView);
 
+
     ContentMarkerView.prototype.render = function () {
         // Marker
         var self = this;
@@ -50,11 +51,14 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
         //TODO(ryanc): Remove magic number 36
         var markerImage = this._getMarkerImageFromContent();
         if (markerImage) {
-            this.el.append('image')
+            var img = this.el.append('image')
                 .attr('xlink:href', markerImage)
                 .attr('width', '36')
                 .attr('height', '36')
                 .attr('transform', 'translate(4,4)');
+            img[0][0].addEventListener('error', function (e) {
+                $(self._svg[0][0]).trigger('contentMarkerImageError.hub', self._point);
+            });
         }
 
         this.notify();
