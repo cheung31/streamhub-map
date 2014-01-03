@@ -13,7 +13,7 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
         opts = opts || {};
 
         if (!MARKER_SVG) {
-            MARKER_SVG = $('body').append($(ClusterMarkerSvg));
+            MARKER_SVG = $('.'+this.mapSvgTemplatesClassName).append($(ClusterMarkerSvg));
         }
 
         this._fillColor = opts.fill;

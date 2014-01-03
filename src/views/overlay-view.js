@@ -7,6 +7,8 @@ define([
         this._rendered = false;
     };
 
+    OverlayView.prototype.mapSvgTemplatesClassName = 'hub-map-svg-templates';
+
     OverlayView.prototype.setMapContext = function (opts) {
         opts = opts || {};
         this._path = opts.path;

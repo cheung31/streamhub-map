@@ -13,7 +13,7 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
         opts = opts || {};
 
         if (!MARKER_SVG) {
-            MARKER_SVG = $('body').append($(ContentMarkerSvg));
+            MARKER_SVG = $('.'+this.mapSvgTemplatesClassName ).append($(ContentMarkerSvg));
         }
 
         this._fillColor = opts.fill;

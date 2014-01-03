@@ -30,6 +30,7 @@ define([
     'use strict';
 
     var STYLE_EL;
+    var SVG_TEMPLATES_EL;
 
     /**
      * A view to visualize StreamHub content on a map
@@ -91,6 +92,7 @@ define([
     MapView.prototype.mapLandClassName = 'hub-map-land';
     MapView.prototype.mapWaterClassName = 'hub-map-water';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
+    MapView.prototype.mapSvgTemplatesClassName = 'hub-map-svg-templates';
     MapView.prototype.elClass = 'hub-map-view';
 
     MapView.prototype.setElement = function (el) {
@@ -195,6 +197,12 @@ define([
             mapSvg = d3.select(this.listElSelector).append('svg')
                 .attr('class', this.mapWaterClassName+' hub-map-svg');
         }
+
+        if (! SVG_TEMPLATES_EL) {
+            SVG_TEMPLATES_EL = d3.select(this.listElSelector).append('div')
+                .attr('class', this.mapSvgTemplatesClassName);
+        }
+
         return {
             path: this._getPathForProjection(),
             svg: mapSvg,
