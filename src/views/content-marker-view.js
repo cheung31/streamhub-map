@@ -66,7 +66,7 @@ function (Point, MarkerView, ContentMarkerSvg, inherits, $) {
         var self = this;
         this.el.on('click', function (datum, index) {
             self.notify();
-            $(self.el[0][0]).trigger('focusDataPoint.hub', { data: self._point.getContent() });
+            $(self.el[0][0]).trigger('focusDataPoint.hub', { contentItems: [self._point.getContent()] });
         });
 
         MarkerView.prototype.render.call(this);
