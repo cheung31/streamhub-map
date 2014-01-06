@@ -26,15 +26,21 @@ function (MapView, ContentListView, ContentPoint, inherits) {
 
         var self = this;
         this.$el.on('focusDataPoint.hub', function (e, focusContext) {
-            self._displayDataPointDetails(focusContext.data);
+            self._displayDataPointDetails(focusContext.contentItems);
         });
     };
 
-    ContentMapView.prototype._displayDataPointDetails = function (data) {
-        if (! this.modal) {
+    ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
+        if (! this.modal || ! contentItems || ! contentItems.length) {
             return;
         }
-        this.modal.show(data);
+
+        var modalContentView = new ContentListView();
+        for (var i=0; i < contentItems.length; i++) {
+            modalContentView.more.write(contentItems[i]);
+        }
+
+        this.modal.show(modalContentView);
     };
 
     return ContentMapView;

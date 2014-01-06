@@ -1,6 +1,6 @@
 define([
     'streamhub-sdk/jquery',
-    'streamhub-sdk/modal/views/content-list-view-modal',
+    'streamhub-sdk/modal',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/overlay-factory',
     'streamhub-map/views/symbol-view',
@@ -14,7 +14,7 @@ define([
     'inherits'
 ], function (
     $,
-    ContentListViewModal,
+    ModalView,
     OverlayView,
     OverlayViewFactory,
     SymbolView,
@@ -45,7 +45,7 @@ define([
      */
     var MapView = function (opts) {
         opts = opts || {};
-        opts.modal = opts.modal || new ContentListViewModal();
+        opts.modal = opts.modal || new ModalView();
 
         this._id = new Date().getTime();
         this._projectionType = opts.projection || 'mercator';

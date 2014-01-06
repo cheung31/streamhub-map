@@ -82,7 +82,7 @@ function (Point, MarkerView, ClusterMarkerSvg, inherits, $) {
             for (var i=0; i < self._cluster.length; i++) {
                 contentItems.push(self._cluster[i].getContent());
             }
-            $(self.el[0][0]).trigger('focusDataPoint.hub', { data: contentItems });
+            $(self.el[0][0]).trigger('focusDataPoint.hub', { contentItems: contentItems });
         });
 
         MarkerView.prototype.render.call(this);
