@@ -275,10 +275,17 @@ define([
           "rail": "#c0c0c0",
           "path": "#d6cfc2"
         };
+
+        var self = this;
         new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
             class: "road",
             layerName: "vectile",
-            style: function(d) { return "fill: none; stroke-width: " + roadSizes[d.properties.kind] + "; stroke: " + roadColors[d.properties.kind]; }
+            style: function(d) {
+                if (self._map.getZoom() <= 12 && d.properties.kind == 'minor_road') {
+                    return "display: none";
+                }
+                return "fill: none; stroke-width: " + roadSizes[d.properties.kind] + "; stroke: " + roadColors[d.properties.kind];
+            }
         }).addTo(this._map);
 
         
