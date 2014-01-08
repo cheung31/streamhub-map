@@ -235,26 +235,30 @@ define([
     MapView.prototype._drawMap = function () {
         this._map = L.map(this.el).setView([37.774929499038386, -122.41941549873445], 12);
         this._map._initPathRoot();
+        var zoom = this._map._zoom;
 
         // Add a fake GeoJSON line to coerce Leaflet into creating the <svg> tag that d3_geoJson needs
         new L.geoJson({"type": "LineString","coordinates":[[0,0],[0,0]]}).addTo(this._map);
 
         // Water Areas from OpenStreetMap
-        var waterColor = "#9cb9e7";
+        var waterColor = "#a5c3ca";
+
         new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
             class: "water",
             layerName: "vectile",
-            style: function(d) { return "fill: " + waterColor; }
+            style: function(d) { return "fill: " + waterColor + "; stroke: " + waterColor; }
         }).addTo(this._map);
 
         // Land
-        var landColor = "#9fde7f";
+        var landColor = "#f7efe6";
+        var parkColor = "#000000";
+
         new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
             class: "land",
             layerName: "vectile",
             style: function(d) { 
-                if (d.properties.kind != 'park') {
-                    return "display: none";
+                if (d.properties.kind == 'park') {
+                    return "fill: " + parkColor + "; opacity: 0.15";
                 }
                 return "fill: " + landColor + "; stroke: " + landColor;
             }
@@ -262,29 +266,29 @@ define([
 
         // Highways from OpenStreetMap
         var roadSizes = {
-          "highway": "4px",
-          "major_road": "1.8px",
+          "highway": "3px",
+          "major_road": "1.4px",
           "minor_road": "1.2px",
           "rail": "0.8px",
           "path": "0.5px"
         };
         var roadColors = {
-          "highway": "#fa9e25",
-          "major_road": "#ffe168",
-          "minor_road": "#FFF",
-          "rail": "#c0c0c0",
-          "path": "#d6cfc2"
+          "highway": "#ffffff",
+          "major_road": "#ffffff",
+          "minor_road": "#ffffff",
+          "rail": "#ffffff",
+          "path": "#ffffff",
+          "opacity": 0.5
         };
 
-        var self = this;
         new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
             class: "road",
             layerName: "vectile",
             style: function(d) {
-                if (self._map.getZoom() <= 12 && d.properties.kind == 'minor_road') {
-                    return "display: none";
+                if (d.properties.kind == 'minor_road' && zoom < 13) {
+                    return "display: none;"
                 }
-                return "fill: none; stroke-width: " + roadSizes[d.properties.kind] + "; stroke: " + roadColors[d.properties.kind];
+                return "fill: none; stroke-width: " + roadSizes[d.properties.kind] + "; stroke: " + roadColors[d.properties.kind] + "; opacity: " + roadColors["opacity"];
             }
         }).addTo(this._map);
 
@@ -292,7 +296,8 @@ define([
         // Labels
         var topPane = this._map._createPane('leaflet-top-pane', this._map.getPanes().mapPane);
         var topLayer = new L.tileLayer('http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
-          maxZoom: 17
+          maxZoom: 17,
+          opacity: 0.6,
         }).addTo(this._map);
         topPane.appendChild(topLayer.getContainer());
         topLayer.setZIndex(7);
