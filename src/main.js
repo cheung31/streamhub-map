@@ -1,5 +1,4 @@
 define([
-    'streamhub-sdk/jquery',
     'streamhub-sdk/modal',
     'streamhub-map/views/overlay-view',
     'streamhub-map/views/overlay-factory',
@@ -11,9 +10,10 @@ define([
     'd3',
     'd3-plugins-geo-tile',
     'topojson',
+    'streamhub-sdk/jquery',
+    'streamhub-map/leaflet',
     'inherits'
 ], function (
-    $,
     ModalView,
     OverlayView,
     OverlayViewFactory,
@@ -25,6 +25,8 @@ define([
     d3,
     d3tile,
     topojson,
+    $,
+    L,
     inherits
 ) {
     'use strict';
@@ -126,7 +128,7 @@ define([
 
     MapView.prototype._update = function () {
         this._clearOverlays();
-        this._draw();
+        //this._draw();
     };
 
     /**
@@ -231,33 +233,64 @@ define([
     };
 
     MapView.prototype._drawMap = function () {
-        var mapDimensions = this._getMapDimensions();
-        var width = mapDimensions.width;
-        var height = mapDimensions.height;
+        this._map = L.map(this.el).setView([37.774929499038386, -122.41941549873445], 12);
+        this._map._initPathRoot();
 
-        this._tilePath = this._getPathForProjection();
+        // Add a fake GeoJSON line to coerce Leaflet into creating the <svg> tag that d3_geoJson needs
+        new L.geoJson({"type": "LineString","coordinates":[[0,0],[0,0]]}).addTo(this._map);
 
-        this._tile = d3.geo.tile().size([width, height]);
+        // Water Areas from OpenStreetMap
+        var waterColor = "#9cb9e7";
+        new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
+            class: "water",
+            layerName: "vectile",
+            style: function(d) { return "fill: " + waterColor; }
+        }).addTo(this._map);
 
-        this._attachZoomHandler();
+        // Land
+        var landColor = "#9fde7f";
+        new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
+            class: "land",
+            layerName: "vectile",
+            style: function(d) { return "fill: " + landColor + "; stroke: " + landColor; }
+        }).addTo(this._map);
 
-        // mapEl
-        this._mapEl = d3.select(this.listElSelector).append('div')
-            .attr('class', 'map')
-            .style('width', this._width + 'px')
-            .style('height', this._height + 'px')
-            .call(this._zoom);
+        // Highways from OpenStreetMap
+        var roadSizes = {
+          "highway": "4px",
+          "major_road": "1.8px",
+          "minor_road": "1.2px",
+          "rail": "0.8px",
+          "path": "0.5px"
+        };
+        var roadColors = {
+          "highway": "#fa9e25",
+          "major_road": "#ffe168",
+          "minor_road": "#FFF",
+          "rail": "#c0c0c0",
+          "path": "#d6cfc2"
+        };
+        new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
+            class: "road",
+            layerName: "vectile",
+            style: function(d) { return "fill: none; stroke-width: " + roadSizes[d.properties.kind] + "; stroke: " + roadColors[d.properties.kind]; }
+        }).addTo(this._map);
 
-        this._tileLayer = this._mapEl.append('div').attr('class', 'layer');
-
-        this._handleZoom();
+        
+        // Labels
+        var topPane = this._map._createPane('leaflet-top-pane', this._map.getPanes().mapPane);
+        var topLayer = new L.tileLayer('http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
+          maxZoom: 17
+        }).addTo(this._map);
+        topPane.appendChild(topLayer.getContainer());
+        topLayer.setZIndex(7);
     };
 
     MapView.prototype._attachZoomHandler = function () {
         this._zoom = d3.behavior.zoom()
             .scale(this._projection.scale() * 2 * Math.PI)
             .scaleExtent([ 1 << 0, 1 << 23 ])
-            .on('zoom', this._handleZoom);
+            .on('zoom', this._handleZoom.bind(this));
     };
 
     MapView.prototype._handleZoom = function () {
@@ -271,7 +304,9 @@ define([
             .translate(this._zoom.translate());
 
         var prefix = '-webkit-';
-        var image = this._tileLayer
+
+        // Water
+        var image = this._waterTileLayer
             .style(prefix + 'transform', this._getMatrix3d(tiles.scale, tiles.translate))
             .selectAll('.tile')
             .data(tiles, function (d) { return d; });
@@ -287,6 +322,37 @@ define([
             .each(function (d) {
                 var svg = d3.select(this);
                 this._xhr = d3.json("http://" + ["a", "b", "c"][(d[0] * 31 + d[1]) % 3] + ".tile.openstreetmap.us/vectiles-water-areas/" + d[2] + "/" + d[0] + "/" + d[1] + ".json", function(error, json) {
+                    var k = Math.pow(2, d[2]) * 256; // size of the world in pixels
+
+                    self._tilePath.projection()
+                        .translate([k / 2 - d[0] * 256, k / 2 - d[1] * 256]) // [0°,0°] in pixels
+                        .scale(k / 2 / Math.PI);
+
+                    svg.selectAll("path")
+                        .data(json.features.sort(function(a, b) { return a.properties.sort_key - b.properties.sort_key; }))
+                      .enter().append("path")
+                        .attr("class", function(d) { return d.properties.kind; })
+                        .attr("d", self._tilePath);
+                });
+            });
+
+        // Land
+        var image = this._landTileLayer
+            .style(prefix + 'transform', this._getMatrix3d(tiles.scale, tiles.translate))
+            .selectAll('.tile')
+            .data(tiles, function (d) { return d; });
+
+        image.exit()
+            .remove();
+
+        var self = this;
+        image.enter().append('svg')
+            .attr('class', 'tile')
+            .style("left", function (d) { return d[0] * 256 + "px"; })
+            .style("top", function (d) { return d[1] * 256 + "px"; })
+            .each(function (d) {
+                var svg = d3.select(this);
+                this._xhr = d3.json("http://" + ["a", "b", "c"][(d[0] * 31 + d[1]) % 3] + ".tile.openstreetmap.us/vectiles-land-usages/" + d[2] + "/" + d[0] + "/" + d[1] + ".json", function(error, json) {
                     var k = Math.pow(2, d[2]) * 256; // size of the world in pixels
 
                     self._tilePath.projection()

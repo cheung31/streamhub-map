@@ -18,7 +18,8 @@
     "d3": "*",
     "d3-plugins": "*",
     "colorbrewer": "*",
-    "topojson": "*"
+    "topojson": "*",
+    "leaflet": "git@github.com:Leaflet/Leaflet.git"
   },
   "devDependencies": {
     "jasmine": "*",
@@ -34,8 +35,5 @@
     "sampleImages": [
       "http://i.imgur.com/dkdzBkB.png"
     ]
-  },
-  "resolutions": {
-    "streamhub-sdk": "~v2.5.0"
   }
 }

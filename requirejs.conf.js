@@ -74,6 +74,10 @@ requirejs.config({
     name: 'd3-plugins-geo-tile',
     location: 'lib/d3-plugins/geo/tile/',
     main: 'tile.js'
+  },{
+    name: 'leaflet',
+    location: 'lib/leaflet/dist/',
+    main: 'leaflet-src'
   }],
   shim: {
     jasmine: {
