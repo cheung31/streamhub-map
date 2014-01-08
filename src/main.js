@@ -237,11 +237,11 @@ define([
         this._map._initPathRoot();
 
         // Add a fake GeoJSON line to coerce Leaflet into creating the <svg> tag that d3_geoJson needs
-        new L.geoJson({"type": "LineString","coordinates":[[0,0],[0,0]]}).addTo(this._map);
+        //new L.geoJson({"type": "LineString","coordinates":[[0,0],[0,0]]}).addTo(this._map);
 
         // Water Areas from OpenStreetMap
         var waterColor = "#9cb9e7";
-        new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
+        new L.TileLayer.TileJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
             class: "water",
             layerName: "vectile",
             style: function(d) { return "fill: " + waterColor; }
@@ -249,7 +249,7 @@ define([
 
         // Land
         var landColor = "#9fde7f";
-        new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
+        new L.TileLayer.TileJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
             class: "land",
             layerName: "vectile",
             style: function(d) { 
@@ -277,7 +277,7 @@ define([
         };
 
         var self = this;
-        new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
+        new L.TileLayer.TileJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
             class: "road",
             layerName: "vectile",
             style: function(d) {
