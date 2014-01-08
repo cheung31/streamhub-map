@@ -252,7 +252,12 @@ define([
         new L.TileLayer.d3_topoJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
             class: "land",
             layerName: "vectile",
-            style: function(d) { return "fill: " + landColor + "; stroke: " + landColor; }
+            style: function(d) { 
+                if (d.properties.kind != 'park') {
+                    return "display: none";
+                }
+                return "fill: " + landColor + "; stroke: " + landColor;
+            }
         }).addTo(this._map);
 
         // Highways from OpenStreetMap
