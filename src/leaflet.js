@@ -1,7 +1,8 @@
 define([
+    'streamhub-sdk/jquery',
     'leaflet',
     'text!leaflet/leaflet.css'
-], function (L, LeafletCss) {
+], function ($, L, LeafletCss) {
     'use strict';
 
     var LEAFLET_STYLE;
@@ -18,7 +19,7 @@ define([
      * Originally by Ziggy Jonsson: http://bl.ocks.org/ZJONSSON/5602552
      * Reworked by Nelson Minar: http://bl.ocks.org/NelsonMinar/5624141
      */
-    L.TileLayer.d3_topoJSON = L.TileLayer.extend({
+    L.TileLayer.D3TopoJSON = L.TileLayer.extend({
         onAdd: function(map) {
             L.TileLayer.prototype.onAdd.call(this,map);
             this._path = d3.geo.path().projection(function(d) {
@@ -43,7 +44,7 @@ define([
                         return;
                     }
 
-                    var geoJson = topojson.feature(tjData, tjData.objects[self.options.layerName]);
+                    var geoJson = topojson.feature(tjData, tjData.objects['vectile']);
                     tile.xhr = null;
                     tile.nodes = d3.select(self._map._container).select("svg").append("g");
                     tile.nodes.selectAll("path")
@@ -57,7 +58,11 @@ define([
         }
     });
 
-    L.TileLayer.TileJSON = L.TileLayer.Canvas.extend({
+    /**
+     * Experimental canvas tile layer for Leaflet
+     * Originally by Diego Guidi: https://gist.github.com/DGuidi/1716010#file-tilelayer-tilejson-js
+     */
+    L.TileLayer.CanvasTopoJSON = L.TileLayer.Canvas.extend({
         options: {
             debug: false
         },
@@ -163,7 +168,7 @@ define([
             var c = ctx.canvas;
             var g = c.getContext('2d');
             g.beginPath();
-            g.fillStyle = style.color;
+            g.fillStyle = style.fill;
             g.arc(p.x, p.y, style.radius, 0, Math.PI * 2);
             g.closePath();
             g.fill();
@@ -177,7 +182,6 @@ define([
             
             var coords = geom, proj = [], i;
             coords = this._clip(ctx, coords);
-            //coords = L.LineUtil.simplify(coords, 1);
             for (i = 0; i < coords.length; i++) {
                 proj.push(this._tilePoint(ctx, coords[i]));
             }
@@ -186,8 +190,8 @@ define([
             }
 
             var g = ctx.canvas.getContext('2d');
-            g.strokeStyle = style.color;
-            g.lineWidth = style.size;
+            g.strokeStyle = style.stroke;
+            g.lineWidth = parseInt(style.strokeWidth, 10);
             g.beginPath();
             for (i = 0; i < proj.length; i++) {
                 var method = (i === 0 ? 'move' : 'line') + 'To';
@@ -213,8 +217,8 @@ define([
                 }
 
                 var g = ctx.canvas.getContext('2d');
-                var outline = style.outline;
-                g.fillStyle = style.color;
+                var outline = style.stroke;
+                g.fillStyle = style.fill;
                 if (outline) {
                     g.strokeStyle = outline.color;
                     g.lineWidth = outline.size;
@@ -257,7 +261,7 @@ define([
             var url = this.createUrl(ctx.tile);
             var self = this, j;
             loader(url, function (tjData) {
-                var data = topojson.feature(tjData, tjData.objects[self.options.layerName]);
+                var data = topojson.feature(tjData, tjData.objects['vectile']);
                 for (var i = 0; i < data.features.length; i++) {
                     var feature = data.features[i];
                     var style = self.styleFor(feature);
@@ -316,24 +320,22 @@ define([
 
         // NOTE: a placeholder for a function that, given a feature, returns a style object used to render the feature itself
         styleFor: function (feature) {
-            // override with your code
-            var styles = {
-                'ocean': {
-                    color: '#9cb9e7'
-                },
-                'lake': {
-                    color: '#9cb9e7'
-                },
-                'park': {
-                    color: '#cbdfaa'
-                },
-                'highway': {},
-                'major_road': {},
-                'minor_road': {},
-                'rail': {},
-                'path': {}
-            };
-            return  styles[feature.properties.kind];
+            var styles;
+            if (! feature.properties.kind) {
+                styles = this.options.style;
+            }
+            styles = this.options.style[feature.properties.kind];
+            if (! styles) {
+                return;
+            }
+
+            styles = $.extend({}, styles);
+            if (styles.maxZoom && this._map.getZoom() <= styles.maxZoom) {
+                styles.fill = 'rgba(0,0,0,0)';
+                styles.stroke = 'rgba(0,0,0,0)';
+            }
+
+            return styles;
         }
     });
 

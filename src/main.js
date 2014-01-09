@@ -40,10 +40,11 @@ define([
      * @param [opts] {Object} Configuration options for the MapView
      * @param [opts.projection='mercator'] {String} A map projection supported by the D3 library (https://github.com/mbostock/d3/wiki/Geo-Projections#standard-projections)
      * @param [opts.mapCenter] {Array} The lat/lon coordinates of the center of the map
+     * @param [opts.mapZoom] {Number} The starting map zoom level
      * @param [opts.boundingBox] {Array} The NW and SE coordinates of the bounding box that defines the scope of the visible map. Bounding box in degrees [{ lat: x1, lon: y1 }, { lat: x2, lon: y2 }].
      * @param [opts.graticule=false] {Boolean} Whether to display the map graticule
      * @param [opts.includeAntarctica=false] {Boolean} Whether to include the continent of Antarctica on the map
-     * @param [opts.colors] {Object} Specify colors for land, water, graticule, etc.
+     * @param [opts.styles] {Object} Specify colors for land, water, graticule, etc.
      */
     var MapView = function (opts) {
         opts = opts || {};
@@ -53,9 +54,10 @@ define([
         this._projectionType = opts.projection || 'mercator';
         this._projection = new d3.geo[this._projectionType]();
         this._mapCenter = opts.mapCenter;
+        this._mapZoom = opts.mapZoom || 12;
         this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
-        this._colors = opts.colors;
+        this._styles = opts.styles || DefaultsJson;
         this._cluster = opts.cluster || true;
         this._clusterPixelDistance = opts.clusterPixelDistance || 50;
         this._includeAntarctica = opts.includeAntarctica || false;
@@ -233,66 +235,40 @@ define([
     };
 
     MapView.prototype._drawMap = function () {
-        this._map = L.map(this.el).setView([37.774929499038386, -122.41941549873445], 12);
+        this._map = L.map(this.el).setView(
+            this._mapCenter || [37.774929499038386, -122.41941549873445],
+            this._mapZoom
+        );
         this._map._initPathRoot();
-
-        // Add a fake GeoJSON line to coerce Leaflet into creating the <svg> tag that d3_geoJson needs
-        //new L.geoJson({"type": "LineString","coordinates":[[0,0],[0,0]]}).addTo(this._map);
 
         // Water Areas from OpenStreetMap
         var waterColor = "#9cb9e7";
-        new L.TileLayer.TileJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
-            class: "water",
-            layerName: "vectile",
-            style: function(d) { return "fill: " + waterColor; }
+        new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
+            style: this._styles.water_areas
         }).addTo(this._map);
 
         // Land
         var landColor = "#9fde7f";
-        new L.TileLayer.TileJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
-            class: "land",
-            layerName: "vectile",
-            style: function(d) { 
-                if (d.properties.kind != 'park') {
-                    return "display: none";
-                }
-                return "fill: " + landColor + "; stroke: " + landColor;
-            }
+        new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
+            style: this._styles.land_usages
         }).addTo(this._map);
 
         // Highways from OpenStreetMap
-        var roadSizes = {
-          "highway": "4px",
-          "major_road": "1.8px",
-          "minor_road": "1.2px",
-          "rail": "0.8px",
-          "path": "0.5px"
-        };
-        var roadColors = {
-          "highway": "#fa9e25",
-          "major_road": "#ffe168",
-          "minor_road": "#FFF",
-          "rail": "#c0c0c0",
-          "path": "#d6cfc2"
-        };
-
-        var self = this;
-        new L.TileLayer.TileJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
-            class: "road",
-            layerName: "vectile",
-            style: function(d) {
-                if (self._map.getZoom() <= 12 && d.properties.kind == 'minor_road') {
-                    return "display: none";
-                }
-                return "fill: none; stroke-width: " + roadSizes[d.properties.kind] + "; stroke: " + roadColors[d.properties.kind];
-            }
+        new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
+            style: this._styles.road_lines
         }).addTo(this._map);
 
+        // Buildings
+        //new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-buildings/{z}/{x}/{y}.topojson", {
+        //    maxZoom: this._styles.buildings.maxZoom,
+        //    style: this._styles.buildings
+        //}).addTo(this._map);
         
         // Labels
         var topPane = this._map._createPane('leaflet-top-pane', this._map.getPanes().mapPane);
         var topLayer = new L.tileLayer('http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
-          maxZoom: 17
+          maxZoom: this._styles.labels.maxZoom,
+          opacity: this._styles.labels.opacity || 0.75
         }).addTo(this._map);
         topPane.appendChild(topLayer.getContainer());
         topLayer.setZIndex(7);
