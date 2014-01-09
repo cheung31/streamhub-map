@@ -17,6 +17,9 @@
         }
     },
     "land_usages": {
+        "land": {
+            "fill": "#f7efe6"
+        },
         "park": {
             "fill": "rgba(188, 207, 159, 0.7)"
         }

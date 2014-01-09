@@ -239,16 +239,15 @@ define([
             this._mapCenter || [37.774929499038386, -122.41941549873445],
             this._mapZoom
         );
+        $(this.el).css('background', this._styles.land_usages.land.fill);
         this._map._initPathRoot();
 
         // Water Areas from OpenStreetMap
-        var waterColor = "#9cb9e7";
         new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
             style: this._styles.water_areas
         }).addTo(this._map);
 
         // Land
-        var landColor = "#9fde7f";
         new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
             style: this._styles.land_usages
         }).addTo(this._map);
