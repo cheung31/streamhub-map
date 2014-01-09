@@ -1,43 +1,43 @@
 {
     "water_areas": {
         "water": {
-            "fill": "#9cb9e7"
+            "fill": "#242226"
         },
         "ocean": {
-            "fill": "#9cb9e7"
+            "fill": "#242226"
         },
         "lake": {
-            "fill": "#9cb9e7"
+            "fill": "#242226"
         },
         "river": {
-            "fill": "#9cb9e7"
+            "fill": "#242226"
         },
         "riverbank": {
-            "fill": "#9cb9e7"
+            "fill": "#242226"
         }
     },
     "land_usages": {
         "land": {
-            "fill": "#f7efe6"
+            "fill": "#343139"
         },
         "park": {
-            "fill": "rgba(188, 207, 159, 0.7)"
+            "fill": "rgba(0,0,0,0.6)"
         }
     },
     "road_lines": {
         "highway": {
             "fill": "none",
-            "stroke": "#fa9e25",
-            "strokeWidth": "3px"
+            "stroke": "#45424f",
+            "strokeWidth": "4px"
         },
         "major_road": {
             "fill": "none",
-            "stroke": "#ffe168",
-            "strokeWidth": "1.5px"
+            "stroke": "#45424f",
+            "strokeWidth": "1.8px"
         },
         "minor_road": {
             "fill": "none",
-            "stroke": "#FFF",
+            "stroke": "#45424f",
             "strokeWidth": "1.2px",
             "maxZoom": 12
         },
@@ -59,7 +59,7 @@
         "maxZoom": 3
     },
     "labels": {
-        "opacity": 0.8,
+        "opacity": 0.6,
         "maxZoom": 17
     }
 }

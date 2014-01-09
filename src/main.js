@@ -5,7 +5,8 @@ define([
     'streamhub-map/views/symbol-view',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
-    'json!streamhub-map/defaults.json',
+    'json!streamhub-map/themes/default.json',
+    'json!streamhub-map/themes/dark.json',
     'text!streamhub-map/css/style.css',
     'd3',
     'd3-plugins-geo-tile',
@@ -20,7 +21,8 @@ define([
     SymbolView,
     ContentListView,
     CollectionToHeatMetric,
-    DefaultsJson,
+    DefaultThemeJson,
+    DarkThemeJson,
     MapViewCss,
     d3,
     d3tile,
@@ -57,7 +59,10 @@ define([
         this._mapZoom = opts.mapZoom || 12;
         this._boundingBox = opts.boundingBox;
         this._graticule = opts.graticule || false;
-        this._styles = opts.styles || DefaultsJson;
+        this._styles = opts.styles || DefaultThemeJson;
+        if (this._styles == 'dark') {
+            this._styles = DarkThemeJson;
+        }
         this._cluster = opts.cluster || true;
         this._clusterPixelDistance = opts.clusterPixelDistance || 50;
         this._includeAntarctica = opts.includeAntarctica || false;
