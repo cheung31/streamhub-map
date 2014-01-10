@@ -14,6 +14,8 @@ define([
         document.getElementsByTagName('head')[0].appendChild(styleEl)
     };
 
+    L.Icon.Default.imagePath = '/lib/leaflet/dist/images/';
+
     /* Experimental vector tile layer for Leaflet
      * Uses D3 to render TopoJSON. Derived from a GeoJSON thing that was
      * Originally by Ziggy Jonsson: http://bl.ocks.org/ZJONSSON/5602552
@@ -338,7 +340,6 @@ define([
             return styles;
         }
     });
-
 
     return L;
 });

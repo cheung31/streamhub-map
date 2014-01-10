@@ -16,10 +16,10 @@
     "event-emitter": "git://github.com/Livefyre/event-emitter.git",
     "inherits": "git://github.com/Livefyre/inherits.git",
     "d3": "*",
-    "d3-plugins": "*",
     "colorbrewer": "*",
     "topojson": "*",
-    "leaflet": "git@github.com:Leaflet/Leaflet.git"
+    "leaflet": "git@github.com:Leaflet/Leaflet.git",
+    "leaflet-markercluster": "git@github.com:Leaflet/Leaflet.markercluster.git"
   },
   "devDependencies": {
     "jasmine": "*",

@@ -71,13 +71,13 @@ requirejs.config({
     location: "lib/view/src",
     main: "view"
   },{
-    name: 'd3-plugins-geo-tile',
-    location: 'lib/d3-plugins/geo/tile/',
-    main: 'tile.js'
-  },{
     name: 'leaflet',
     location: 'lib/leaflet/dist/',
     main: 'leaflet-src'
+  },{
+    name: 'leaflet-markercluster',
+    location: 'lib/leaflet-markercluster/dist/',
+    main: 'leaflet.markercluster-src'
   }],
   shim: {
     jasmine: {
@@ -96,15 +96,14 @@ requirejs.config({
     d3: {
         exports: 'd3'
     },
-    'd3-plugins-geo-tile': {
-        deps: ['d3'],
-        exports: 'd3.geo.tile'
-    },
     colorbrewer: {
         exports: 'colorbrewer'
     },
     topojson: {
         exports: 'topojson'
+    },
+    'leaflet-markercluster': {
+        deps: ['leaflet']
     }
   },
   urlArgs: "_=" +  (new Date()).getTime()

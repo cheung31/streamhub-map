@@ -2,11 +2,33 @@ define([
     'streamhub-map',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-map/content/content-point',
-    'inherits'],
-function (MapView, ContentListView, ContentPoint, inherits) {
+    'inherits',
+    'streamhub-map/leaflet',
+    'streamhub-map/leaflet-markercluster'],
+function (
+    MapView,
+    ContentListView,
+    ContentPoint,
+    inherits,
+    L) {
 
     var ContentMapView = function (opts) {
         MapView.call(this, opts);
+
+        this._markers = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true,
+            maxClusterRadius: 100,
+            spiderfyDistanceMultiplier: 2,
+            iconCreateFunction: function(cluster) {
+                return new L.Icon({
+                    iconUrl: '/src/images/CollectionMarker.png',
+                    iconRetinaUrl: '/src/images/CollectionMarker@2x.png',
+                    iconSize: [54,55],
+                    iconAnchor: [27,55]
+                });
+            }
+        });
     };
     inherits(ContentMapView, MapView);
 
@@ -28,6 +50,25 @@ function (MapView, ContentListView, ContentPoint, inherits) {
         this.$el.on('focusDataPoint.hub', function (e, focusContext) {
             self._displayDataPointDetails(focusContext.contentItems);
         });
+    };
+
+    ContentMapView.prototype._drawMap = function () {
+        MapView.prototype._drawMap.call(this);
+    };
+
+    ContentMapView.prototype._drawMarker = function (dataPoint) {
+        var marker = new L.Marker(
+            new L.LatLng(dataPoint.lat, dataPoint.lon), {
+                icon: new L.Icon({
+                    iconUrl: '/src/images/ContentMarker.png',
+                    iconRetinaUrl: '/src/images/ContentMarker@2x.png',
+                    iconSize: [44,48],
+                    iconAnchor: [22,48]
+                })
+            }
+        );
+        this._markers.addLayer(marker);
+        this._map.addLayer(this._markers);
     };
 
     ContentMapView.prototype._displayDataPointDetails = function (contentItems) {

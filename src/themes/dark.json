@@ -28,12 +28,12 @@
         "highway": {
             "fill": "none",
             "stroke": "#45424f",
-            "strokeWidth": "4px"
+            "strokeWidth": "3px"
         },
         "major_road": {
             "fill": "none",
             "stroke": "#45424f",
-            "strokeWidth": "1.8px"
+            "strokeWidth": "3px"
         },
         "minor_road": {
             "fill": "none",
@@ -59,7 +59,7 @@
         "maxZoom": 3
     },
     "labels": {
-        "opacity": 0.6,
+        "opacity": 0.45,
         "maxZoom": 17
     }
 }
