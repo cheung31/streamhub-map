@@ -25,7 +25,7 @@ function (
                     iconUrl: '/src/images/CollectionMarker.png',
                     iconRetinaUrl: '/src/images/CollectionMarker@2x.png',
                     iconSize: [54,55],
-                    iconAnchor: [27,55]
+                    iconAnchor: [27,27.5]
                 });
             }
         });
