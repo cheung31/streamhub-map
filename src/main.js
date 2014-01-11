@@ -93,7 +93,13 @@ define([
 
         var self = this;
 
-        this.$el.on('contentMarkerImageError.hub', function (e, dataPoint) {
+        this.$el.on('imageError.hub', function (e) {
+            var dataPoint;
+            for (var i=0; i < self._dataPoints.length; i++) {
+                if ($(e.target).attr('src') == self._dataPoints[i].getContent().attachments[0].thumbnail_url) {
+                    dataPoint = self._dataPoints[i];
+                }
+            }
             self._removeDataPoint(dataPoint);
         });
 
