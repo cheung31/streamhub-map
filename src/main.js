@@ -64,17 +64,8 @@ define([
                 .text('.'+this.elId+MapViewCss)
                 .prependTo('head');
         }
-        this._draw();
 
-        var self = this;
-        $(window).on('resize', function (e) {
-            for (var i=0; i < self._overlayViews.length; i++) {
-                if (self._overlayViews[i]._animating) {
-                    self._overlayViews[i]._animating = false;
-                }
-            }
-            self.$el.trigger('mapResize.hub');
-        });
+        this._draw();
     };
     inherits(MapView, ContentListView);
 
@@ -216,12 +207,6 @@ define([
         new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
             style: this._styles.road_lines
         }).addTo(this._map);
-
-        // Buildings
-        //new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-buildings/{z}/{x}/{y}.topojson", {
-        //    maxZoom: this._styles.buildings.maxZoom,
-        //    style: this._styles.buildings
-        //}).addTo(this._map);
         
         // Labels
         var topPane = this._map._createPane('leaflet-top-pane', this._map.getPanes().mapPane);

@@ -15,10 +15,7 @@ function (
     L) {
 
     var ContentMapView = function (opts) {
-        MapView.call(this, opts);
-
         this._contentToMarkerMap = {};
-
         this._markers = new L.MarkerClusterGroup({
             showCoverageOnHover: false,
             zoomToBoundsOnClick: true,
@@ -45,6 +42,8 @@ function (
                 });
             }
         });
+
+        MapView.call(this, opts);
     };
     inherits(ContentMapView, MapView);
 
@@ -63,9 +62,18 @@ function (
         MapView.prototype.setElement.apply(this, arguments);
 
         var self = this;
+
         this.$el.on('focusDataPoint.hub', function (e, focusContext) {
             self._displayDataPointDetails(focusContext.contentItems);
         });
+
+        this._markers.on('click', function (e) {
+            var content = e.layer.options.icon.options.content;
+            self.$el.trigger('focusDataPoint.hub', { contentItems: [content] });
+        });
+
+        //this._markers.on('clusterclick', function (e) {
+        //});
     };
 
     ContentMapView.prototype._drawMap = function () {
@@ -81,7 +89,8 @@ function (
                         thumbnail_url: dataPoint.getContent().attachments[0].thumbnail_url
                     }),
                     iconSize: [44,48],
-                    iconAnchor: [22,48]
+                    iconAnchor: [22,48],
+                    content: dataPoint.getContent()
                 })
             }
         );
