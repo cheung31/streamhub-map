@@ -72,12 +72,17 @@ function (
             self.$el.trigger('focusDataPoint.hub', { contentItems: [content] });
         });
 
-        //this._markers.on('clusterclick', function (e) {
-        //});
-    };
+        this._markers.on('clusterclick', function (e) {
+            if (self._map.getMaxZoom() !== self._map.getZoom()) {
+                return;
+            }
 
-    ContentMapView.prototype._drawMap = function () {
-        MapView.prototype._drawMap.call(this);
+            var content = [];
+            for (var i=0; i < e.layer._markers.length; i++) {
+                content.push(e.layer._markers[i].options.icon.options.content);
+            }
+            self.$el.trigger('focusDataPoint.hub', { contentItems: content });
+        });
     };
 
     ContentMapView.prototype._drawMarker = function (dataPoint) {

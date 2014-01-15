@@ -44,9 +44,8 @@
             var mapView = window.mapView = new ContentMapView({
                 el: document.getElementById('feed1')
                 ,styles: 'dark'
-                //,mapCenter: { lat: 37.09024, lon: -95.712891 }
-                //,mapCenter: { lat: 0, lon: 0 }
-                ,mapZoom: 4
+                //,zoom: 4
+                ,maxZoom: 16
             });
 
             var collection = window.collection = new Collection(opts);

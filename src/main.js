@@ -45,8 +45,8 @@ define([
         opts.modal = opts.modal || new ModalView();
 
         this._id = new Date().getTime();
-        this._mapCenter = opts.mapCenter;
-        this._mapZoom = opts.mapZoom || 12;
+        this._mapCenter = opts.center || [0,0];
+        this._mapZoom = opts.zoom || 2;
         this._styles = opts.styles || DefaultThemeJson;
         if (this._styles == 'dark') {
             this._styles = DarkThemeJson;
@@ -65,7 +65,7 @@ define([
                 .prependTo('head');
         }
 
-        this._draw();
+        this._drawMap(opts);
     };
     inherits(MapView, ContentListView);
 
@@ -181,17 +181,12 @@ define([
         return dataPoint._collection !== undefined;
     };
 
-    MapView.prototype._draw = function () {
-        this._drawMap();
-    };
-
-    MapView.prototype._drawMap = function () {
-        this._map = L.map(this.el).setView(
-            this._mapCenter || [37.774929499038386, -122.41941549873445],
+    MapView.prototype._drawMap = function (opts) {
+        this._map = new L.map(this.el, opts).setView(
+            this._mapCenter,
             this._mapZoom
         );
         $(this.el).css('background', this._styles.land_usages.land.fill);
-        this._map._initPathRoot();
 
         // Water Areas
         new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
@@ -211,8 +206,8 @@ define([
         // Labels
         var topPane = this._map._createPane('leaflet-top-pane', this._map.getPanes().mapPane);
         var topLayer = new L.tileLayer('http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
-          maxZoom: this._styles.labels.maxZoom,
-          opacity: this._styles.labels.opacity || 0.75
+            maxZoom: this._styles.labels.maxZoom,
+            opacity: this._styles.labels.opacity || 0.75
         }).addTo(this._map);
         topPane.appendChild(topLayer.getContainer());
         topLayer.setZIndex(3);
