@@ -35,9 +35,11 @@ function (
                     }
                 }
 
+                var $clusterIcon = $(clusterIconHtml);
+                $clusterIcon.append('<div class="hub-map-marker-badge">'+childMarkers.length+'</div>');
                 return new L.ContentDivIcon({
                     className: 'hub-map-collection-marker',
-                    html: clusterIconHtml,
+                    html: '<div class="hub-map-marker-bg">'+$clusterIcon.html()+'</div>',
                     iconSize: [54,55],
                     iconAnchor: [27,27.5]
                 });
