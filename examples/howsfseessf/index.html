@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../../lib/streamhub-sdk/src/css/style.css">
+    <style>
+        #controls { display: none; margin: 20px 0; }
+        h2 { display: none; }
+        body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        #feed1 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+</head>
+    <body>
+        <h2>A stream showcasing various types of attachments</h2>
+        <div id="feed1"></div>
+
+        <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
+        <script src="../../lib/requirejs/require.js" type="text/javascript"></script>
+        <script src="/requirejs.conf.js" type="text/javascript"></script>
+        <script>
+        require([
+            'streamhub-sdk/collection',
+            'streamhub-map/content/content-map-view'
+        ], function (
+            Collection,
+            ContentMapView) {
+            var opts = {
+                "network": "strategy-prod.fyre.co",
+                "siteId": "340628",
+                "articleId": "custom-1389845009515"
+            };
+
+            var mapView = window.mapView = new ContentMapView({
+                el: document.getElementById('feed1')
+                ,styles: 'dark'
+                ,center: [37.774929499038386, -122.41941549873445]
+                ,zoom: 13
+                ,maxZoom: 16
+            });
+
+            var collection = window.collection = new Collection(opts);
+            collection.pipe(mapView);
+        });
+        </script>
+    </body>
+</html>
