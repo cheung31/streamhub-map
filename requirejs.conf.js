@@ -1,9 +1,6 @@
 requirejs.config({
   baseUrl: '/',
   include: [
-    'streamhub-wall',
-    'streamhub-multiview',
-    'streamhub-map/views/solar-terminator-view',
     'streamhub-map/collection/collection-map-view',
     'streamhub-map/content/content-map-view',
     'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections',
@@ -60,12 +57,6 @@ requirejs.config({
   },{
     name: "streamhub-metrics",
     location: "lib/streamhub-metrics/src/"
-  },{
-    name: "streamhub-multiview",
-    location: "lib/streamhub-multiview/src/"
-  },{
-    name: "streamhub-wall",
-    location: "lib/streamhub-wall/src/"
   },{
     name: "view",
     location: "lib/view/src",
