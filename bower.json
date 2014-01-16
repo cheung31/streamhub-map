@@ -18,7 +18,7 @@
     "d3": "*",
     "colorbrewer": "*",
     "topojson": "*",
-    "leaflet": "git@github.com:Leaflet/Leaflet.git",
+    "leaflet": "http://leaflet-cdn.s3.amazonaws.com/build/leaflet-0.7.1.zip",
     "leaflet-markercluster": "git@github.com:Leaflet/Leaflet.markercluster.git"
   },
   "devDependencies": {
