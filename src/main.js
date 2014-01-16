@@ -38,7 +38,6 @@ define([
      */
     var MapView = function (opts) {
         opts = opts || {};
-        opts.modal = opts.modal || new ModalView();
 
         this._id = new Date().getTime();
         this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
