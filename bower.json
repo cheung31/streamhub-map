@@ -35,5 +35,8 @@
     "sampleImages": [
       "http://i.imgur.com/dkdzBkB.png"
     ]
+  },
+  "resolutions": {
+    "streamhub-sdk": "~v2.5.0"
   }
 }
