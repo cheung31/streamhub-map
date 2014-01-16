@@ -19,7 +19,7 @@
     "colorbrewer": "*",
     "topojson": "*",
     "leaflet": "http://leaflet-cdn.s3.amazonaws.com/build/leaflet-0.7.1.zip",
-    "leaflet-markercluster": "git@github.com:Leaflet/Leaflet.markercluster.git"
+    "leaflet-markercluster": "git://github.com/Leaflet/Leaflet.markercluster.git"
   },
   "devDependencies": {
     "jasmine": "*",
