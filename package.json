@@ -15,8 +15,7 @@
     "jasmine-node": "*"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install && npm run-script leaflet-postinstall",
-    "leaflet-postinstall": "cd ./lib/leaflet/ && npm install && npm run-script prepublish && cd ../leaflet-markercluster/ && npm install && npm run-script prepublish",
+    "postinstall": "./node_modules/bower/bin/bower install",
     "start": "./node_modules/http-server/bin/http-server .",
     "build": "./node_modules/requirejs/bin/r.js -o ./build-prod.js",
     "build-dev": "./node_modules/requirejs/bin/r.js -o ./build-dev.js",

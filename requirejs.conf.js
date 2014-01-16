@@ -72,7 +72,7 @@ requirejs.config({
     main: "view"
   },{
     name: 'leaflet',
-    location: 'lib/leaflet/dist/',
+    location: 'lib/leaflet/',
     main: 'leaflet-src'
   },{
     name: 'leaflet-markercluster',
