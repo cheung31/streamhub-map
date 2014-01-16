@@ -5,9 +5,6 @@ streamhub-map is a [StreamHub App](http://apps.livefyre.com) that displays socia
 * Dot mapping
 * Proportional symbol mapping
 
-MapView + MediaWall
-![MapView + MediaWall](http://i.imgur.com/dkdzBkB.png)
-
 ## Getting Started
 
 The quickest way to use streamhub-map is to use the built version hosted on Livefyre's CDN.
