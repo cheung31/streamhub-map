@@ -1,9 +1,3 @@
-// Variables
-@mapBackgroundColor: #FFF;
-@mapLandColor: #333;
-@mapLandStroke: #DDD;
-
-
 // Overlays
 .hub-map-view {
     .hub-list {
@@ -44,12 +38,9 @@
         position: absolute;
         bottom: 20px;
         right: 20px;
+        z-index: 100;
     }
 
-    .hub-place,
-    .hub-map-content-marker {
-        cursor: pointer;
-    }
     .hub-place {
         stroke: none;
     }
@@ -57,26 +48,60 @@
         // fill: steelblue;
         // stroke: none;
     }
+
+    .hub-place,
+    .hub-map-content-marker {
+        cursor: pointer;
+
+        .hub-map-marker-bg {
+            width: 100%;
+            height: 100%;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAwCAYAAABqkJjhAAACPUlEQVR42t2Z2U7CQBRA1WhM9A941oQX/C/9If0L+AMXliCbylZAkEU2AX+Al9pDnEgkWNopt8VJTkKYe++cDKWd6ewttQOLQ4ujQIETbr8aHSGLsEUkYIRxw3F5ZkOxWOxqPp+PzYA1nKLR6CWOaqaZ8rCGrIg0jriqyyGiOsezT21G0xl4Uks1HHH1TBhBo9Uz08818zZdBj7zHX3BEq63+2YiV1WiK9BHjO/CQ2vm8uUmUptALDn+CPMzZ4oNRJxADrnywtVmFwE3kCsurP5cbiBXXjiRr7oVJldeOJ6tuBUmV144qTHD5Mpfw0+ur2Fy5YWzpVe3wuTKCr8YbwysAzXkhHNqdjWghphwsd7WFaaGnHCrN9QVpoacMGuBZN5wK0suNeSEYTiZmoVK06ksOeT6s7xsdgdOhcnxbz3cH0+cCpMjJKz/ACHW/y3S++jDvM/YyhJDrJCw/m2OGLE9ne7Tj75g7JoHk+niX1+qt+12zcQQS46scGcwNkuNju4WiRrU2o5wb/SxePbH1Sx6BzWpzRj6wu3+yMy8NCgsAWMxpmNhbu7q/uoHjI3DZsLcK+O5Col+ggMu9sL5sppZ38HFVlgtG4MALv9RuBAc4VRhA+HUjgn/+YLkDh5L35QX3EPmh4cF1W+W+oAchapj88JlRXjXDmV27tjLq4PFC8MwbtYNSh8xXhwsenV0e2pxjtga2XNitI5uPW77FidKekWWPmIEmivpWq12DRqy4tJnoCErLn0M25D9Ar+GEEWCwlUXAAAAAElFTkSuQmCC);
+        }
+
+        .hub-map-marker-thumbnail {
+            top: 4px;
+            left: 4px;
+        }
+    }
+
+    .hub-map-marker-thumbnail {
+        position: relative;
+        width: 36px;
+        height: 36px;
+    }
+
+    .hub-map-collection-marker {
+        cursor: pointer;
+
+        .hub-map-marker-bg {
+            width: 100%;
+            height: 100%;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA3CAQAAADtEHHzAAADs0lEQVR4Ab3YXWhbZRjA8f/5Pl2apEub1X4Eq2GiuNV9OSsyGMrU1RWnMm8UrybIrobsYuBcnWMiSBFvvBYUL3V1tNqpUGXTdmZzKshAx+posV27NknX5Jzk5LxCGGQ5bYXBeft/785FfjzvCefiIcQUFOSHis461hPDQGIKOjZJ0mxu285m7sOSw2iYJOji4Z2P//h2dlx4hckTL9GBgRrutRnE6OShdVs/PzQ5XCqWRUkURVb8nmE3aZKYrJBy14yKRYw49qkH9/elnqbFpXqqgzaI4m+JSPbSk8euTuCtiAV+TFn17Rg0Eieyt+P13gf2mF0uAhP79lGpdWmg5z0WqeCvjhkkA/8opXpUdKLEiTbFX350S0/qfks1sbDQWbnJTO8RZskyS3llTOWe0/t7jxuthFJ5ZujEC4NM49eAWjpN4VFgtD7XTwwVgphKA8101KhwOAyUIKYQ69w4fmT4FFLTAdBInjvWfuAKclMBMFnftA2Qj2HTRtv8rbXANDac3Hquv6Eb6emoRN/8aK7dYS0wOnS71WIeKSn11+hP5bIZmxL+WmDk/zxjouLIxxAsHR3RijpFJKTVY+Cdn5kZteRMZgYxn/zYGTnY8g+xoPDqD2JeChZHr8egUlr492wFj7BrbqEBpR4T5L8ZVHAJu1d2EkMNYu7xy8XrDmHX/QRRtHoMfHJ/f18i7NrSBzqJoASx/Ccjrk/IGcrBPmKo9RiURq/+c42QM0k/QxQjiHnMZS4QchZG1/ubaEStxwS5Ly6Fj7m82EcsiEF5cZaQ0/FofzbSiBnEKuQJPQ098emu6mx1mC8DsyjRs48YWj0mcAg9G5cNux9LYKPUYyUZmAP2wB5iqHdi4MmZTLBpH9H6yUAQeiogiG9P1q5RZgYezvTsLYT0ycASU+MfH+IGFV0+5v668SDXKKzJZM0RshQRoCK9m5cpAUjHpi5mPtx1kkV8AB2p7e3nD+Zwlk8mKJdnCDH3BhNMU0Asx3zyw++6NyCs1cTX77CA939Ll2bSQ2+ldrBiHi4uJRx/cuLi2Omxm9PkKOLgIQCBQNQ08qsvXQBUTO796Y0dh+8c2KGIg4tDBYPS9b++/eyroSssVB9UakAggb98nRTkEu2pn48mtswV7EccxaGMhlU96vz0yHdfHr5AjgIePnfZcgx0EjRh0vLLQGrb7Q2VMzuaGXztbG6BJSr4iHDXsAZNHzy/NOV72fHzx57qJomNhoKkFBrpTKVpJYKOiuQUNLTwmP8AikFDS3MsZj8AAAAASUVORK5CYII=);
+        }
+
+        .hub-map-marker-thumbnail {
+            top: 10px;
+            left: 9px;
+        }
+    }
+
+    .hub-map-marker-badge {
+        position: absolute;
+        top: 0px;
+        right: -7px;
+        background: #0f98ec;
+        color: #FFF;
+        min-width: 25px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 1.1em;
+    }
+
     .hub-map-night {
         stroke: none;
         fill: #333;
         fill-opacity: .5;
-    }
-
-    // Map Land
-    .hub-map-land {
-        //fill: @mapLandColor;
-        //stroke: @mapLandStroke;
-        stroke-width: 1px;
-    }
-
-    // Map Background / Water
-    .hub-map-svg,
-    .hub-map-bg,
-    .hub-map-water {
-        width: 100%;
-        height: 100%;
-        //fill: #888;
     }
     svg.hub-map {
         position: absolute;

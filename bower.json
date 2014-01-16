@@ -1,6 +1,6 @@
 {
   "name": "streamhub-map",
-  "version": "0.2.6",
+  "version": "1.0.0",
   "main": [
     "./src/main.js"
   ],
@@ -17,7 +17,9 @@
     "inherits": "git://github.com/Livefyre/inherits.git",
     "d3": "*",
     "colorbrewer": "*",
-    "topojson": "*"
+    "topojson": "*",
+    "leaflet": "git@github.com:Leaflet/Leaflet.git",
+    "leaflet-markercluster": "git@github.com:Leaflet/Leaflet.markercluster.git"
   },
   "devDependencies": {
     "jasmine": "*",
@@ -33,8 +35,5 @@
     "sampleImages": [
       "http://i.imgur.com/dkdzBkB.png"
     ]
-  },
-  "resolutions": {
-    "streamhub-sdk": "~v2.5.0"
   }
 }

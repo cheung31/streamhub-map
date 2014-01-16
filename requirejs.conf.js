@@ -70,6 +70,14 @@ requirejs.config({
     name: "view",
     location: "lib/view/src",
     main: "view"
+  },{
+    name: 'leaflet',
+    location: 'lib/leaflet/dist/',
+    main: 'leaflet-src'
+  },{
+    name: 'leaflet-markercluster',
+    location: 'lib/leaflet-markercluster/dist/',
+    main: 'leaflet.markercluster-src'
   }],
   shim: {
     jasmine: {
@@ -93,6 +101,9 @@ requirejs.config({
     },
     topojson: {
         exports: 'topojson'
+    },
+    'leaflet-markercluster': {
+        deps: ['leaflet']
     }
   },
   urlArgs: "_=" +  (new Date()).getTime()
