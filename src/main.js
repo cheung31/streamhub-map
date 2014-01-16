@@ -1,7 +1,5 @@
 define([
     'streamhub-sdk/modal',
-    'streamhub-map/views/overlay-view',
-    'streamhub-map/views/symbol-view',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'text!streamhub-map/css/style.css',
@@ -12,8 +10,6 @@ define([
     'inherits'
 ], function (
     ModalView,
-    OverlayView,
-    SymbolView,
     ContentListView,
     CollectionToHeatMetric,
     MapViewCss,
