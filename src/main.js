@@ -44,10 +44,6 @@ define([
         this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
         this._mapCenter = opts.center || [0,0];
         this._mapZoom = opts.zoom || 2;
-        this._styles = opts.styles || DefaultThemeJson;
-        if (this._styles == 'dark') {
-            this._styles = DarkThemeJson;
-        }
         this._cluster = opts.cluster || true;
         this._clusterPixelDistance = opts.clusterPixelDistance || 50;
         this._overlayViews = [];
