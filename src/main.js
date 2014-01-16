@@ -4,8 +4,6 @@ define([
     'streamhub-map/views/symbol-view',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
-    'json!streamhub-map/themes/default.json',
-    'json!streamhub-map/themes/dark.json',
     'text!streamhub-map/css/style.css',
     'd3',
     'topojson',
@@ -18,8 +16,6 @@ define([
     SymbolView,
     ContentListView,
     CollectionToHeatMetric,
-    DefaultThemeJson,
-    DarkThemeJson,
     MapViewCss,
     d3,
     topojson,
@@ -45,6 +41,7 @@ define([
         opts.modal = opts.modal || new ModalView();
 
         this._id = new Date().getTime();
+        this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
         this._mapCenter = opts.center || [0,0];
         this._mapZoom = opts.zoom || 2;
         this._styles = opts.styles || DefaultThemeJson;
@@ -188,29 +185,7 @@ define([
         );
         $(this.el).css('background', this._styles.land_usages.land.fill);
 
-        // Water Areas
-        new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-water-areas/{z}/{x}/{y}.topojson", {
-            style: this._styles.water_areas
-        }).addTo(this._map);
-
-        // Land Usages
-        new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-land-usages/{z}/{x}/{y}.topojson", {
-            style: this._styles.land_usages
-        }).addTo(this._map);
-
-        // Road Lines
-        new L.TileLayer.CanvasTopoJSON("http://tile.openstreetmap.us/vectiles-highroad/{z}/{x}/{y}.topojson", {
-            style: this._styles.road_lines
-        }).addTo(this._map);
-        
-        // Labels
-        var topPane = this._map._createPane('leaflet-top-pane', this._map.getPanes().mapPane);
-        var topLayer = new L.tileLayer('http://{s}.tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
-            maxZoom: this._styles.labels.maxZoom,
-            opacity: this._styles.labels.opacity || 0.75
-        }).addTo(this._map);
-        topPane.appendChild(topLayer.getContainer());
-        topLayer.setZIndex(3);
+        new L.TileLayer("http://{s}.tile.cloudmade.com/9f4a9cd9d242456794a775abb4e765e1/"+this._cloudmadeStyleId+"/256/{z}/{x}/{y}.png").addTo(this._map);
     };
 
     /**
