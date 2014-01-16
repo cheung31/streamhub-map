@@ -179,7 +179,7 @@ define([
             this._mapCenter,
             this._mapZoom
         );
-        $(this.el).css('background', this._styles.land_usages.land.fill);
+        //$(this.el).css('background', this._styles.land_usages.land.fill);
 
         new L.TileLayer("http://{s}.tile.cloudmade.com/9f4a9cd9d242456794a775abb4e765e1/"+this._cloudmadeStyleId+"/256/{z}/{x}/{y}.png").addTo(this._map);
     };
