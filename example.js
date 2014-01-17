@@ -11,11 +11,13 @@ define(function(require) {
         var collection = new Collection(opts);
 
         var view = new View({
-            el: el
-            ,center: [37.774929499038386, -122.41941549873445]
-            ,zoom: 13
-            ,maxZoom: 16
-            ,cloudmadeStyleId: 77922
+            el: el,
+            cloudmadeStyleId: 77922,
+            leafletMapOptions: {
+                center: [37.774929499038386, -122.41941549873445]
+                zoom: 13
+                maxZoom: 16
+            }
         });
 
         collection.pipe(view);
