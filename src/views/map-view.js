@@ -28,19 +28,16 @@ define([
      * A view to visualize StreamHub content on a map
      * @constructor
      * @param [opts] {Object} Configuration options for the MapView
-     * @param [opts.mapCenter] {Array} The lat/lon coordinates of the center of the map
-     * @param [opts.mapZoom] {Number} The starting map zoom level
-     * @param [opts.styles] {Object} Specify colors for land, water, graticule, etc.
+     * @param [opts.leafletMapOptions] {Object} An object representing the options passed into the creation of a Leaflet Map (L.Map)
+     * @param [opts.cloudmadeStyleId] {Number} The style id of the CloudMade map tile theme
      */
     var MapView = function (opts) {
         opts = opts || {};
 
         this._id = new Date().getTime();
         this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
-        this._mapCenter = opts.center || [0,0];
-        this._mapZoom = opts.zoom || 2;
-        this._cluster = opts.cluster || true;
-        this._clusterPixelDistance = opts.clusterPixelDistance || 50;
+        this._leafletMapOptions = opts.leafletMapOptions || {};
+
         this._overlayViews = [];
         this._dataPoints = [];
         this.elId = this.elClass+'-'+this._id;
@@ -53,7 +50,7 @@ define([
                 .prependTo('head');
         }
 
-        this._drawMap(opts);
+        this._drawMap();
     };
     inherits(MapView, ContentListView);
 
@@ -169,12 +166,11 @@ define([
         return dataPoint._collection !== undefined;
     };
 
-    MapView.prototype._drawMap = function (opts) {
-        this._map = new L.map(this.el, opts).setView(
-            this._mapCenter,
-            this._mapZoom
+    MapView.prototype._drawMap = function () {
+        this._map = new L.Map(this.el, this._leafletMapOptions).setView(
+            this._leafletMapOptions.center || [0,0],
+            this._leafletMapOptions.zoom || 2
         );
-        //$(this.el).css('background', this._styles.land_usages.land.fill);
 
         new L.TileLayer("http://{s}.tile.cloudmade.com/9f4a9cd9d242456794a775abb4e765e1/"+this._cloudmadeStyleId+"/256/{z}/{x}/{y}.png").addTo(this._map);
     };
