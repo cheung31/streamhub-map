@@ -1,5 +1,5 @@
 define(function(require) {
-    var View = require('streamhub-map/content/content-map-view');
+    var View = require('streamhub-map');
     var Collection = require('streamhub-sdk/collection');
 
     return function(el) {

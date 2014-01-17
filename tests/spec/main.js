@@ -1,6 +1,6 @@
 define([
     'streamhub-map',
-    'streamhub-map/content/content-map-view',
+    'streamhub-map',
     'streamhub-map/point',
     'streamhub-map/collection/collection-point',
     'streamhub-map/views/overlay-factory',
