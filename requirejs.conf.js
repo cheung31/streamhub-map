@@ -1,10 +1,5 @@
 requirejs.config({
   baseUrl: '/',
-  include: [
-    'streamhub-map/collection/collection-map-view',
-    'streamhub-map/content/content-map-view',
-    'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections',
-    'json!streamhub-hot-collections-tests/mocks/clients/hot-collections-response.json'],
   paths: {
     jquery: 'lib/jquery/jquery',
 	jasmine: 'lib/jasmine/lib/jasmine-core/jasmine',

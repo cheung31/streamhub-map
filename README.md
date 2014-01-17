@@ -1,9 +1,6 @@
 # streamhub-map
 
-streamhub-map is a [StreamHub App](http://apps.livefyre.com) that displays social content on a geographical map. It supports basic thematic mapping visualizations for StreamHub collections and content, such as:
-
-* Dot mapping
-* Proportional symbol mapping
+streamhub-map is a [StreamHub App](http://apps.livefyre.com) that displays social content on a geographical map.
 
 ## Getting Started
 
@@ -13,7 +10,7 @@ The quickest way to use streamhub-map is to use the built version hosted on Live
 
 streamhub-map depends on [streamhub-sdk](https://github.com/livefyre/streamhub-sdk). Ensure it's been included in your page.
 
-	<script src="http://cdn.livefyre.com/libs/sdk/v2.2.0/streamhub-sdk.min.gz.js"></script>
+	<script src="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.min.gz.js"></script>
 
 Include streamhub-map too.
 
@@ -21,13 +18,13 @@ Include streamhub-map too.
 	
 Optionally, include some reasonable default CSS rules for StreamHub Content. This stylesheet is provided by the StreamHub SDK.
 
-    <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.2.0/streamhub-sdk.gz.css" />
+    <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.gz.css" />
 
 ### Usage
 #### Visualizing a Livefyre Collection (```ContentMapView```)
 1. Require streamhub-sdk and ContentMapView
 
-        var ContentMapView = Livefyre.require('streamhub-map/content/content-map-view');
+        var ContentMapView = Livefyre.require('streamhub-map');
         
 1. Create a ```Collection```.
 
@@ -48,63 +45,39 @@ Optionally, include some reasonable default CSS rules for StreamHub Content. Thi
 
         collection.pipe(view);
 
-#### Visualizing Livefyre Hot Collections (```CollectionMapView```)
-
-1. Require streamhub-sdk and CollectionMapView
-
-        var CollectionMapView = Livefyre.require('streamhub-map/collection/collection-map-view');
-    
-1. Your ```site``` on Livefyre keeps track of the hottest conversations. To access these hot conversations Livefyre provides ```Hot Collections```. To visualize Hot Collections on the ```MapView```. **Define the mapping of ```Collection``` to ```Location```.** This requires prior knowledge of Collection ```articleId```s, and their respective latitude/longitude coordinates. (**Note**: *In the future this explicit mapping may be deprecated by allowing Collections to be geotagged through the Livefyre admin.*):
-    
-        // A map of articleIds from a set of Hot Collections to their respective locations
-        var collectionToLocation = {
-        	'articleId1': { lat: 30.52, lon: -58.23 },
-        	'articleId2': { lat: 60.52, lon: 8.23 },
-        	...
-        };
-        
-1. Create a CollectionMapView, passing the DOMElement to render it in (```el``` option).
-
-        var view = new CollectionMapView({
-        	el: document.getElementById("myMap"),
-        	collectionToLocation: collectionToLocation
-    	});
-    
-1. Pipe the collection's content into the ```CollectionMapView```
-
-        var hotCollectionsStream = new MockHotCollectionsStream({
-            network: 'livefyre.com'
-        });
-        hotCollections.pipe(view);
         
 ## Map Customization
-### Bounding box
-The visible region can be specified with  the ```boundingBox``` option. The bounding box is represented by the North-West and South-East Lat/Lon coordinates.
+The default center point, zoom level, and appearance of map tiles can be
+configured with the ```leafletMapOptions``` option.
 
-        var view = new MapView({
+### Default center point
+To set the default center point of the map, specify the lat/lon coordinate in the ```leafletMapOptions```:
+
+        var view = new ContentMapView({
             el: document.getElementById("myMap"),
-            boundingBox: [
-                { lat: 49.32512199104001, lon: -126.5625 }, // NW
-                { lat: 24.686952411999155, lon: -65.830078125 } // SE
-            ]
-        });
-
-### Land/Water colors
-
-The ```MapView``` constructor accepts the ```colors``` option.
-
-        var view = new MapView({
-            el: document.getElementById("myMap"),
-            colors: {
-                land: {
-                    fill: 'green',
-                    stroke: 'black'
-                },
-                water {
-               	    fill: 'blue'
-                }
+            leafletMapOptions: {
+                center: [37.774929499038386, -122.41941549873445]
             }
         });
+
+### Default zoom level
+To set the default zoom level of the map, specify the zoom level in the ```leafletMapOptions```:
+
+        var view = new ContentMapView({
+            el: document.getElementById("myMap"),
+            leafletMapOptions: {
+                zoom: 4
+            }
+        });
+
+### Map Tile theme
+To change the appearance of map tiles, specify the style id of the theme from CloudMade with the ```cloudmadeStyleId``` option:
+
+        var view = new ContentMapView({
+            el: document.getElementById("myMap"),
+            cloudmadeStyleId: 998
+        });
+
 
 ## Local Development
 

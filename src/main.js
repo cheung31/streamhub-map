@@ -1,191 +1,128 @@
 define([
-    'streamhub-sdk/modal',
+    'streamhub-map/views/map-view',
     'streamhub-sdk/content/views/content-list-view',
-    'streamhub-hot-collections/streams/collection-to-heat-metric',
-    'text!streamhub-map/css/style.css',
-    'd3',
-    'topojson',
-    'streamhub-sdk/jquery',
+    'streamhub-map/content/content-point',
+    'hgn!streamhub-map/views/templates/marker',
+    'inherits',
     'streamhub-map/leaflet',
-    'inherits'
-], function (
-    ModalView,
+    'streamhub-map/leaflet-markercluster'],
+function (
+    MapView,
     ContentListView,
-    CollectionToHeatMetric,
-    MapViewCss,
-    d3,
-    topojson,
-    $,
-    L,
-    inherits
-) {
-    'use strict';
+    ContentPoint,
+    MarkerTemplate,
+    inherits,
+    L) {
 
-    var STYLE_EL;
-    var SVG_TEMPLATES_EL;
+    var ContentMapView = function (opts) {
+        this._contentToMarkerMap = {};
+        this._markers = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true,
+            maxClusterRadius: 100,
+            spiderfyDistanceMultiplier: 2,
+            iconCreateFunction: function(cluster) {
+                var childMarkers = cluster.getAllChildMarkers();
+                var clusterIconHtml;
+                for (var i=0; i < childMarkers.length; i++) {
+                    var childMarker = childMarkers[i];
+                    clusterIconHtml = childMarker._icon ? childMarker._icon.innerHTML : childMarker.options.icon.options.html;
+                    if (clusterIconHtml) {
+                        break;
+                    }
+                }
 
-    /**
-     * A view to visualize StreamHub content on a map
-     * @constructor
-     * @param [opts] {Object} Configuration options for the MapView
-     * @param [opts.mapCenter] {Array} The lat/lon coordinates of the center of the map
-     * @param [opts.mapZoom] {Number} The starting map zoom level
-     * @param [opts.styles] {Object} Specify colors for land, water, graticule, etc.
-     */
-    var MapView = function (opts) {
-        opts = opts || {};
+                var $clusterIcon = $(clusterIconHtml);
+                $clusterIcon.append('<div class="hub-map-marker-badge">'+childMarkers.length+'</div>');
+                return new L.ContentDivIcon({
+                    className: 'hub-map-collection-marker',
+                    html: '<div class="hub-map-marker-bg">'+$clusterIcon.html()+'</div>',
+                    iconSize: [54,55],
+                    iconAnchor: [27,27.5]
+                });
+            }
+        });
 
-        this._id = new Date().getTime();
-        this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
-        this._mapCenter = opts.center || [0,0];
-        this._mapZoom = opts.zoom || 2;
-        this._cluster = opts.cluster || true;
-        this._clusterPixelDistance = opts.clusterPixelDistance || 50;
-        this._overlayViews = [];
-        this._dataPoints = [];
-        this.elId = this.elClass+'-'+this._id;
+        MapView.call(this, opts);
+    };
+    inherits(ContentMapView, MapView);
 
-        ContentListView.call(this, opts);
-
-        if (!STYLE_EL) {
-            $('<style id="'+this.elId+'-style"></style>')
-                .text('.'+this.elId+MapViewCss)
-                .prependTo('head');
+    ContentMapView.prototype.add = function (content) {
+        if (! content._annotations.geocode || ! content._annotations.geocode.latitude || ! content._annotations.geocode.longitude ) {
+            return;
         }
 
-        this._drawMap(opts);
+        // Adapt Content to ContentPoint
+        var contentPoint = new ContentPoint(content);
+
+        MapView.prototype.add.call(this, contentPoint);
     };
-    inherits(MapView, ContentListView);
 
-    MapView.prototype.mapClassName = 'hub-map';
-    MapView.prototype.mapOverlayLayerClassName = 'hub-map-overlays';
-    MapView.prototype.mapLayerClassName = 'hub-map-layer';
-    MapView.prototype.mapLandClassName = 'hub-map-land';
-    MapView.prototype.mapWaterClassName = 'hub-map-water';
-    MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
-    MapView.prototype.mapSvgTemplatesClassName = 'hub-map-svg-templates';
-    MapView.prototype.elClass = 'hub-map-view';
-
-    MapView.prototype.setElement = function (el) {
-        ContentListView.prototype.setElement.call(this, el);
-        this.$el.addClass(this.elId);
+    ContentMapView.prototype.setElement = function (el) {
+        MapView.prototype.setElement.apply(this, arguments);
 
         var self = this;
 
-        this.$el.on('imageError.hub', function (e) {
-            var dataPoint;
-            for (var i=0; i < self._dataPoints.length; i++) {
-                if ($(e.target).attr('src') == self._dataPoints[i].getContent().attachments[0].thumbnail_url) {
-                    dataPoint = self._dataPoints[i];
-                }
-            }
-            self._removeDataPoint(dataPoint);
+        this.$el.on('focusDataPoint.hub', function (e, focusContext) {
+            self._displayDataPointDetails(focusContext.contentItems);
         });
 
-        this.$el.on('addDataPoint.hub', function (e, dataPoint) {
-            self._drawMarker(dataPoint);
+        this._markers.on('click', function (e) {
+            var content = e.layer.options.icon.options.content;
+            self.$el.trigger('focusDataPoint.hub', { contentItems: [content] });
+        });
+
+        this._markers.on('clusterclick', function (e) {
+            if (self._map.getMaxZoom() !== self._map.getZoom()) {
+                return;
+            }
+
+            var content = [];
+            for (var i=0; i < e.layer._markers.length; i++) {
+                content.push(e.layer._markers[i].options.icon.options.content);
+            }
+            self.$el.trigger('focusDataPoint.hub', { contentItems: content });
         });
     };
 
-    MapView.prototype._drawMarker = function (dataPoint) {
-        new L.Marker(new L.LatLng(dataPoint.lat, dataPoint.lon)).addTo(this._map);
-    };
-
-    MapView.prototype._getMapDimensions = function () {
-        this._width = this.$el.width();
-        this._height = this.$el.height();
-        return { width: this._width, height: this._height };
-    };
-
-    /**
-     * Add a layer that may contain any number of views
-     * @param name {String} The name of the layer. Adds a className on the
-     *                      associated svg:g element.
-     * @returns {SVGGElement} The svg:g element representing the layer
-     */
-    MapView.prototype.addLayer = function (name) {
-        return this._mapContext.svg.append('svg:g')
-            .attr('class', this.mapLayerClassName)
-            .attr('class', name);
-    };
-
-    MapView.prototype._addDataPoint = function (dataPoint) {
-        this._dataPoints.push(dataPoint);
-        this.$el.trigger('addDataPoint.hub', dataPoint);
-    };
-
-    MapView.prototype._removeDataPoint = function (dataPoint) {
-        var index = this._dataPoints.indexOf(dataPoint);
-        if (index >= 0) {
-            this._dataPoints.splice(index, 1);
-            this.$el.trigger('removeDataPoint.hub');
-        }
-    };
-
-    MapView.prototype._createOverlayView = (function () {
-        var maxMetricValue = 0;
-
-        return function (dataPoint) {
-            var overlayView;
-
-            // Check if it is cluster set
-            if (dataPoint.length) {
-                if (dataPoint.length > 1) {
-                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
-                } else {
-                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint[0]);
-                }
-                return overlayView;
+    ContentMapView.prototype._drawMarker = function (dataPoint) {
+        var marker = new L.Marker(
+            new L.LatLng(dataPoint.lat, dataPoint.lon), {
+                icon: new L.ContentDivIcon({
+                    className: 'hub-map-content-marker',
+                    html: MarkerTemplate({
+                        thumbnail_url: dataPoint.getContent().attachments[0].thumbnail_url
+                    }),
+                    iconSize: [44,48],
+                    iconAnchor: [22,48],
+                    content: dataPoint.getContent()
+                })
             }
-
-            // Check if it is not a CollectionPoint
-            if (! this.isCollectionPoint(dataPoint)) {
-                overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
-                return overlayView;
-            }
-
-            // Otherwise it's a CollectionPoint
-            var collection = dataPoint.getCollection();
-            var metric = CollectionToHeatMetric.transform(collection);
-            var metricValue = metric.getValue();
-            if (metricValue > maxMetricValue) {
-                maxMetricValue = metricValue;
-            }
-            overlayView = new SymbolView(dataPoint, {
-                mapContext: this._mapContext,
-                maxMetricValue: function () { return maxMetricValue; },
-                notifyStream: dataPoint.getCollection()
-            });
-
-            return overlayView;
-        };
-    }());
-
-    /**
-     * A helper function to check whether a Point instance is of type CollectionPoint
-     * @param dataPoint {Point} The point instance to be checked
-     */
-    MapView.prototype.isCollectionPoint = function (dataPoint) {
-        return dataPoint._collection !== undefined;
-    };
-
-    MapView.prototype._drawMap = function (opts) {
-        this._map = new L.map(this.el, opts).setView(
-            this._mapCenter,
-            this._mapZoom
         );
-        //$(this.el).css('background', this._styles.land_usages.land.fill);
+        this._markers.addLayer(marker);
+        this._map.addLayer(this._markers);
 
-        new L.TileLayer("http://{s}.tile.cloudmade.com/9f4a9cd9d242456794a775abb4e765e1/"+this._cloudmadeStyleId+"/256/{z}/{x}/{y}.png").addTo(this._map);
+        this._contentToMarkerMap[dataPoint.getContent().id] = marker;
     };
 
-    /**
-     * Add a Point instance to be visualized on the map
-     * @param dataPoint {Point} The point to be visualized on the map
-     */
-    MapView.prototype.add = function (point) {
-        this._addDataPoint(point);
+    ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
+        if (! this.modal || ! contentItems || ! contentItems.length) {
+            return;
+        }
+
+        var modalContentView = new ContentListView();
+        for (var i=0; i < contentItems.length; i++) {
+            modalContentView.more.write(contentItems[i]);
+        }
+
+        this.modal.show(modalContentView);
     };
 
-    return MapView;
+    ContentMapView.prototype._removeDataPoint = function (dataPoint) {
+        // Remove marker
+        this._markers.removeLayer(this._contentToMarkerMap[dataPoint.getContent().id]);
+        MapView.prototype._removeDataPoint.call(this, dataPoint);
+    };
+
+    return ContentMapView;
 });
