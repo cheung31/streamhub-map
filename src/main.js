@@ -86,12 +86,27 @@ function (
     };
 
     ContentMapView.prototype._drawMarker = function (dataPoint) {
+        var thumbnail_url;
+        var contentItem = dataPoint.getContent();
+        if (contentItem.attachments.length && contentItem.attachments[0].thumbnail_url) {
+            thumbnail_url = contentItem.attachments[0].thumbnail_url;
+        } else if (contentItem.author && contentItem.author.avatar) {
+            thumbnail_url = contentItem.author.avatar;
+        }
+
+
+        var latlng;
+        if (contentItem.source === 'twitter') {
+            latlng = new L.LatLng(dataPoint.lon, dataPoint.lat);
+        } else {
+            latlng = new L.LatLng(dataPoint.lat, dataPoint.lon);
+        }
         var marker = new L.Marker(
-            new L.LatLng(dataPoint.lat, dataPoint.lon), {
+            latlng, {
                 icon: new L.ContentDivIcon({
                     className: 'hub-map-content-marker',
                     html: MarkerTemplate({
-                        thumbnail_url: dataPoint.getContent().attachments[0].thumbnail_url
+                        thumbnail_url: thumbnail_url || ''
                     }),
                     iconSize: [44,48],
                     iconAnchor: [22,48],
