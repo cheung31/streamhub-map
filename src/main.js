@@ -4,6 +4,7 @@ define([
     'streamhub-map/content/content-point',
     'hgn!streamhub-map/views/templates/marker',
     'inherits',
+    'streamhub-sdk/jquery',
     'streamhub-map/leaflet',
     'streamhub-map/leaflet-markercluster'],
 function (
@@ -12,6 +13,7 @@ function (
     ContentPoint,
     MarkerTemplate,
     inherits,
+    $,
     L) {
 
     var ContentMapView = function (opts) {
