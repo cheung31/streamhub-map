@@ -7,13 +7,6 @@
         overflow-y: hidden;
     }
 
-    // SVG Templates
-    .hub-map-svg-templates {
-        position: absolute;
-        top: 0;
-        z-index: -1;
-    }
-
     .hub-list-more {
         background-repeat: no-repeat;
         background-color: transparent;
@@ -98,34 +91,19 @@
         font-size: 1.1em;
     }
 
-    .hub-map-night {
-        stroke: none;
-        fill: #333;
-        fill-opacity: .5;
-    }
-    svg.hub-map {
-        position: absolute;
-        z-index: 1;
+    .hub-modal-close {
+        display: none;
     }
 
-    // Graticule
-    .hub-map-graticule {
-        //fill: none;
-        stroke: #ccc;
-        stroke-width: 0.5px;
-    }
-
-    .hub-map-info-window {
+    .hub-modal-content {
         position: absolute;
-        z-index: 2;
-        border: 1px solid #AAA;
-        background: rgba(255, 255, 255, 0.9);
-        color: #FFF;
-        width: 100px;
-        height: 100px;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
+        top: 0;
+        right: 0;
+        width: 500px;
+        height: 100%;
+        background-color: #FFF;
+        opacity: 0.75;
+        z-index: 100;
     }
 }
 

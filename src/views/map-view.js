@@ -1,5 +1,6 @@
 define([
     'streamhub-sdk/modal',
+    'streamhub-map/views/side-panel-view',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'text!streamhub-map/css/style.css',
@@ -10,6 +11,7 @@ define([
     'inherits'
 ], function (
     ModalView,
+    SidePanelView,
     ContentListView,
     CollectionToHeatMetric,
     MapViewCss,
@@ -37,6 +39,7 @@ define([
         this._id = new Date().getTime();
         this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
         this._leafletMapOptions = opts.leafletMapOptions || {};
+        this._sidePanelView = opts.sidePanel ? new SidePanelView({ modalSubView: new ContentListView() }) : null;
 
         this._overlayViews = [];
         this._dataPoints = [];
@@ -65,7 +68,11 @@ define([
 
     MapView.prototype.setElement = function (el) {
         ContentListView.prototype.setElement.call(this, el);
-        this.$el.addClass(this.elId);
+        this.$el.addClass(this.elId)
+
+        if (this._sidePanelView) {
+            this._sidePanelView.setElement(el);
+        };
 
         var self = this;
 
@@ -82,6 +89,14 @@ define([
         this.$el.on('addDataPoint.hub', function (e, dataPoint) {
             self._drawMarker(dataPoint);
         });
+    };
+
+    MapView.prototype.render = function () {
+        ContentListView.prototype.render.call(this);
+
+        if (this._sidePanelView) {
+            this._sidePanelView.render();
+        }
     };
 
     MapView.prototype._drawMarker = function (dataPoint) {
@@ -170,6 +185,12 @@ define([
         this._map = new L.Map(this.el, this._leafletMapOptions).setView(
             this._leafletMapOptions.center || [0,0],
             this._leafletMapOptions.zoom || 2
+        );
+
+        this._map.setView(
+            this._leafletMapOptions.center || [0,0],
+            this._leafletMapOptions.zoom || 1,
+            { offset: [500, 0] }
         );
 
         new L.TileLayer("http://{s}.tile.cloudmade.com/9f4a9cd9d242456794a775abb4e765e1/"+this._cloudmadeStyleId+"/256/{z}/{x}/{y}.png").addTo(this._map);
