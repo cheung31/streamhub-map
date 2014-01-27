@@ -3,6 +3,7 @@ define([
     'streamhub-map/views/side-panel-view',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
+    'hgn!streamhub-map/views/templates/map-view',
     'text!streamhub-map/css/style.css',
     'd3',
     'topojson',
@@ -14,6 +15,7 @@ define([
     SidePanelView,
     ContentListView,
     CollectionToHeatMetric,
+    MapViewTemplate,
     MapViewCss,
     d3,
     topojson,
@@ -64,6 +66,8 @@ define([
     MapView.prototype.mapWaterClassName = 'hub-map-water';
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
     MapView.prototype.mapSvgTemplatesClassName = 'hub-map-svg-templates';
+    MapView.prototype.mapContainerSelector = '.hub-map-container';
+    MapView.prototype.template = MapViewTemplate;
     MapView.prototype.elClass = 'hub-map-view';
 
     MapView.prototype.setElement = function (el) {
@@ -95,30 +99,12 @@ define([
         ContentListView.prototype.render.call(this);
 
         if (this._sidePanelView) {
-            this._sidePanelView.render();
+            this._sidePanelView.setElement(this.el);
         }
     };
 
     MapView.prototype._drawMarker = function (dataPoint) {
         new L.Marker(new L.LatLng(dataPoint.lat, dataPoint.lon)).addTo(this._map);
-    };
-
-    MapView.prototype._getMapDimensions = function () {
-        this._width = this.$el.width();
-        this._height = this.$el.height();
-        return { width: this._width, height: this._height };
-    };
-
-    /**
-     * Add a layer that may contain any number of views
-     * @param name {String} The name of the layer. Adds a className on the
-     *                      associated svg:g element.
-     * @returns {SVGGElement} The svg:g element representing the layer
-     */
-    MapView.prototype.addLayer = function (name) {
-        return this._mapContext.svg.append('svg:g')
-            .attr('class', this.mapLayerClassName)
-            .attr('class', name);
     };
 
     MapView.prototype._addDataPoint = function (dataPoint) {
@@ -134,45 +120,6 @@ define([
         }
     };
 
-    MapView.prototype._createOverlayView = (function () {
-        var maxMetricValue = 0;
-
-        return function (dataPoint) {
-            var overlayView;
-
-            // Check if it is cluster set
-            if (dataPoint.length) {
-                if (dataPoint.length > 1) {
-                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
-                } else {
-                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint[0]);
-                }
-                return overlayView;
-            }
-
-            // Check if it is not a CollectionPoint
-            if (! this.isCollectionPoint(dataPoint)) {
-                overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
-                return overlayView;
-            }
-
-            // Otherwise it's a CollectionPoint
-            var collection = dataPoint.getCollection();
-            var metric = CollectionToHeatMetric.transform(collection);
-            var metricValue = metric.getValue();
-            if (metricValue > maxMetricValue) {
-                maxMetricValue = metricValue;
-            }
-            overlayView = new SymbolView(dataPoint, {
-                mapContext: this._mapContext,
-                maxMetricValue: function () { return maxMetricValue; },
-                notifyStream: dataPoint.getCollection()
-            });
-
-            return overlayView;
-        };
-    }());
-
     /**
      * A helper function to check whether a Point instance is of type CollectionPoint
      * @param dataPoint {Point} The point instance to be checked
@@ -182,7 +129,10 @@ define([
     };
 
     MapView.prototype._drawMap = function () {
-        this._map = new L.Map(this.el, this._leafletMapOptions).setView(
+        this._map = new L.Map(
+            this.$el.find(this.mapContainerSelector)[0],
+            this._leafletMapOptions
+        ).setView(
             this._leafletMapOptions.center || [0,0],
             this._leafletMapOptions.zoom || 2
         );

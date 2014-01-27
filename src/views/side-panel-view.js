@@ -1,22 +1,23 @@
 define([
-    'streamhub-sdk/modal',
+    'hgn!streamhub-map/views/templates/side-panel',
+    'view',
     'inherits'
 ], function (
-    ModalView,
+    SidePanelTemplate,
+    View,
     inherits
 ) {
 
     var SidePanelView = function (opts) {
         opts = opts || {};
 
-        ModalView.call(this, opts);
+        View.call(this, opts);
     };
-    inherits(SidePanelView, ModalView);
+    inherits(SidePanelView, View);
 
-    SidePanelView.$el = $('<div class="hub-map-side-panels"></div>');
-    SidePanelView.el = SidePanelView.$el[0];
-
-    SidePanelView.prototype.elClass = ' hub-map-side-panel';
+    SidePanelView.prototype.elTag = 'div';
+    SidePanelView.prototype.elClass = 'hub-map-side-panel';
+    SidePanelView.prototype.template = SidePanelTemplate;
 
     return SidePanelView;
 });
