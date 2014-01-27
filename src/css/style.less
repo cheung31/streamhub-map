@@ -100,15 +100,34 @@
         display: none;
     }
 
-    .hub-map-side-panel {
+    .hub-map-side-panel-background {
         position: absolute;
         top: 0;
         right: 0;
         width: 500px;
         height: 100%;
         background-color: #FFF;
-        opacity: 0.75;
+        z-index: 99;
+        opacity: 0.5;
+    }
+    .hub-map-side-panel {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 500px;
+        height: 100%;
         z-index: 100;
+        overflow-y: scroll;
+
+        .hub-list {
+            width: 95%;
+            margin: 0 auto;
+            overflow-y: scroll;
+        }
+    }
+
+    .hub-map-side-panel-hidden {
+        display: none;
     }
 }
 

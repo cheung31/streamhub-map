@@ -8,8 +8,9 @@ define([
     'd3',
     'topojson',
     'streamhub-sdk/jquery',
+    'inherits',
     'streamhub-map/leaflet',
-    'inherits'
+    'streamhub-map/leaflet-mapoffsetcenter'
 ], function (
     ModalView,
     SidePanelView,
@@ -20,8 +21,8 @@ define([
     d3,
     topojson,
     $,
-    L,
-    inherits
+    inherits,
+    L
 ) {
     'use strict';
 
@@ -41,7 +42,7 @@ define([
         this._id = new Date().getTime();
         this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
         this._leafletMapOptions = opts.leafletMapOptions || {};
-        this._sidePanelView = opts.sidePanel ? new SidePanelView({ modalSubView: new ContentListView() }) : null;
+        this._sidePanelView = opts.sidePanel ? new SidePanelView({ subView: new ContentListView() }) : null;
 
         this._overlayViews = [];
         this._dataPoints = [];
@@ -67,16 +68,14 @@ define([
     MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
     MapView.prototype.mapSvgTemplatesClassName = 'hub-map-svg-templates';
     MapView.prototype.mapContainerSelector = '.hub-map-container';
+    MapView.prototype.mapSidePanelSelector = '.hub-map-side-panel';
+    MapView.prototype.mapSidePanelHiddenClassName = 'hub-map-side-panel-hidden';
     MapView.prototype.template = MapViewTemplate;
     MapView.prototype.elClass = 'hub-map-view';
 
     MapView.prototype.setElement = function (el) {
         ContentListView.prototype.setElement.call(this, el);
-        this.$el.addClass(this.elId)
-
-        if (this._sidePanelView) {
-            this._sidePanelView.setElement(el);
-        };
+        this.$el.addClass(this.elId);
 
         var self = this;
 
@@ -92,6 +91,10 @@ define([
 
         this.$el.on('addDataPoint.hub', function (e, dataPoint) {
             self._drawMarker(dataPoint);
+
+            if (self._sidePanelView) {
+                self._sidePanelView._subView.write(dataPoint.getContent());
+            }
         });
     };
 
@@ -99,7 +102,10 @@ define([
         ContentListView.prototype.render.call(this);
 
         if (this._sidePanelView) {
-            this._sidePanelView.setElement(this.el);
+            this._sidePanelView.setElement(this.$el.find(this.mapSidePanelSelector));
+            this._sidePanelView.render();
+        } else {
+            this.$el.find(this.mapSidePanelSelector).addClass('hub-map-side-panel-hidden');
         }
     };
 
@@ -129,10 +135,20 @@ define([
     };
 
     MapView.prototype._drawMap = function () {
-        this._map = new L.Map(
-            this.$el.find(this.mapContainerSelector)[0],
-            this._leafletMapOptions
-        ).setView(
+       
+        if (this._sidePanelView) { 
+            this._map = new L.MapCenterOffset(
+                this.$el.find(this.mapContainerSelector)[0],
+                this._leafletMapOptions
+            );
+        } else {
+            this._map = new L.Map(
+                this.$el.find(this.mapContainerSelector)[0],
+                this._leafletMapOptions
+            );
+        }
+
+        this._map.setView(
             this._leafletMapOptions.center || [0,0],
             this._leafletMapOptions.zoom || 2
         );

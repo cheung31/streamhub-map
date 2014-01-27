@@ -16,6 +16,9 @@ function (
 
     var ContentMapView = function (opts) {
         this._contentToMarkerMap = {};
+        if (opts.sidePanel) {
+            require(['streamhub-map/leaflet-markerclusteroffsetcenter']);
+        }
         this._markers = new L.MarkerClusterGroup({
             showCoverageOnHover: false,
             zoomToBoundsOnClick: true,
