@@ -2,6 +2,7 @@ define([
     'streamhub-sdk/modal',
     'streamhub-map/views/side-panel-view',
     'streamhub-sdk/content/views/content-list-view',
+    'streamhub-wall',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'hgn!streamhub-map/views/templates/map-view',
     'text!streamhub-map/css/style.css',
@@ -15,6 +16,7 @@ define([
     ModalView,
     SidePanelView,
     ContentListView,
+    WallView,
     CollectionToHeatMetric,
     MapViewTemplate,
     MapViewCss,
@@ -42,7 +44,7 @@ define([
         this._id = new Date().getTime();
         this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
         this._leafletMapOptions = opts.leafletMapOptions || {};
-        this._sidePanelView = opts.sidePanel ? new SidePanelView({ subView: new ContentListView() }) : null;
+        this._sidePanelView = opts.sidePanel ? new SidePanelView({ subView: new WallView() }) : null;
 
         this._overlayViews = [];
         this._dataPoints = [];

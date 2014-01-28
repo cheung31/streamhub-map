@@ -53,6 +53,9 @@ requirejs.config({
     name: "streamhub-metrics",
     location: "lib/streamhub-metrics/src/"
   },{
+    name: "streamhub-wall",
+    location: "lib/streamhub-wall/src/"
+  },{
     name: "view",
     location: "lib/view/src",
     main: "view"
