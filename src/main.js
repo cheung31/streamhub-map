@@ -97,12 +97,8 @@ function (
         }
 
 
-        var latlng;
-        if (contentItem.source === 'twitter') {
-            latlng = new L.LatLng(dataPoint.lon, dataPoint.lat);
-        } else {
-            latlng = new L.LatLng(dataPoint.lat, dataPoint.lon);
-        }
+        var latlng = new L.LatLng(dataPoint.lat, dataPoint.lon);
+
         var marker = new L.Marker(
             latlng, {
                 icon: new L.ContentDivIcon({

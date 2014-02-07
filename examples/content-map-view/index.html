@@ -34,12 +34,12 @@
         ], function (
             Collection,
             ContentMapView) {
-            var opts = {
-                "network": "livefyre.com",
-                "siteId": "290596",
-                "articleId": "172",
-                "environment": "qa-ext.livefyre.com"
-            };
+            var collection = window.collection = new Collection({
+                "network": "drphil.fyre.co",
+                "siteId": "340265",
+                "articleId": "big-demo-0",
+                "environment": "livefyre.com"
+            });
 
             var mapView = window.mapView = new ContentMapView({
                 el: document.getElementById('feed1')
@@ -48,7 +48,6 @@
                 ,maxZoom: 16
             });
 
-            var collection = window.collection = new Collection(opts);
             collection.pipe(mapView);
         });
         </script>
