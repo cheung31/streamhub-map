@@ -3,8 +3,6 @@ define([
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-hot-collections/streams/collection-to-heat-metric',
     'text!streamhub-map/css/style.css',
-    'd3',
-    'topojson',
     'streamhub-sdk/jquery',
     'streamhub-map/leaflet',
     'inherits'
@@ -13,8 +11,6 @@ define([
     ContentListView,
     CollectionToHeatMetric,
     MapViewCss,
-    d3,
-    topojson,
     $,
     L,
     inherits
