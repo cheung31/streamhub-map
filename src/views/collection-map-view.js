@@ -8,6 +8,10 @@ function (MapView, CollectionPoint, inherits) {
         opts = opts || {};
 
         this._collectionToLocation = opts.collectionToLocation;
+        if (opts.drawMarker && typeof(opts.drawMarker) === 'function') {
+            CollectionMapView.prototype._drawMarker = opts.drawMarker;
+        }
+
         MapView.call(this, opts);
     };
     inherits(CollectionMapView, MapView);
