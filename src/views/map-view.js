@@ -82,7 +82,9 @@ define([
 
     MapView.prototype._drawMarker = function (dataPoint) {
         var marker = this._createMarker(dataPoint);
-        this._addMarkerToMap(marker);
+        if (marker) {
+            this._addMarkerToMap(marker);
+        }
         return marker;
     };
 
