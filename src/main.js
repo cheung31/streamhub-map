@@ -88,6 +88,12 @@ function (
     };
 
     ContentMapView.prototype._drawMarker = function (dataPoint) {
+        var marker = MapView.prototype._drawMarker.call(this, dataPoint);
+        this._contentToMarkerMap[dataPoint.getContent().id] = marker;
+        return marker;
+    };
+
+    ContentMapView.prototype._createMarker = function (dataPoint) {
         var thumbnail_url;
         var contentItem = dataPoint.getContent();
         if (contentItem.attachments.length && contentItem.attachments[0].thumbnail_url) {
@@ -96,10 +102,8 @@ function (
             thumbnail_url = contentItem.author.avatar;
         }
 
-
-        var latlng = new L.LatLng(dataPoint.lat, dataPoint.lon);
-
-        var marker = new L.Marker(
+        var latlng = this._getLatLngFromPoint(dataPoint);
+        return new L.Marker(
             latlng, {
                 icon: new L.ContentDivIcon({
                     className: 'hub-map-content-marker',
@@ -112,10 +116,11 @@ function (
                 })
             }
         );
+    };
+
+    ContentMapView.prototype._addMarkerToMap = function (marker) {
         this._markers.addLayer(marker);
         this._map.addLayer(this._markers);
-
-        this._contentToMarkerMap[dataPoint.getContent().id] = marker;
     };
 
     ContentMapView.prototype._displayDataPointDetails = function (contentItems) {

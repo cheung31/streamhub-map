@@ -81,7 +81,21 @@ define([
     };
 
     MapView.prototype._drawMarker = function (dataPoint) {
-        new L.Marker(new L.LatLng(dataPoint.lat, dataPoint.lon)).addTo(this._map);
+        var marker = this._createMarker(dataPoint);
+        this._addMarkerToMap(marker);
+        return marker;
+    };
+
+    MapView.prototype._createMarker = function (dataPoint) {
+        return new L.Marker(this._getLatLngFromPoint(dataPoint));
+    };
+
+    MapView.prototype._addMarkerToMap = function (marker) {
+        marker.addTo(this._map);
+    };
+
+    MapView.prototype._getLatLngFromPoint = function (point) {
+        return new L.LatLng(point.lat, point.lon);
     };
 
     MapView.prototype._getMapDimensions = function () {
