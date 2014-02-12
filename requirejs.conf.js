@@ -11,7 +11,11 @@ requirejs.config({
     json: 'lib/requirejs-plugins/src/json',
     base64: 'lib/base64/base64',
     'event-emitter': 'lib/event-emitter/src/event-emitter',
-    inherits: 'lib/inherits/inherits'
+    inherits: 'lib/inherits/inherits',
+    leaflet: 'lib/leaflet/leaflet-src',
+    'leaflet-css': 'lib/leaflet/leaflet.css',
+    'leaflet-markercluster': 'lib/leaflet-markercluster/dist/leaflet.markercluster-src',
+    'leaflet-markercluster-css': 'lib/leaflet-markercluster/dist/MarkerCluster.css',
   },
   packages: [{
     name: "streamhub-sdk",
@@ -53,14 +57,6 @@ requirejs.config({
     name: "view",
     location: "lib/view/src",
     main: "view"
-  },{
-    name: 'leaflet',
-    location: 'lib/leaflet/',
-    main: 'leaflet-src'
-  },{
-    name: 'leaflet-markercluster',
-    location: 'lib/leaflet-markercluster/dist/',
-    main: 'leaflet.markercluster-src'
   }],
   shim: {
     jasmine: {
@@ -76,14 +72,8 @@ requirejs.config({
     jquery: {
         exports: '$'
     },
-    d3: {
-        exports: 'd3'
-    },
-    colorbrewer: {
-        exports: 'colorbrewer'
-    },
-    topojson: {
-        exports: 'topojson'
+    leaflet: {
+        exports: 'L'
     },
     'leaflet-markercluster': {
         deps: ['leaflet']

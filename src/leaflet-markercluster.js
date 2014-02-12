@@ -1,6 +1,6 @@
 define([
     'leaflet-markercluster',
-    'text!leaflet-markercluster/MarkerCluster.css'
+    'text!leaflet-markercluster-css'
 ], function (MarkerCluster, LeafletCss) {
     'use strict';
 

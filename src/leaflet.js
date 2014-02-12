@@ -1,7 +1,7 @@
 define([
     'streamhub-sdk/jquery',
     'leaflet',
-    'text!leaflet/leaflet.css'
+    'text!leaflet-css'
 ], function ($, L, LeafletCss) {
     'use strict';
 
@@ -14,7 +14,7 @@ define([
         document.getElementsByTagName('head')[0].appendChild(styleEl)
     };
 
-    L.Icon.Default.imagePath = '/lib/leaflet/dist/images/';
+    L.Icon.Default.imagePath = '/lib/leaflet/images/';
 
     /* Experimental vector tile layer for Leaflet
      * Uses D3 to render TopoJSON. Derived from a GeoJSON thing that was

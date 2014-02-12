@@ -81,6 +81,8 @@ define([
     };
 
     MapView.prototype._drawMarker = function (dataPoint) {
+        console.log(dataPoint);
+        debugger;
         new L.Marker(new L.LatLng(dataPoint.lat, dataPoint.lon)).addTo(this._map);
     };
 
