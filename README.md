@@ -10,7 +10,7 @@ The quickest way to use streamhub-map is to use the built version hosted on Live
 
 streamhub-map depends on [streamhub-sdk](https://github.com/livefyre/streamhub-sdk). Ensure it's been included in your page.
 
-	<script src="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.min.gz.js"></script>
+	<script src="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.min.js"></script>
 
 Include streamhub-map too.
 
@@ -18,7 +18,7 @@ Include streamhub-map too.
 	
 Optionally, include some reasonable default CSS rules for StreamHub Content. This stylesheet is provided by the StreamHub SDK.
 
-    <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.gz.css" />
+    <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.min.css" />
 
 ### Usage
 #### Visualizing a Livefyre Collection (```ContentMapView```)
