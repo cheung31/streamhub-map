@@ -11,10 +11,7 @@ requirejs.config({
     json: 'lib/requirejs-plugins/src/json',
     base64: 'lib/base64/base64',
     'event-emitter': 'lib/event-emitter/src/event-emitter',
-    inherits: 'lib/inherits/inherits',
-    d3: 'lib/d3/d3',
-    colorbrewer: 'lib/colorbrewer/colorbrewer',
-    topojson: 'lib/topojson/topojson'
+    inherits: 'lib/inherits/inherits'
   },
   packages: [{
     name: "streamhub-sdk",
