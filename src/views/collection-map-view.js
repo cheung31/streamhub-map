@@ -16,6 +16,11 @@ function (MapView, CollectionPoint, inherits) {
     };
     inherits(CollectionMapView, MapView);
 
+    CollectionMapView.prototype.setElement = function (el) {
+        MapView.prototype.setElement.call(this, el);
+        this.$el.off('imageError.hub');
+    };
+
     CollectionMapView.prototype.add = function (collection) {
         if (! this._collectionToLocation || ! collection.id in this._collectionToLocation) {
             return;
