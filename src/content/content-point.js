@@ -10,8 +10,8 @@ function (Point, inherits) {
         }
         this._content = content;
 
-        opts.lat = content._annotations.geocode.latitude;
-        opts.lon = content._annotations.geocode.longitude;
+        opts.lat = content.geocode.latitude;
+        opts.lon = content.geocode.longitude;
 
         Point.call(this, opts);
     };

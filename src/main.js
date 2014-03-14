@@ -50,7 +50,7 @@ function (
     inherits(ContentMapView, MapView);
 
     ContentMapView.prototype.add = function (content) {
-        if (! content._annotations.geocode || ! content._annotations.geocode.latitude || ! content._annotations.geocode.longitude ) {
+        if (! content.geocode || ! content.geocode.latitude || ! content.geocode.longitude ) {
             return;
         }
 
