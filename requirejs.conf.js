@@ -7,7 +7,7 @@ requirejs.config({
   ],
   paths: {
     jquery: 'lib/jquery/jquery',
-	jasmine: 'lib/jasmine/lib/jasmine-core/jasmine',
+    jasmine: 'lib/jasmine/lib/jasmine-core/jasmine',
     'jasmine-html': 'lib/jasmine/lib/jasmine-core/jasmine-html',
     'jasmine-jquery': 'lib/jasmine-jquery/lib/jasmine-jquery',
     text: 'lib/requirejs-text/text',
@@ -44,8 +44,8 @@ requirejs.config({
     name: "stream",
     location: "lib/stream/src"
   },{
-	name: "streamhub-map",
-  	location: "src"
+  name: "streamhub-map",
+    location: "src"
   },{
     name: "streamhub-map-resources",
     location: "src/resources/"
