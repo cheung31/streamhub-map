@@ -25,13 +25,15 @@ define([
      * @constructor
      * @param [opts] {Object} Configuration options for the MapView
      * @param [opts.leafletMapOptions] {Object} An object representing the options passed into the creation of a Leaflet Map (L.Map)
-     * @param [opts.cloudmadeStyleId] {Number} The style id of the CloudMade map tile theme
+     * @param [opts.mapboxTileOptions] {Number} The mapbox map id and other tile options
      */
     var MapView = function (opts) {
         opts = opts || {};
 
         this._id = new Date().getTime();
-        this._cloudmadeStyleId = opts.cloudmadeStyleId || 998;
+        this._mapboxTileOptions = opts.mapboxTileOptions || {};
+        this._mapboxTileOptions.mapId = this._mapboxTileOptions.mapId || 'livefyre.hknm2g26';
+        this._mapboxTileOptions.format = this._mapboxTileOptions.format || 'png';
         this._leafletMapOptions = opts.leafletMapOptions || {};
 
         this._overlayViews = [];
@@ -184,7 +186,8 @@ define([
             this._leafletMapOptions.zoom || 2
         );
 
-        new L.TileLayer("http://{s}.tile.cloudmade.com/9f4a9cd9d242456794a775abb4e765e1/"+this._cloudmadeStyleId+"/256/{z}/{x}/{y}.png").addTo(this._map);
+        new L.TileLayer("http://{s}.tiles.mapbox.com/v3/"+this._mapboxTileOptions.mapId+"/{z}/{x}/{y}."+this._mapboxTileOptions.format)
+            .addTo(this._map);
     };
 
     /**
