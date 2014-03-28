@@ -10,15 +10,15 @@ The quickest way to use streamhub-map is to use the built version hosted on Live
 
 streamhub-map depends on [streamhub-sdk](https://github.com/livefyre/streamhub-sdk). Ensure it's been included in your page.
 
-	<script src="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.min.js"></script>
+	<script src="http://cdn.livefyre.com/libs/sdk/v2.7.0/streamhub-sdk.min.js"></script>
 
 Include streamhub-map too.
 
-	<script src="http://livefyre-cdn-dev.s3.amazonaws.com/libs/apps/cheung31/streamhub-map/v1.0.2/streamhub-map.min.js"></script>
+	<script src="http://cdn.livefyre.com/libs/apps/cheung31/streamhub-map/v1.2.0-build.45/streamhub-map.min.js"></script>
 	
 Optionally, include some reasonable default CSS rules for StreamHub Content. This stylesheet is provided by the StreamHub SDK.
 
-    <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.min.css" />
+    <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.7.0/streamhub-sdk.min.css" />
 
 ### Usage
 #### Visualizing a Livefyre Collection (```ContentMapView```)
@@ -71,13 +71,17 @@ To set the default zoom level of the map, specify the zoom level in the ```leafl
         });
 
 ### Map Tile theme
-To change the appearance of map tiles, specify the style id of the theme from CloudMade with the ```cloudmadeStyleId``` option:
+Out of the box, the map tiles are powered by (Mapbox)[http://www.mapbox.com]. To change the appearance of map tiles, specify ```mapboxTileOptions``` option:
 
         var view = new ContentMapView({
             el: document.getElementById("myMap"),
-            cloudmadeStyleId: 998
+            mapboxTileOptions: {
+                mapId: 'myuser.map-0l53fhk2'
+                format: 'jpg70'
+            }
         });
 
+To use a custom map tiles, get a Mapbox map ID (create a Mapbox account)[https://www.mapbox.com/plans/].
 
 ## Local Development
 
