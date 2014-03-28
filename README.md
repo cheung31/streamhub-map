@@ -14,7 +14,7 @@ streamhub-map depends on [streamhub-sdk](https://github.com/livefyre/streamhub-s
 
 Include streamhub-map too.
 
-	<script src="http://cdn.livefyre.com/libs/apps/cheung31/streamhub-map/v1.2.0-build.45/streamhub-map.min.js"></script>
+	<script src="http://cdn.livefyre.com/libs/apps/cheung31/streamhub-map/v1.2.0-build.46/streamhub-map.min.js"></script>
 	
 Optionally, include some reasonable default CSS rules for StreamHub Content. This stylesheet is provided by the StreamHub SDK.
 
