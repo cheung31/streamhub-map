@@ -76,7 +76,7 @@ Out of the box, the map tiles are powered by [Mapbox](http://www.mapbox.com). To
         var view = new ContentMapView({
             el: document.getElementById("myMap"),
             mapboxTileOptions: {
-                mapId: 'myuser.map-0l53fhk2'
+                mapId: 'myuser.map-0l53fhk2',
                 format: 'jpg70'
             }
         });
