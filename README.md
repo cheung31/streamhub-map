@@ -71,7 +71,7 @@ To set the default zoom level of the map, specify the zoom level in the ```leafl
         });
 
 ### Map Tile theme
-Out of the box, the map tiles are powered by (Mapbox)[http://www.mapbox.com]. To change the appearance of map tiles, specify ```mapboxTileOptions``` option:
+Out of the box, the map tiles are powered by [Mapbox](http://www.mapbox.com). To change the appearance of map tiles, specify ```mapboxTileOptions``` option:
 
         var view = new ContentMapView({
             el: document.getElementById("myMap"),
@@ -81,7 +81,7 @@ Out of the box, the map tiles are powered by (Mapbox)[http://www.mapbox.com]. To
             }
         });
 
-To use a custom map tiles, get a Mapbox map ID (create a Mapbox account)[https://www.mapbox.com/plans/].
+To use a custom map tiles, get a Mapbox map ID [create a Mapbox account](https://www.mapbox.com/plans/).
 
 ## Local Development
 
