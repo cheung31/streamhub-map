@@ -15,7 +15,7 @@ define(function(require) {
             cloudmadeStyleId: 77922,
             leafletMapOptions: {
                 center: [37.774929499038386, -122.41941549873445],
-                zoom: 13,
+                zoom: 12,
                 maxZoom: 16
             }
         });
