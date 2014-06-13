@@ -38,6 +38,8 @@
   },
   "resolutions": {
     "streamhub-sdk": ">=v2.6.9",
-    "base64": "~0.3.0"
+    "base64": "~0.3.0",
+    "view": "~1.2.0",
+    "livefyre-bootstrap": "1.1.0"
   }
 }
