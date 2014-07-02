@@ -21,6 +21,7 @@ requirejs.config({
     'leaflet-css': 'lib/leaflet/leaflet.css',
     'leaflet-markercluster': 'lib/leaflet-markercluster/dist/leaflet.markercluster-src',
     'leaflet-markercluster-css': 'lib/leaflet-markercluster/dist/MarkerCluster.css',
+    debug: 'lib/debug/debug'
   },
   packages: [{
     name: "streamhub-sdk",
@@ -58,6 +59,9 @@ requirejs.config({
   },{
     name: "streamhub-metrics",
     location: "lib/streamhub-metrics/src/"
+  },{
+    name: "auth",
+    location: "lib/auth/src"
   },{
     name: "view",
     location: "lib/view/src",
