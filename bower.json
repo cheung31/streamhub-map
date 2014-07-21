@@ -1,6 +1,6 @@
 {
   "name": "streamhub-map",
-  "version": "1.2.1-test",
+  "version": "1.2.2",
   "main": [
     "./src/main.js"
   ],
