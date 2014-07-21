@@ -21,6 +21,7 @@ requirejs.config({
     'leaflet-css': 'lib/leaflet/leaflet.css',
     'leaflet-markercluster': 'lib/leaflet-markercluster/dist/leaflet.markercluster-src',
     'leaflet-markercluster-css': 'lib/leaflet-markercluster/dist/MarkerCluster.css',
+    rework: 'lib/rework/rework',
     'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main',
     debug: 'lib/debug/debug'
   },
