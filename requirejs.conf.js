@@ -76,6 +76,13 @@ requirejs.config({
     location: "lib/require-less",
     main: "less"
   }],
+  css: {
+    clearFileEachBuild: 'dist/streamhub-gallery.min.css',
+    transformEach: {
+      requirejs: 'lib/livefyre-package-attribute/tools/prefix-css-requirejs',
+      node: 'lib/livefyre-package-attribute/tools/prefix-css-node'
+    }
+  },
   shim: {
     jasmine: {
       exports: 'jasmine'
@@ -95,6 +102,9 @@ requirejs.config({
     },
     'leaflet-markercluster': {
         deps: ['leaflet']
+    },
+    rework: {
+      exports: 'rework'
     }
   },
   urlArgs: "_=" +  (new Date()).getTime()

@@ -3,6 +3,7 @@
 all: build
 
 build: node_modules
+	npm run lessc
 
 dist: build src requirejs.conf.js tools
 	mkdir dist
