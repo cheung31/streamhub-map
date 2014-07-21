@@ -6,7 +6,8 @@ define([
     'inherits',
     'streamhub-sdk/jquery',
     'streamhub-map/leaflet',
-    'streamhub-map/leaflet-markercluster'],
+    'streamhub-map/leaflet-markercluster',
+    'css!streamhub-map/css/style'],
 function (
     MapView,
     ContentListView,
@@ -14,7 +15,8 @@ function (
     MarkerTemplate,
     inherits,
     $,
-    L) {
+    L,
+    Css) {
 
     var ContentMapView = function (opts) {
         this._contentToMarkerMap = {};

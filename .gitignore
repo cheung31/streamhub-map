@@ -1,3 +1,5 @@
 .project
 lib/
 node_modules
+dist/
+.DS_Store/

@@ -21,6 +21,7 @@ requirejs.config({
     'leaflet-css': 'lib/leaflet/leaflet.css',
     'leaflet-markercluster': 'lib/leaflet-markercluster/dist/leaflet.markercluster-src',
     'leaflet-markercluster-css': 'lib/leaflet-markercluster/dist/MarkerCluster.css',
+    'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main',
     debug: 'lib/debug/debug'
   },
   packages: [{
@@ -66,6 +67,14 @@ requirejs.config({
     name: "view",
     location: "lib/view/src",
     main: "view"
+  },{
+    name: "css",
+    location: "lib/require-css",
+    main: "css"
+  },{
+    name: "less",
+    location: "lib/require-less",
+    main: "less"
   }],
   shim: {
     jasmine: {
