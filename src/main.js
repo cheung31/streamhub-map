@@ -6,7 +6,6 @@ define([
     'inherits',
     'streamhub-sdk/jquery',
     'streamhub-map/leaflet',
-    'streamhub-map/package-attribute',
     'streamhub-map/leaflet-markercluster',
     'css!streamhub-map/css/style'
     ],
@@ -18,7 +17,6 @@ function (
     inherits,
     $,
     L,
-    PackageAttribute,
     lm,
     css
     ) {
@@ -54,9 +52,6 @@ function (
 
         MapView.call(this, opts);
 
-        if(this.el){
-            PackageAttribute.decorate(this.el);
-        }
     };
     inherits(ContentMapView, MapView);
 

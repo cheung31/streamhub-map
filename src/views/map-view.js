@@ -5,6 +5,7 @@ define([
     'text!streamhub-map/css/style.css',
     'streamhub-sdk/jquery',
     'streamhub-map/leaflet',
+    'streamhub-map/package-attribute',
     'inherits'
 ], function (
     ModalView,
@@ -13,6 +14,7 @@ define([
     MapViewCss,
     $,
     L,
+    PackageAttribute,
     inherits
 ) {
     'use strict';
@@ -41,6 +43,14 @@ define([
         this.elId = this.elClass+'-'+this._id;
 
         ContentListView.call(this, opts);
+
+        if(this.el){
+            PackageAttribute.decorate(this.el);
+        }
+
+        if(this.modal) {
+            PackageAttribute.decorateModal(this.modal);
+        }
 
         if (!STYLE_EL) {
             $('<style id="'+this.elId+'-style"></style>')
