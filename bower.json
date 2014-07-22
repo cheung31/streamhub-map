@@ -1,6 +1,6 @@
 {
   "name": "streamhub-map",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "main": [
     "./src/main.js"
   ],
@@ -19,14 +19,18 @@
     "colorbrewer": "*",
     "topojson": "*",
     "leaflet": "http://leaflet-cdn.s3.amazonaws.com/build/leaflet-0.7.1.zip",
-    "leaflet-markercluster": "git://github.com/Leaflet/Leaflet.markercluster.git"
+    "leaflet-markercluster": "git://github.com/Leaflet/Leaflet.markercluster.git",
+    "livefyre-package-attribute": "git://github.com/gobengo/livefyre-package-attribute"
   },
   "devDependencies": {
     "jasmine": "1.3.1",
     "jasmine-jquery": "1.6.0",
     "almond": "~0.2.5",
     "streamhub-multiview": "git://github.com/cheung31/sh-multiview.git",
-    "streamhub-wall": "git://github.com/Livefyre/streamhub-wall.git"
+    "streamhub-wall": "git://github.com/Livefyre/streamhub-wall.git",
+    "require-less": "git://github.com/gobengo/require-less#~0.1.1",
+    "require-css": "git://github.com/gobengo/require-css#~0.2",
+    "rework": "git://github.com/gobengo/rework.git#~0.21.1"
   },
   "streamhub": {
     "icon": "http://i.imgur.com/9JokhRs.png",

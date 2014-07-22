@@ -21,6 +21,8 @@ requirejs.config({
     'leaflet-css': 'lib/leaflet/leaflet.css',
     'leaflet-markercluster': 'lib/leaflet-markercluster/dist/leaflet.markercluster-src',
     'leaflet-markercluster-css': 'lib/leaflet-markercluster/dist/MarkerCluster.css',
+    rework: 'lib/rework/rework',
+    'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main',
     debug: 'lib/debug/debug'
   },
   packages: [{
@@ -66,7 +68,22 @@ requirejs.config({
     name: "view",
     location: "lib/view/src",
     main: "view"
+  },{
+    name: "css",
+    location: "lib/require-css",
+    main: "css"
+  },{
+    name: "less",
+    location: "lib/require-less",
+    main: "less"
   }],
+  css: {
+    clearFileEachBuild: 'dist/streamhub-gallery.min.css',
+    transformEach: {
+      requirejs: 'lib/livefyre-package-attribute/tools/prefix-css-requirejs',
+      node: 'lib/livefyre-package-attribute/tools/prefix-css-node'
+    }
+  },
   shim: {
     jasmine: {
       exports: 'jasmine'
@@ -86,6 +103,9 @@ requirejs.config({
     },
     'leaflet-markercluster': {
         deps: ['leaflet']
+    },
+    rework: {
+      exports: 'rework'
     }
   },
   urlArgs: "_=" +  (new Date()).getTime()

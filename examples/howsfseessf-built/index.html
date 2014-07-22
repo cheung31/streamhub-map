@@ -23,28 +23,26 @@
         <h2>A stream showcasing various types of attachments</h2>
         <div id="feed1"></div>
 
-        <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
-        <script src="../../lib/requirejs/require.js" type="text/javascript"></script>
-        <script src="/requirejs.conf.js" type="text/javascript"></script>
+        <script src="../../dist/streamhub-map.min.js"></script>
         <script>
-        require([
-            'streamhub-sdk/collection',
-            'streamhub-map'
-        ], function (
-            Collection,
-            ContentMapView) {
-            var collection = window.collection = new Collection({
+            var ContentMapView = Livefyre['streamhub-map'];
+            var Collection = Livefyre['streamhub-sdk/collection'];
+
+            var opts = {
                 "network": "strategy-prod.fyre.co",
                 "siteId": "340628",
                 "articleId": "custom-1389845009515"
-            });
+            };
 
             var mapView = window.mapView = new ContentMapView({
-                el: document.getElementById('feed1')
+                el: document.getElementById('feed1'),
+                initial: 100,
+                leafletMapOptions: {
+                    center: [37.774929499038386, -122.41941549873445]
+                    ,zoom: 13
+                    ,maxZoom: 16
+                }
             });
-
-            collection.pipe(mapView);
-        });
         </script>
     </body>
 </html>
