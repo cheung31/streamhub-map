@@ -16,6 +16,7 @@
             height: 100%;
         }
     </style>
+    <script src="http://cdn.livefyre.com/Livefyre.js"></script>
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 </head>
@@ -26,7 +27,6 @@
         <script src="../../dist/streamhub-map.min.js"></script>
         <script>
             var ContentMapView = Livefyre['streamhub-map'];
-            var Collection = Livefyre['streamhub-sdk/collection'];
 
             var opts = {
                 "network": "strategy-prod.fyre.co",
@@ -42,6 +42,10 @@
                     ,zoom: 13
                     ,maxZoom: 16
                 }
+            });
+
+            Livefyre.require(['streamhub-sdk#2'], function (SDK) {
+                new (SDK.Collection)(opts).pipe(mapView);                
             });
         </script>
     </body>

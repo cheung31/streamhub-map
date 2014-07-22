@@ -18,7 +18,7 @@
     excludeRequireCss: true
   },
   cjsTranslate: true,
-  optimize: "uglify2",
+  optimize: "none",
   preserveLicenseComments: false,
   uglify2: {
     compress: {

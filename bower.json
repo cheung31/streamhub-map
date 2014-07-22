@@ -44,6 +44,8 @@
     "streamhub-sdk": "~v2.11",
     "base64": "~0.4",
     "view": "~1.2",
-    "livefyre-bootstrap": "1.1.0"
+    "livefyre-bootstrap": "1.1.0",
+    "require-css": "transformEach2",
+    "require-less": "deponcss"
   }
 }
