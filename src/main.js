@@ -7,8 +7,8 @@ define([
     'streamhub-sdk/jquery',
     'streamhub-map/leaflet',
     'streamhub-map/leaflet-markercluster',
-    'css!streamhub-map/css/style',
-    'css!streamhub-sdk/css/style'
+    'css!streamhub-sdk/css/style',
+    'css!streamhub-map/css/style'
     ],
 function (
     MapView,
@@ -19,8 +19,8 @@ function (
     $,
     L,
     lm,
-    css,
-    sdkCss
+    sdkCss,
+    css
     ) {
 
     var ContentMapView = function (opts) {

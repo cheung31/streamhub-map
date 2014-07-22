@@ -78,7 +78,7 @@ requirejs.config({
     main: "less"
   }],
   css: {
-    clearFileEachBuild: 'dist/streamhub-gallery.min.css',
+    clearFileEachBuild: 'dist/streamhub-map.min.css',
     transformEach: {
       requirejs: 'lib/livefyre-package-attribute/tools/prefix-css-requirejs',
       node: 'lib/livefyre-package-attribute/tools/prefix-css-node'
