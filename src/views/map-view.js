@@ -78,13 +78,20 @@ define([
         var self = this;
 
         this.$el.on('imageError.hub', function (e) {
+            var badImageSrc = $(e.target).attr('src');
             var dataPoint;
-            for (var i=0; i < self._dataPoints.length; i++) {
-                if ($(e.target).attr('src') == self._dataPoints[i].getContent().attachments[0].thumbnail_url) {
-                    dataPoint = self._dataPoints[i];
+            self._dataPoints.forEach(function (dataPoint) {
+                if (typeof dataPoint.getContent !== 'function') {
+                    return;
                 }
-            }
-            self._removeDataPoint(dataPoint);
+                var content = dataPoint.getContent() || {};
+                var attachments = content.attachments || [];
+                var firstAttachment = attachments[0] || {};
+                // Remove datapoint of image is broken
+                if (firstAttachment.thumbnail_url === badImageSrc) {
+                    self._removeDataPoint(dataPoint);
+                }
+            });
         });
 
         this.$el.on('addDataPoint.hub', function (e, dataPoint) {
