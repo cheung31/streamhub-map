@@ -14,7 +14,7 @@ function (jasmine, jasmineHtml, $) {
             return spec[key].apply(spec, arguments);
         };
     });
-    ['beforeEach', 'afterEach', 'describe', 'it'].forEach(function (key) {
+    ['beforeEach', 'afterEach', 'describe', 'it', 'xit', 'xdescribe'].forEach(function (key) {
         window[key] = jasmineEnv[key].bind(jasmineEnv);
     });
 
