@@ -29,6 +29,6 @@
     "test-jenkins": "node tests/runner.js > tests.log",
     "build-version": "node tools/build_version.js",
     "jsdoc": "rm -rf docs/api && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json",
-    "lessc": "./node_modules/less/bin/lessc --yui-compress src/css/style.{less,css}"
+    "lessc": "./node_modules/less/bin/lessc --yui-compress src/css/style.less src/css/style.css"
   }
 }
