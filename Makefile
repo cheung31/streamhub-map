@@ -17,6 +17,8 @@ node_modules: package.json
 server: build
 	npm start
 
+test:
+	echo "script-friendly tests have yet to be set up. Open a webserver and access /tests"
 
 clean:
 	rm -rf node_modules
