@@ -36,6 +36,7 @@ define([
         this._mapboxTileOptions = opts.mapboxTileOptions || {};
         this._mapboxTileOptions.mapId = this._mapboxTileOptions.mapId || 'livefyre.hknm2g26';
         this._mapboxTileOptions.format = this._mapboxTileOptions.format || 'png';
+        this._mapboxTileOptions.accessToken = this._mapboxTileOptions.accessToken || null;
         this._leafletMapOptions = opts.leafletMapOptions || {};
 
         this._overlayViews = [];
@@ -198,6 +199,8 @@ define([
     };
 
     MapView.prototype._drawMap = function () {
+        var urlTemplate;
+
         this._map = new L.Map(this.el, this._leafletMapOptions).setView(
             this._leafletMapOptions.center || [0,0],
             this._leafletMapOptions.zoom || 2
@@ -207,7 +210,14 @@ define([
             .setPrefix('')
             .addAttribution("<a href='https://www.openstreetmap.org/copyright' target='_blank'>&copy; OpenStreetMap</a>");
 
-        new L.TileLayer("https://{s}.tiles.mapbox.com/v3/"+this._mapboxTileOptions.mapId+"/{z}/{x}/{y}."+this._mapboxTileOptions.format)
+        // No Mapbox accessToken, use Mapbox v3
+        if(this._mapboxTileOptions.accessToken == null) {
+            urlTemplate = "https://{s}.tiles.mapbox.com/v3/"+this._mapboxTileOptions.mapId+"/{z}/{x}/{y}."+this._mapboxTileOptions.format;
+        } else {
+            // Mapbox accessToken supplied, use Mapbox v4
+            urlTemplate = "https://{s}.tiles.mapbox.com/v4/"+this._mapboxTileOptions.mapId+"/{z}/{x}/{y}."+this._mapboxTileOptions.format+"?access_token="+this._mapboxTileOptions.accessToken;
+        }
+        new L.TileLayer(urlTemplate)
             .addTo(this._map);
     };
 
