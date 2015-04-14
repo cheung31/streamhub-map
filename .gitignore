@@ -1,4 +1,6 @@
 .project
+dev/
+docs/
 lib/
 node_modules
 dist/

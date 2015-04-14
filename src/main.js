@@ -1,154 +1,171 @@
-define([
-    'streamhub-map/views/map-view',
-    'streamhub-sdk/content/views/content-list-view',
-    'streamhub-map/content/content-point',
-    'hgn!streamhub-map/views/templates/marker',
-    'inherits',
-    'streamhub-sdk/jquery',
-    'streamhub-map/leaflet',
-    'streamhub-map/leaflet-markercluster',
-    'css!streamhub-sdk/css/style',
-    'css!streamhub-map/css/style'
-    ],
-function (
-    MapView,
-    ContentListView,
-    ContentPoint,
-    MarkerTemplate,
-    inherits,
-    $,
-    L,
-    lm,
-    sdkCss,
-    css
-    ) {
+'use strict';
 
-    var ContentMapView = function (opts) {
-        this._contentToMarkerMap = {};
-        this._markers = new L.MarkerClusterGroup({
-            showCoverageOnHover: false,
-            zoomToBoundsOnClick: true,
-            maxClusterRadius: 100,
-            spiderfyDistanceMultiplier: 2,
-            iconCreateFunction: function(cluster) {
-                var childMarkers = cluster.getAllChildMarkers();
-                var clusterIconHtml;
-                for (var i=0; i < childMarkers.length; i++) {
-                    var childMarker = childMarkers[i];
-                    clusterIconHtml = childMarker._icon ? childMarker._icon.innerHTML : childMarker.options.icon.options.html;
-                    if (clusterIconHtml) {
-                        break;
-                    }
-                }
+var $ = require('jquery');
+var AppBase = require('app-base');
+var bind = require('mout/function/bind');
+var events = require('./events');
+var inherits = require('inherits');
+var isArray = require('mout/lang/isArray');
+var isBoolean = require('mout/lang/isBoolean');
+var isObject = require('mout/lang/isObject');
+var MapController = require('streamhub-map/map-controller');
+var merge = require('mout/object/merge');
+var packageJson = require('json!../package.json');
+var themableCss = require('text!streamhub-map/css/theme.css');
+var values = require('mout/object/values');
 
-                var $clusterIcon = $(clusterIconHtml);
-                $clusterIcon.append('<div class="hub-map-marker-badge">'+childMarkers.length+'</div>');
-                return new L.ContentDivIcon({
-                    className: 'hub-map-collection-marker',
-                    html: '<div class="hub-map-marker-bg">'+$clusterIcon.html()+'</div>',
-                    iconSize: [54,55],
-                    iconAnchor: [27,27.5]
-                });
-            }
-        });
+/**
+ * Map component.
+ * @constructor
+ * @extends {AppBase}
+ * @param {Object} opts
+ */
+function MapComponent(opts) {
+  AppBase.call(this, opts);
 
-        MapView.call(this, opts);
+  // If there is no collection or the articleId is not set, don't load the app.
+  if (!opts.collection || !opts.collection.articleId) {
+    return;
+  }
 
-    };
-    inherits(ContentMapView, MapView);
+  this._initializeDOM(opts);
 
-    ContentMapView.prototype.add = function (content) {
-        if (! content.geocode || ! content.geocode.latitude || ! content.geocode.longitude ) {
-            return;
-        }
+  /**
+   * Set up the antenna that we will be listening on.
+   * @type {jQuery.Element}
+   */
+  this.$antenna = opts.$antenna = $(this.el);
 
-        // Adapt Content to ContentPoint
-        var contentPoint = new ContentPoint(content);
+  // Listen to all DOM events and emit them.
+  this.$antenna.on(values(events).join(' '), bind(this._eventPassthrough, this));
 
-        MapView.prototype.add.call(this, contentPoint);
-    };
+  /**
+   * Apply the theme to the app.
+   */
+  this.configure(opts);
+}
+inherits(MapComponent, AppBase);
 
-    ContentMapView.prototype.setElement = function (el) {
-        MapView.prototype.setElement.apply(this, arguments);
+/**
+ * Passes through DOM events to the EventEmitter emit flow.
+ * @param {Event} evt The DOM event to pass through.
+ * @param {Object=} opt_data Optional data object.
+ * @private
+ */
+MapComponent.prototype._eventPassthrough = function(evt, opt_data) {
+  evt.stopPropagation();
+  this.emit(evt.type, opt_data);
+};
 
-        var self = this;
+/**
+ * Initialize the DOM by adding an element which will be decorated by the
+ * content views. When destroyed, this element will be removed and will need
+ * to be added again.
+ * @param {Object} opts The app configuration options.
+ * @private
+ */
+MapComponent.prototype._initializeDOM = function(opts) {
+  if (this.el.childNodes.length > 0) {
+    return;
+  }
+  opts.el = document.createElement('div');
+  this.el.appendChild(opts.el);
+};
 
-        this.$el.on('focusDataPoint.hub', function (e, focusContext) {
-            self._displayDataPointDetails(focusContext.contentItems);
-        });
+/** @override */
+MapComponent.prototype.configureInternal = function(opts) {
+  this._opts = merge(this._opts, opts);
 
-        this._markers.on('click', function (e) {
-            var content = e.layer.options.icon.options.content;
-            self.$el.trigger('focusDataPoint.hub', { contentItems: [content] });
-        });
+  var resetController = false;
 
-        this._markers.on('clusterclick', function (e) {
-            if (self._map.getMaxZoom() !== self._map.getZoom()) {
-                return;
-            }
+  this._opts.leafletMapOptions = this._opts.leafletMapOptions || {};
+  this._opts.mapboxTileOptions = this._opts.mapboxTileOptions || {
+    mapId: 'livefyre.hknm2g26'
+  };
 
-            var content = [];
-            for (var i=0; i < e.layer._markers.length; i++) {
-                content.push(e.layer._markers[i].options.icon.options.content);
-            }
-            self.$el.trigger('focusDataPoint.hub', { contentItems: content });
-        });
-    };
+  if (opts.customMapTiles) {
+    this._opts.mapboxTileOptions = { mapId: opts.customMapTiles };
+  }
 
-    ContentMapView.prototype._drawMarker = function (dataPoint) {
-        var marker = MapView.prototype._drawMarker.call(this, dataPoint);
-        this._contentToMarkerMap[dataPoint.getContent().id] = marker;
-        return marker;
-    };
+  if (isObject(opts.mapConfig)) {
+    opts.mapCenter = [opts.mapConfig.lat, opts.mapConfig.lng];
+    opts.mapZoom = opts.mapConfig.zoom;
+  }
 
-    ContentMapView.prototype._createMarker = function (dataPoint) {
-        var thumbnail_url;
-        var contentItem = dataPoint.getContent();
-        if (contentItem.attachments.length && contentItem.attachments[0].thumbnail_url) {
-            thumbnail_url = contentItem.attachments[0].thumbnail_url;
-        } else if (contentItem.author && contentItem.author.avatar) {
-            thumbnail_url = contentItem.author.avatar;
-        }
+  if (isArray(opts.mapCenter)) {
+    this._opts.leafletMapOptions.center = opts.mapCenter;
+  }
 
-        var latlng = this._getLatLngFromPoint(dataPoint);
-        return new L.Marker(
-            latlng, {
-                icon: new L.ContentDivIcon({
-                    className: 'hub-map-content-marker',
-                    html: MarkerTemplate({
-                        thumbnail_url: thumbnail_url || ''
-                    }),
-                    iconSize: [44,48],
-                    iconAnchor: [22,48],
-                    content: dataPoint.getContent()
-                })
-            }
-        );
-    };
+  if (isBoolean(opts.openModalOnClick)) {
+    this._opts.modal = opts.openModalOnClick;
+  }
 
-    ContentMapView.prototype._addMarkerToMap = function (marker) {
-        this._markers.addLayer(marker);
-        this._map.addLayer(this._markers);
-    };
+  if (opts.mapZoom) {
+    this._opts.leafletMapOptions.zoom = opts.mapZoom;
+  }
 
-    ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
-        if (! this.modal || ! contentItems || ! contentItems.length) {
-            return;
-        }
+  if (isBoolean(opts.zoomControl)) {
+    this._opts.leafletMapOptions.zoomControl = opts.zoomControl;
+  }
 
-        var modalContentView = new ContentListView();
-        for (var i=0; i < contentItems.length; i++) {
-            modalContentView.more.write(contentItems[i]);
-        }
+  this._opts.allowPanning = isBoolean(opts.allowPanning)
+    ? opts.allowPanning
+    : true;
 
-        this.modal.show(modalContentView);
-    };
+  if (opts.collection) {
+    this._opts.collection = opts.collection;
+    resetController = true;
+  }
 
-    ContentMapView.prototype._removeDataPoint = function (dataPoint) {
-        // Remove marker
-        this._markers.removeLayer(this._contentToMarkerMap[dataPoint.getContent().id]);
-        MapView.prototype._removeDataPoint.call(this, dataPoint);
-    };
+  if (isBoolean(opts.allowClustering)) {
+    this._opts.allowClustering = opts.allowClustering;
+    resetController = true;
+  } else {
+    this._opts.allowClustering = true;
+  }
 
-    return ContentMapView;
-});
+  if (resetController || !this._controller) {
+    this._controller && this._controller.destroy();
+    this._initializeDOM(this._opts);
+    this._controller = new MapController(this._opts);
+  } else {
+    this._controller.configureMap(this._opts);
+  }
+  this.applyTheme(this._opts);
+};
+
+/** @override */
+MapComponent.prototype.destroy = function() {
+  AppBase.prototype.destroy.call(this);
+  this.$antenna.off();
+};
+
+/**
+ * Called when the app enters the view. This is called by app-embed.
+ */
+MapComponent.prototype.enteredView = function() {
+  this._controller.relayoutMap();
+};
+
+/** @override */
+MapComponent.prototype.getPackageJson = function() {
+  return packageJson;
+};
+
+/** @override */
+MapComponent.prototype.getPrefix = function() {
+  return 'lf-maps-uuid';
+};
+
+/** @override */
+MapComponent.prototype.getThemableCss = function() {
+  return themableCss;
+};
+
+/** @override */
+MapComponent.prototype.unconfigureInternal = function() {
+  this._controller && this._controller.destroy();
+  this._controller = null;
+};
+
+module.exports = MapComponent;

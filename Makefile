@@ -2,29 +2,33 @@
 
 all: build
 
-build: node_modules
+build: node_modules lib
 	npm run lessc
-
-dist: build src requirejs.conf.js tools
-	mkdir -p dist
-	./node_modules/requirejs/bin/r.js -o ./tools/build.conf.js	
-
-# if package.json changes, install
-node_modules: package.json
-	npm install
-	touch $@
-
-server: build
-	npm start
-
 
 clean:
 	rm -rf node_modules
 	rm -rf lib
 	rm -rf dist
 
+env=dev
+deploy: dist
+	./node_modules/.bin/lfcdn -e $(env)
+
+dist: build src requirejs.conf.js tools
+	mkdir -p dist
+	./node_modules/gulp/bin/gulp.js prefix
+	./node_modules/requirejs/bin/r.js -o ./tools/build.conf.js
+	rm -rf dist/temp
+
+lib: bower.json
+	./node_modules/bower/bin/bower install
+	touch $@
+
+node_modules: package.json
+	npm install
+	touch $@
+
 package: build
 
-env=dev
-deploy:
-	./node_modules/.bin/lfcdn -e $(env)
+run: build
+	npm start

@@ -1,25 +1,25 @@
-define(['streamhub-map/point','inherits'],
-function (Point, inherits) {
-    'use strict';
+'use strict';
 
-    var ContentPoint = function (content, opts) {
-        opts = opts || {};
+var inherits = require('inherits');
+var Point = require('streamhub-map/point');
 
-        if (content === undefined) {
-            throw new Error('ContentPoint expected a Content instance as its first argument');
-        }
-        this._content = content;
+function ContentPoint(content, opts) {
+  opts = opts || {};
 
-        opts.lat = content.geocode.latitude;
-        opts.lon = content.geocode.longitude;
+  if (content === undefined) {
+    throw new Error('ContentPoint expected a Content instance as its first argument');
+  }
+  this._content = content;
 
-        Point.call(this, opts);
-    };
-    inherits(ContentPoint, Point);
+  opts.lat = content.geocode.latitude;
+  opts.lon = content.geocode.longitude;
 
-    ContentPoint.prototype.getContent = function () {
-        return this._content;
-    };
+  Point.call(this, opts);
+};
+inherits(ContentPoint, Point);
 
-    return ContentPoint;
-});
+ContentPoint.prototype.getContent = function () {
+  return this._content;
+};
+
+module.exports = ContentPoint;

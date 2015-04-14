@@ -1,65 +1,65 @@
 {
-    "water_areas": {
-        "water": {
-            "fill": "#242226"
-        },
-        "ocean": {
-            "fill": "#242226"
-        },
-        "lake": {
-            "fill": "#242226"
-        },
-        "river": {
-            "fill": "#242226"
-        },
-        "riverbank": {
-            "fill": "#242226"
-        }
+  "water_areas": {
+    "water": {
+      "fill": "#242226"
     },
-    "land_usages": {
-        "land": {
-            "fill": "#343139"
-        },
-        "park": {
-            "fill": "rgba(0,0,0,0.6)"
-        }
+    "ocean": {
+      "fill": "#242226"
     },
-    "road_lines": {
-        "highway": {
-            "fill": "none",
-            "stroke": "#45424f",
-            "strokeWidth": "3px"
-        },
-        "major_road": {
-            "fill": "none",
-            "stroke": "#45424f",
-            "strokeWidth": "3px"
-        },
-        "minor_road": {
-            "fill": "none",
-            "stroke": "#45424f",
-            "strokeWidth": "1.2px",
-            "maxZoom": 12
-        },
-        "rail": {
-            "fill": "none",
-            "stroke": "#c0c0c0",
-            "strokeWidth": "0.8px"
-        },
-        "path": {
-            "fill": "none",
-            "stroke": "#d6cfc2",
-            "strokeWidth": "0.5px"
-        }
+    "lake": {
+      "fill": "#242226"
     },
-    "buildings": {
-        "fill": "#000",
-        "stroke": "#dbdad4",
-        "strokeWidth": "0.5px",
-        "maxZoom": 3
+    "river": {
+      "fill": "#242226"
     },
-    "labels": {
-        "opacity": 0.45,
-        "maxZoom": 17
+    "riverbank": {
+      "fill": "#242226"
     }
+  },
+  "land_usages": {
+    "land": {
+      "fill": "#343139"
+    },
+    "park": {
+      "fill": "rgba(0,0,0,0.6)"
+    }
+  },
+  "road_lines": {
+    "highway": {
+      "fill": "none",
+      "stroke": "#45424f",
+      "strokeWidth": "3px"
+    },
+    "major_road": {
+      "fill": "none",
+      "stroke": "#45424f",
+      "strokeWidth": "3px"
+    },
+    "minor_road": {
+      "fill": "none",
+      "stroke": "#45424f",
+      "strokeWidth": "1.2px",
+      "maxZoom": 12
+    },
+    "rail": {
+      "fill": "none",
+      "stroke": "#c0c0c0",
+      "strokeWidth": "0.8px"
+    },
+    "path": {
+      "fill": "none",
+      "stroke": "#d6cfc2",
+      "strokeWidth": "0.5px"
+    }
+  },
+  "buildings": {
+    "fill": "#000",
+    "stroke": "#dbdad4",
+    "strokeWidth": "0.5px",
+    "maxZoom": 3
+  },
+  "labels": {
+    "opacity": 0.45,
+    "maxZoom": 17
+  }
 }

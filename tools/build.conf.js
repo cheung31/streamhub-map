@@ -7,10 +7,11 @@
   baseUrl: '..',
   name: "streamhub-map",
   include: [
-    'almond'
+    'almond',
+    'css!dist/temp/style',
+    'css!lib/streamhub-sdk/src/css/style'
   ],
   buildCSS: true,
-  separateCSS: true,
   stubModules: ['text', 'hgn', 'json'],
   out: "../dist/streamhub-map.min.js",
   pragmasOnSave: {
@@ -18,7 +19,7 @@
     excludeRequireCss: true
   },
   cjsTranslate: true,
-  optimize: "uglify2",
+  optimize: "none",
   preserveLicenseComments: false,
   uglify2: {
     compress: {
