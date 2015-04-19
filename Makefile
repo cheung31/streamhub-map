@@ -2,8 +2,7 @@
 
 all: build
 
-build: node_modules lib
-	npm run lessc
+build: node_modules lib dist
 
 clean:
 	rm -rf node_modules
