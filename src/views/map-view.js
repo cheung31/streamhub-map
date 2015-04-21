@@ -211,7 +211,7 @@ define([
             .addAttribution("<a href='https://www.openstreetmap.org/copyright' target='_blank'>&copy; OpenStreetMap</a>");
 
         // No Mapbox accessToken, use Mapbox v3
-        if(this._mapboxTileOptions.accessToken == null) {
+        if (this._mapboxTileOptions.accessToken == null) {
             urlTemplate = "https://{s}.tiles.mapbox.com/v3/"+this._mapboxTileOptions.mapId+"/{z}/{x}/{y}."+this._mapboxTileOptions.format;
         } else {
             // Mapbox accessToken supplied, use Mapbox v4
