@@ -87,6 +87,10 @@ MapComponent.prototype.configureInternal = function(opts) {
     this._opts.mapboxTileOptions = { mapId: opts.customMapTiles };
   }
 
+  if (opts.accessToken) {
+    this._opts.mapboxTileOptions.accessToken = opts.accessToken;
+  }
+
   if (isObject(opts.mapConfig)) {
     opts.mapCenter = [opts.mapConfig.lat, opts.mapConfig.lng];
     opts.mapZoom = opts.mapConfig.zoom;

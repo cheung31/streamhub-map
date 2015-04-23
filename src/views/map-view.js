@@ -41,7 +41,7 @@ inherits(MapView, ContentListView);
  * The URL for tile images being loaded.
  * @const {string}
  */
-var TILE_URL = 'http://{s}.tiles.mapbox.com/v3/{mapId}/{z}/{x}/{y}.{format}';
+var TILE_URL = 'http://{s}.tiles.mapbox.com/{version}/{mapId}/{z}/{x}/{y}.{format}';
 
 /**
  * Draw the map and add a tile layer.
@@ -57,7 +57,7 @@ MapView.prototype._drawMap = function() {
     .setPrefix('')
     .addAttribution("<a href='https://www.openstreetmap.org/copyright' target='_blank'>&copy; OpenStreetMap</a>");
 
-  this._tileLayer = new L.TileLayer(TILE_URL, {
+  this._tileLayer = new L.TileLayer(this._getVersionedTileURL(), {
     mapId: this._mapboxTileOptions.mapId,
     format: this._mapboxTileOptions.format
   }).addTo(this._map);
@@ -71,6 +71,19 @@ MapView.prototype._drawMap = function() {
  */
 MapView.prototype._getLatLngFromPoint = function(point) {
   return new L.LatLng(point.lat, point.lon);
+};
+
+/**
+ * Gets a versioned tile URL based on the config options.
+ * @return {string}
+ * @private
+ */
+MapView.prototype._getVersionedTileURL = function() {
+  var accessToken = this._mapboxTileOptions.accessToken;
+  if (!accessToken) {
+    return TILE_URL.replace('{version}', 'v3');
+  }
+  return [TILE_URL.replace('{version}', 'v4'), '?access_token=', accessToken].join('');
 };
 
 /**
