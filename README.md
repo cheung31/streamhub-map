@@ -77,11 +77,20 @@ Out of the box, the map tiles are powered by [Mapbox](http://www.mapbox.com). To
             el: document.getElementById("myMap"),
             mapboxTileOptions: {
                 mapId: 'myuser.map-0l53fhk2',
-                format: 'jpg70'
+                format: 'jpg70',
+                accessToken: 'XXXXXX'
             }
         });
 
-To use a custom map tiles, get a Mapbox map ID [create a Mapbox account](https://www.mapbox.com/plans/).
+  **mapId**: The Map ID of your Mapbox Studio project.
+   
+  **format:** The [Mapbox image format](https://www.mapbox.com/developers/api/maps/#format) your tiles should use.
+   
+  **accessToken:** Your [Mapbox public access token](https://www.mapbox.com/developers/api/#access-tokens).
+
+To use a custom map tiles, [create a Mapbox account](https://www.mapbox.com/plans/).
+
+Specifying a [Mapbox public access token](https://www.mapbox.com/developers/api/#access-tokens) will use the latest verison (v4) of the Mapbox API. This is required when using a Mapbox account created after January 2015. If your Mapbox account was created before then, your project has access to v3 of Mapbox's API which does not require an access token, though we recommend specifying an access token in case v3 is deprecated in the future.
 
 ## Local Development
 
