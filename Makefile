@@ -8,6 +8,7 @@ clean:
 	rm -rf node_modules
 	rm -rf lib
 	rm -rf dist
+	npm cache clean
 
 env=dev
 deploy: dist
@@ -31,3 +32,6 @@ package: build
 
 run: build
 	npm start
+
+test: build
+	./node_modules/karma/bin/karma start tools/karma.conf.js --singleRun=true
