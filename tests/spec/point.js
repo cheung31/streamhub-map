@@ -1,7 +1,7 @@
 'use strict';
 
 var expect = require('chai').expect;
-var Point = require('streamhub-map/point');
+var Point = require('livefyre-map/point');
 
 describe('src/point.js', function () {
   describe('can be constructed', function () {

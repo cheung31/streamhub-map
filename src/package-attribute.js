@@ -1,4 +1,4 @@
 var packageAttributeBuilder = require('livefyre-package-attribute');
-var packageJson = require('json!streamhub-map/../package.json');
+var packageJson = require('json!livefyre-map/../package.json');
 
 module.exports = packageAttributeBuilder(packageJson);

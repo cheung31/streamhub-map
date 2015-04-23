@@ -3,18 +3,18 @@
 var base64 = require('base64');
 var bind = require('mout/function/bind');
 var Collection = require('streamhub-sdk/collection');
-var ContentMapView = require('streamhub-map/views/content-map-view');
+var ContentMapView = require('livefyre-map/views/content-map-view');
 var delegate = require('view/delegate');
 var Duplex = require('stream/duplex');
 var events = require('./events');
 var forEach = require('mout/array/forEach');
 var isBoolean = require('mout/lang/isBoolean');
 var isPlainObject = require('mout/lang/isPlainObject');
-var L = require('streamhub-map/leaflet/main');
+var L = require('livefyre-map/leaflet/main');
 var LivefyreBootstrapClient = require('streamhub-sdk/collection/clients/bootstrap-client');
-var GeoLayer = require('streamhub-map/leaflet/tilelayer-geojson');
+var GeoLayer = require('livefyre-map/leaflet/tilelayer-geojson');
 var ModalView = require('streamhub-sdk/modal');
-require('streamhub-map/leaflet/geojson');
+require('livefyre-map/leaflet/geojson');
 
 /**
  * Map controller class. Handles setting up the collection, map, and layers.

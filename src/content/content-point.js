@@ -1,7 +1,7 @@
 'use strict';
 
 var inherits = require('inherits');
-var Point = require('streamhub-map/point');
+var Point = require('livefyre-map/point');
 
 function ContentPoint(content, opts) {
   opts = opts || {};

@@ -4,8 +4,8 @@ var $ = require('streamhub-sdk/jquery');
 var ContentListView = require('streamhub-sdk/content/views/content-list-view');
 var forEach = require('mout/array/forEach');
 var inherits = require('inherits');
-var L = require('streamhub-map/leaflet/main');
-var PackageAttribute = require('streamhub-map/package-attribute');
+var L = require('livefyre-map/leaflet/main');
+var PackageAttribute = require('livefyre-map/package-attribute');
 
 /**
  * A view to visualize StreamHub content on a map.

@@ -1,7 +1,7 @@
 'use strict';
 
 var expect = require('chai').expect;
-var MapView = require('streamhub-map/views/map-view');
+var MapView = require('livefyre-map/views/map-view');
 var sinon = require('sinon');
 
 describe('src/views/map-view.js', function() {

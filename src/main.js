@@ -8,10 +8,10 @@ var inherits = require('inherits');
 var isArray = require('mout/lang/isArray');
 var isBoolean = require('mout/lang/isBoolean');
 var isObject = require('mout/lang/isObject');
-var MapController = require('streamhub-map/map-controller');
+var MapController = require('livefyre-map/map-controller');
 var merge = require('mout/object/merge');
 var packageJson = require('json!../package.json');
-var themableCss = require('text!streamhub-map/css/theme.css');
+var themableCss = require('text!livefyre-map/css/theme.css');
 var values = require('mout/object/values');
 
 /**

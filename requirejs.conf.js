@@ -1,7 +1,7 @@
 requirejs.config({
   baseUrl: '/',
   include: [
-    'streamhub-map/views/collection-map-view',
+    'livefyre-map/views/collection-map-view',
     'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections',
     'json!streamhub-hot-collections-tests/mocks/clients/hot-collections-response.json'
   ],
@@ -54,10 +54,10 @@ requirejs.config({
     name: "stream",
     location: "lib/stream/src"
   },{
-    name: "streamhub-map",
+    name: "livefyre-map",
     location: "src"
   },{
-    name: "streamhub-map-resources",
+    name: "livefyre-map-resources",
     location: "src/resources"
   },{
     name: "streamhub-metrics",

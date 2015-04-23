@@ -1,11 +1,11 @@
 'use strict';
 
 var Collection = require('streamhub-sdk/collection');
-var events = require('streamhub-map/events');
+var events = require('livefyre-map/events');
 var expect = require('chai').expect;
-var L = require('streamhub-map/leaflet/main');
-var Map = require('streamhub-map');
-var MapController = require('streamhub-map/map-controller');
+var L = require('livefyre-map/leaflet/main');
+var Map = require('livefyre-map');
+var MapController = require('livefyre-map/map-controller');
 var ModalView = require('streamhub-sdk/modal');
 var sinon = require('sinon');
 

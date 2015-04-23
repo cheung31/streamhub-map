@@ -2,16 +2,16 @@
 
 var $ = require('streamhub-sdk/jquery');
 var ContentListView = require('streamhub-sdk/content/views/content-list-view');
-var ContentPoint = require('streamhub-map/content/content-point');
-var events = require('streamhub-map/events');
+var ContentPoint = require('livefyre-map/content/content-point');
+var events = require('livefyre-map/events');
 var inherits = require('inherits');
 var isBoolean = require('mout/lang/isBoolean');
-var L = require('streamhub-map/leaflet/main');
-var MapView = require('streamhub-map/views/map-view');
-var markerBadgeTemplate = require('hgn!streamhub-map/views/templates/marker-badge');
-var markerIconTemplate = require('hgn!streamhub-map/views/templates/marker-icon');
-var markerTemplate = require('hgn!streamhub-map/views/templates/marker');
-require('streamhub-map/leaflet/markercluster');
+var L = require('livefyre-map/leaflet/main');
+var MapView = require('livefyre-map/views/map-view');
+var markerBadgeTemplate = require('hgn!livefyre-map/views/templates/marker-badge');
+var markerIconTemplate = require('hgn!livefyre-map/views/templates/marker-icon');
+var markerTemplate = require('hgn!livefyre-map/views/templates/marker');
+require('livefyre-map/leaflet/markercluster');
 
 // Default values
 var defaultIconAnchor = [22, 48];
