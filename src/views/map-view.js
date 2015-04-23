@@ -41,7 +41,7 @@ inherits(MapView, ContentListView);
  * The URL for tile images being loaded.
  * @const {string}
  */
-var TILE_URL = 'http://{s}.tiles.mapbox.com/{version}/{mapId}/{z}/{x}/{y}.{format}';
+var TILE_URL = 'https://{s}.tiles.mapbox.com/{version}/{mapId}/{z}/{x}/{y}.{format}';
 
 /**
  * Draw the map and add a tile layer.
