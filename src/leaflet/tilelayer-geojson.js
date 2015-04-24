@@ -1,6 +1,8 @@
 'use strict';
 
 var LivefyreHttpClient = require('streamhub-sdk/collection/clients/http-client');
+var merge = require('mout/object/merge');
+var toLookup = require('mout/array/toLookup');
 require('leaflet-tilelayer-geojson');
 
 /**
@@ -10,6 +12,12 @@ require('leaflet-tilelayer-geojson');
  * Main purpose is to add paging (show more) functionality to the geo layer.
  */
 module.exports = L.TileLayer.GeoJSON.extend({
+  /**
+   * Authors lookup object.
+   * @type {Object}
+   * @private
+   */
+  _authors: {},
 
   /**
    * Show more content for the provided tilePoint and paging object.
@@ -80,7 +88,26 @@ module.exports = L.TileLayer.GeoJSON.extend({
   },
 
   /** @override */
+  _tileLoaded: function(tile, tilePoint) {
+    L.TileLayer.Ajax.prototype._tileLoaded.apply(this, arguments);
+    if (tile.datum === null) { return null; }
+
+    // Need to store the authors so that they can be used for lookups when
+    // adding individual tile data. This is one master lookup object that gets
+    // updated whenever new authors are added.
+    if (tile.datum.authors) {
+      this._authors = merge(this._authors, toLookup(tile.datum.authors, function(author) {
+        return author.id;
+      }));
+    }
+    this.addTileData(tile.datum, tilePoint);
+  },
+
+  /** @override */
   addTileData: function(geojson, tilePoint) {
+    if (geojson.type === 'Feature') {
+      geojson.properties.content.author = this._authors[geojson.properties.content.authorId];
+    }
     L.TileLayer.GeoJSON.prototype.addTileData.call(this, geojson, tilePoint);
 
     // TODO: When return to paging, uncomment!

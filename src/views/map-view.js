@@ -158,14 +158,16 @@ MapView.prototype.setElement = function(el) {
     var badImageSrc = $(evt.target).attr('src');
     var dataPoint;
     forEach(self._dataPoints, function (dataPoint) {
-      if (typeof dataPoint.getContent !== 'function') {
+      if (!dataPoint || typeof dataPoint.getContent !== 'function') {
         return;
       }
       var content = dataPoint.getContent() || {};
+      var author = content.author || {};
       var attachments = content.attachments || [];
       var firstAttachment = attachments[0] || {};
-      // Remove datapoint of image is broken
-      if (firstAttachment.thumbnail_url === badImageSrc) {
+      // Either the attachment or the avatar is bad. Check the bad image src
+      // against both of them and remove if one of them match.
+      if ([firstAttachment.thumbnail_url, author.avatar].indexOf(badImageSrc) > -1) {
         self.removeDataPoint(dataPoint);
       }
     });
