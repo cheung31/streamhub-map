@@ -157,10 +157,9 @@ MapController.prototype._initialize = function() {
   if (!this._collection) {
     return;
   }
-  Duplex.prototype.pipe.call(this._collection, this._contentMapView);
+  this._collection.pipe(this._contentMapView);
   this._initializeGeoJsonLayer();
   this._delegateEvents();
-
   this._map.on('zoomend', bind(this._handleZoomEvent, this));
 };
 

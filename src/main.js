@@ -119,7 +119,7 @@ MapComponent.prototype.configureInternal = function(opts) {
     : true;
 
   if (opts.collection) {
-    this._opts.collection = new Collection(opts.collection);
+    this._opts.collection = opts.collection;
     resetController = true;
   }
 
