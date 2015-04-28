@@ -3,6 +3,7 @@
 var $ = require('jquery');
 var AppBase = require('app-base');
 var bind = require('mout/function/bind');
+var Collection = require('streamhub-sdk/collection');
 var events = require('./events');
 var inherits = require('inherits');
 var isArray = require('mout/lang/isArray');
@@ -23,13 +24,6 @@ var values = require('mout/object/values');
 function MapComponent(opts) {
   AppBase.call(this, opts);
 
-  // If there is no collection or the articleId is not set, don't load the app.
-  if (!opts.collection || !opts.collection.articleId) {
-    return;
-  }
-
-  this._initializeDOM(opts);
-
   /**
    * Set up the antenna that we will be listening on.
    * @type {jQuery.Element}
@@ -38,6 +32,13 @@ function MapComponent(opts) {
 
   // Listen to all DOM events and emit them.
   this.$antenna.on(values(events).join(' '), bind(this._eventPassthrough, this));
+
+  // If there is no collection or the articleId is not set, don't load the app.
+  if (!opts.collection || !opts.collection.articleId) {
+    return;
+  }
+
+  this._initializeDOM(opts);
 
   /**
    * Apply the theme to the app.
@@ -75,6 +76,7 @@ MapComponent.prototype._initializeDOM = function(opts) {
 /** @override */
 MapComponent.prototype.configureInternal = function(opts) {
   this._opts = merge(this._opts, opts);
+  this._opts.$antenna = this.$antenna;
 
   var resetController = false;
 
@@ -117,7 +119,7 @@ MapComponent.prototype.configureInternal = function(opts) {
     : true;
 
   if (opts.collection) {
-    this._opts.collection = opts.collection;
+    this._opts.collection = new Collection(opts.collection);
     resetController = true;
   }
 

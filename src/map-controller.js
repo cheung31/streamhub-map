@@ -154,6 +154,9 @@ MapController.prototype._handleZoomEvent = function(evt) {
  * @private
  */
 MapController.prototype._initialize = function() {
+  if (!this._collection) {
+    return;
+  }
   Duplex.prototype.pipe.call(this._collection, this._contentMapView);
   this._initializeGeoJsonLayer();
   this._delegateEvents();

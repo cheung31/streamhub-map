@@ -114,9 +114,9 @@ MapView.prototype.createMarker = function(dataPoint) {
 
 /** @override */
 MapView.prototype.destroy = function() {
-  ContentListView.prototype.destroy.call(this);
   this._map && this._map.remove();
   this._map = null;
+  ContentListView.prototype.destroy.call(this);
 };
 
 /**
