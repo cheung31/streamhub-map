@@ -141,12 +141,17 @@ describe('src/map-controller.js', function() {
   });
 
   describe('configureMap', function() {
-    it('updates the map center position', function() {
-      var spy = sinon.spy(controller._map, 'setView');
+    it('updates the map center position', function(done) {
+      var spy = sinon.spy(window, 'setTimeout');
+      var stub = sinon.stub(controller._map, 'setView', function() {
+        expect(spy.callCount).to.equal(1);
+        expect(stub.callCount).to.equal(1);
+        expect(stub.calledWith([1, 2])).to.be.true;
+        done();
+      });
       controller.configureMap({ leafletMapOptions: { center: [1, 2] } });
-      expect(spy.callCount).to.equal(1);
-      expect(spy.calledWith([1, 2])).to.be.true;
       spy.restore();
+      stub.restore();
     });
 
     it('updates the map zoom level', function() {

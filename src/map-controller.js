@@ -246,7 +246,8 @@ MapController.prototype._setZoomControl = function(opt_enabled) {
  */
 MapController.prototype.configureMap = function(opts) {
   if (opts.leafletMapOptions.center) {
-    this._map.setView(opts.leafletMapOptions.center);
+    // Needs to be set within a timeout in order for it to reposition properly.
+    setTimeout(bind(this._map.setView, this._map, opts.leafletMapOptions.center), 0);
   }
 
   if (opts.leafletMapOptions.zoom) {

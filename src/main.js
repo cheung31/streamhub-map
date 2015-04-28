@@ -148,7 +148,7 @@ MapComponent.prototype.destroy = function() {
  * Called when the app enters the view. This is called by app-embed.
  */
 MapComponent.prototype.enteredView = function() {
-  this._controller.relayoutMap();
+  this._controller && this._controller.relayoutMap();
 };
 
 /** @override */
