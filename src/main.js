@@ -114,9 +114,9 @@ MapComponent.prototype.configureInternal = function(opts) {
     this._opts.leafletMapOptions.zoomControl = opts.zoomControl;
   }
 
-  this._opts.allowPanning = isBoolean(opts.allowPanning)
-    ? opts.allowPanning
-    : true;
+  if (isBoolean(opts.allowPanning)) {
+    this._opts.allowPanning = opts.allowPanning;
+  }
 
   if (opts.collection) {
     this._opts.collection = opts.collection;
@@ -126,8 +126,6 @@ MapComponent.prototype.configureInternal = function(opts) {
   if (isBoolean(opts.allowClustering)) {
     this._opts.allowClustering = opts.allowClustering;
     resetController = true;
-  } else {
-    this._opts.allowClustering = true;
   }
 
   if (resetController || !this._controller) {
