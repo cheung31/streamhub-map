@@ -9,7 +9,7 @@ var Duplex = require('stream/duplex');
 var events = require('./events');
 var forEach = require('mout/array/forEach');
 var isBoolean = require('mout/lang/isBoolean');
-var isPlainObject = require('mout/lang/isPlainObject');
+var isFunction = require('mout/lang/isFunction');
 var L = require('livefyre-map/leaflet/main');
 var LivefyreBootstrapClient = require('streamhub-sdk/collection/clients/bootstrap-client');
 var GeoLayer = require('livefyre-map/leaflet/tilelayer-geojson');
@@ -42,9 +42,9 @@ function MapController(opts) {
    * @type {Collection}
    * @private
    */
-  this._collection = isPlainObject(opts.collection)
-    ? new Collection(opts.collection)
-    : opts.collection;
+  this._collection = isFunction(opts.collection.pipe)
+    ? opts.collection
+    : new Collection(opts.collection);
 
   /**
    * Sets up the content map view. This is what the user sees and what will
@@ -270,8 +270,8 @@ MapController.prototype.configureMap = function(opts) {
  * Destroy all child components.
  */
 MapController.prototype.destroy = function() {
-  Duplex.prototype.unpipe.call(this._collection, this._contentMapView);
   delegate.undelegateEvents(this.$antenna, this._uid);
+  this._collection && this._collection.unpipe(this._contentMapView);
   this._contentMapView && this._contentMapView.destroy();
   this._seenIds = [];
   this._collection = null;
