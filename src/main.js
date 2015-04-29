@@ -134,9 +134,9 @@ MapComponent.prototype.configureInternal = function(opts) {
     this._controller && this._controller.destroy();
     this._initializeDOM(this._opts);
     this._controller = new MapController(this._opts);
-  } else {
-    this._controller.configureMap(this._opts);
   }
+
+  this._controller.configureMap(this._opts);
   this.applyTheme(this._opts);
 };
 
