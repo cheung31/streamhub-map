@@ -5,7 +5,7 @@
     "./src/main.js"
   ],
   "dependencies": {
-    "app-base": "git+ssh://github.com/Livefyre/app-base#initial",
+    "app-base": "git@github.com:Livefyre/app-base#initial",
     "base64": "git://github.com/ross-pfahler/Base64.js#~0.4.0",
     "colorbrewer": "*",
     "event-emitter": "git://github.com/Livefyre/event-emitter.git",
