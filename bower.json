@@ -16,7 +16,7 @@
     "leaflet-markercluster": "git://github.com/Leaflet/Leaflet.markercluster.git",
     "leaflet-tilelayer-geojson": "git://github.com/glenrobertson/leaflet-tilelayer-geojson.git",
     "mout": "~0.11.0",
-    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#ensure_protocol",
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~v2.11",
     "require-css": "~0.1.8",
     "requirejs": "~2.1.5",
     "requirejs-text": "~2.0.5",
@@ -44,7 +44,7 @@
     ]
   },
   "resolutions": {
-    "streamhub-sdk": "ensure_protocol",
+    "streamhub-sdk": "~2.11",
     "base64": "~0.4",
     "view": "~1.3",
     "livefyre-bootstrap": "1.1.0",
