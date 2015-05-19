@@ -23,6 +23,8 @@ function MapView(opts) {
   this._mapboxTileOptions.mapId = this._mapboxTileOptions.mapId || 'examples.map-i86nkdio';
   this._mapboxTileOptions.format = this._mapboxTileOptions.format || 'png';
   this._leafletMapOptions = opts.leafletMapOptions || {};
+  this._leafletMapOptions.doubleClickZoom = 'center';
+  this._leafletMapOptions.scrollWheelZoom = 'center';
 
   this._overlayViews = [];
   this._dataPoints = [];
