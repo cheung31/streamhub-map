@@ -75,7 +75,10 @@ MapComponent.prototype._initializeDOM = function(opts) {
 
 /** @override */
 MapComponent.prototype.configureInternal = function(opts) {
-  this._opts = merge(this._opts, opts);
+  this._opts = merge(this._opts, opts, {
+    prefix: this.getPrefix(),
+    uuid: this._uuid
+  });
   this._opts.$antenna = this.$antenna;
 
   var resetController = false;

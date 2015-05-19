@@ -31,7 +31,11 @@ function MapView(opts) {
   ContentListView.call(this, opts);
 
   this.el && PackageAttribute.decorate(this.el);
-  this.modal && PackageAttribute.decorateModal(this.modal);
+
+  if (this.modal) {
+    PackageAttribute.decorateModal(this.modal);
+    this.modal.$el.attr(opts.prefix, opts.uuid);
+  }
 
   this._drawMap();
 };
