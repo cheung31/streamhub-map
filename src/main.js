@@ -98,7 +98,7 @@ MapComponent.prototype.configureInternal = function(opts) {
 
   if (isObject(opts.mapConfig)) {
     opts.mapCenter = [opts.mapConfig.lat, opts.mapConfig.lng];
-    opts.mapZoom = opts.mapConfig.zoom;
+    opts.mapZoom = opts.mapConfig.zoom || 1;
   }
 
   if (isArray(opts.mapCenter)) {
@@ -110,7 +110,7 @@ MapComponent.prototype.configureInternal = function(opts) {
   }
 
   if (opts.mapZoom) {
-    this._opts.leafletMapOptions.zoom = opts.mapZoom;
+    this._opts.leafletMapOptions.zoom = opts.mapZoom || 1;
   }
 
   if (isBoolean(opts.zoomControl)) {

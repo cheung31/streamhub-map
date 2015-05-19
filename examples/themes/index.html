@@ -25,6 +25,7 @@
     <button class="light">Light</button>
     <button class="dark">Dark</button>
     <br>
+    <button class="zoom-0">0</button>
     <button class="zoom-2">2</button>
     <button class="zoom-5">5</button>
     <button class="zoom-10">10</button>
@@ -107,6 +108,9 @@ function ($, App) {
         }
         if ($elem.hasClass('dark')) {
             theme = darkTheme;
+        }
+        if ($elem.hasClass('zoom-0')) {
+            theme = {mapZoom: 0};
         }
         if ($elem.hasClass('zoom-2')) {
             theme = {mapZoom: 2};
