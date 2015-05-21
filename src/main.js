@@ -131,6 +131,10 @@ MapComponent.prototype.configureInternal = function(opts) {
     resetController = true;
   }
 
+  if (!this._opts.collection) {
+    return;
+  }
+
   if (resetController || !this._controller) {
     this._controller && this._controller.destroy();
     this._initializeDOM(this._opts);
