@@ -1,0 +1,129 @@
+/**
+ * Bouncing frames for images within markers.
+ */
+
+@firstBounceScale: 1.15;
+@secondBounceScale: 1.05;
+
+@-webkit-keyframes imgBounce {
+  0% {
+    -webkit-transform: scale(1);
+  }
+  30% {
+    -webkit-transform: scale(@firstBounceScale);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+  70% {
+    -webkit-transform: scale(@secondBounceScale);
+  }
+  100% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@-moz-keyframes imgBounce {
+  0% {
+    -moz-transform: scale(1);
+  }
+  30% {
+    -moz-transform: scale(@firstBounceScale);
+  }
+  50% {
+    -moz-transform: scale(1);
+  }
+  70% {
+    -moz-transform: scale(@secondBounceScale);
+  }
+  100% {
+    -moz-transform: scale(1);
+  }
+}
+
+@-o-keyframes imgBounce {
+  0% {
+    -o-transform: scale(1);
+  }
+  30% {
+    -o-transform: scale(@firstBounceScale);
+  }
+  50% {
+    -o-transform: scale(1);
+  }
+  70% {
+    -o-transform: scale(@secondBounceScale);
+  }
+  100% {
+    -o-transform: scale(1);
+  }
+}
+
+@keyframes imgBounce {
+  0% {
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+  30% {
+    -ms-transform: scale(@firstBounceScale);
+    transform: scale(@firstBounceScale);
+  }
+  50% {
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+  70% {
+    -ms-transform: scale(@secondBounceScale);
+    transform: scale(@secondBounceScale);
+  }
+  100% {
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+
+/**
+ * Growing frames for single content markers.
+ */
+
+@startScale: 0.9;
+@endScale: 1;
+
+@-webkit-keyframes expand {
+  0% {
+    -webkit-transform: scale(@startScale);
+  }
+  100% {
+    -webkit-transform: scale(@endScale);
+  }
+}
+
+@-moz-keyframes expand {
+  0% {
+    -moz-transform: scale(@startScale);
+  }
+  100% {
+    -moz-transform: scale(@endScale);
+  }
+}
+
+@-o-keyframes expand {
+  0% {
+    -o-transform: scale(@startScale);
+  }
+  100% {
+    -o-transform: scale(@endScale);
+  }
+}
+
+@keyframes expand {
+  0% {
+    -ms-transform: scale(@startScale);
+    transform: scale(@startScale);
+  }
+  100% {
+    -ms-transform: scale(@endScale);
+    transform: scale(@endScale);
+  }
+}

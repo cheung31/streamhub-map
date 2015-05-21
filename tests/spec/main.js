@@ -1,214 +1,135 @@
-define([
-    'streamhub-map',
-    'streamhub-map',
-    'streamhub-map/point',
-    'streamhub-map/collection/collection-point',
-    'streamhub-sdk/collection',
-    'streamhub-sdk/content',
-    'streamhub-sdk/jquery',
-    'jasmine',
-    'jasmine-jquery'
-],
-function (
-    MapView,
-    ContentMapView,
-    Point,
-    CollectionPoint,
-    Collection,
-    Content,
-    $
-) {
-    'use strict';
+'use strict';
 
+var Collection = require('streamhub-sdk/collection');
+var events = require('livefyre-map/events');
+var expect = require('chai').expect;
+var L = require('livefyre-map/leaflet/main');
+var Map = require('livefyre-map');
+var MapController = require('livefyre-map/map-controller');
+var ModalView = require('streamhub-sdk/modal');
+var sinon = require('sinon');
 
-    describe('A Point', function () {
+describe('src/main.js', function() {
+  var stub;
 
-        describe('can be constructed', function () {
-            it ("with no options", function () {
-                var point = new Point();
-                expect(point).toBeDefined();
-            });
-            it ("with empty options", function () {
-                var point = new Point({});
-                expect(point).toBeDefined();
-            });
-            it ("with 'lat' and 'lon' options", function () {
-                var point = new Point({
-                    lat: 49,
-                    lon: -30
-                });
-                expect(point).toBeDefined();
-            });
-        });
+  before(function() {
+    // We don't need to fetch collection information since we're not doing
+    // anything with the maps app.
+    stub = sinon.stub(Collection.prototype, '_handleInitComplete');
+  });
 
-        describe('can return the coordinates', function () {
-            var point;
+  after(function() {
+    stub.restore();
+  });
 
-            beforeEach(function () {
-                point = new Point({
-                    lat: 49,
-                    lon: -30
-                });
-            });
-
-            it('in a lon, lat pair', function () {
-                var coords = point.getCoordinates();
-                expect(coords[0]).toBe(-30);
-                expect(coords[1]).toBe(49);
-            });
-
-            it('in a lat, lon pair', function () {
-                var coords = point.getLatLon();
-                expect(coords[0]).toBe(49);
-                expect(coords[1]).toBe(-30);
-            });
-        });
+  describe('#constructor', function() {
+    it('requires collection and articleId', function() {
+      var element = document.createElement('div');
+      var spy = sinon.spy(Map.prototype, 'configure');
+      var map = new Map({ el: element });
+      expect(spy.callCount).to.equal(0);
+      map = new Map({collection: {articleId: '123'}, el: element});
+      expect(spy.callCount).to.equal(1);
+      spy.restore();
     });
 
-    describe('A MapView', function () {
-
-        describe('can be constructed', function () {
-            it ("with no options", function () {
-                var view = new MapView();
-                expect(view).toBeDefined();
-            });
-            it ("with empty options", function () {
-                var view = new MapView({});
-                expect(view).toBeDefined();
-            });
-            it ("with an el", function () {
-                setFixtures('<div id="hub-map-view"></div>');
-                var view = new MapView({
-                    el: $('#hub-map-view')
-                });
-                expect(view).toBeDefined();
-            });
-        });
-
+    it('listens for events on the antenna', function() {
+      var element = document.createElement('div');
+      var spy = sinon.spy(Map.prototype, '_eventPassthrough');
+      var map = new Map({collection: {articleId: '123'}, el: element});
+      map.$antenna.trigger(events.OPEN_MODAL);
+      expect(spy.callCount).to.equal(1);
+      spy.restore();
     });
 
-    describe('A ContentMapView', function () {
+    it('configures the app', function() {
+      var element = document.createElement('div');
+      var spy = sinon.spy(Map.prototype, 'configure');
+      var map = new Map({collection: {articleId: '123'}, el: element});
+      expect(spy.callCount).to.equal(1);
+      expect(map._controller).to.be.an.instanceof(MapController);
+      spy.restore();
+    });
+  });
 
-        describe('can be constructed', function () {
-            it ("with no options", function () {
-                var view = new ContentMapView();
-                expect(view).toBeDefined();
-            });
-            it ("with empty options", function () {
-                var view = new ContentMapView({});
-                expect(view).toBeDefined();
-            });
-            it ("with an el", function () {
-                setFixtures('<div id="hub-map-view"></div>');
-                var view = new MapView({
-                    el: $('#hub-map-view')
-                });
-                expect(view).toBeDefined();
-            });
-        });
+  describe('configureInternal', function() {
+    var map;
 
-        it('attributes OpenStreetMap', function () {
-            var view = new ContentMapView({});
-            var rendersAttribution = (view.el.innerHTML.indexOf('© OpenStreetMap') !== -1)
-            expect(rendersAttribution).toBe(true);
-        });
-
-        describe('can add a Content instance', function () {
-
-            var content;
-            beforeEach(function () {
-                setFixtures('<div id="hub-map-view"></div>');
-                content = new Content();
-                content.geocode = { latitude: 37.77, longitude: -122.42 };
-            });
-
-            xit ('draws an appropriate ContentViewMarker on the map', function () {
-                var view = new ContentMapView({
-                    el: $('#hub-map-view')
-                });
-                view.add(content);
-                expect($('#hub-map-view')).toContain('.hub-map-content-marker');
-            });
-        });
+    beforeEach(function() {
+      var element = document.createElement('div');
+      map = new Map({collection: {articleId: '123'}, el: element});
     });
 
-    describe('ContentMarkerView', function () {
-
-        describe('opens a modal', function () {
-
-            var content;
-            beforeEach(function () {
-                setFixtures('<div id="hub-map-view"></div>');
-                content = new Content();
-                content._annotations = { 
-                    geocode: { latitude: 37.77, longitude: -122.42 }
-                };
-            });
-
-            afterEach(function () {
-                $('.hub-modal').remove();
-                $('svg').remove();
-            });
-
-            xit ('displays the ContentView of the clicked ContentMarkerView', function () {
-                var view = new ContentMapView({
-                    el: $('#hub-map-view')
-                });
-                view.add(content);
-
-                $('.hub-map-content-marker').trigger('focusDataPoint.hub', { data: content });
-
-                expect($('body > .hub-modals')).toBe('div');
-                expect($('body > .hub-modals')).toContain('.streamhub-content-list-view');
-                expect($('body > .hub-modals .hub-content-container').length).toBe(1);
-            });
-        });
+    afterEach(function() {
+      map.destroy();
     });
 
-    describe('ClusteredContentMarkerView', function () {
-
-        describe('can add many Content instances', function () {
-
-            var content1 = new Content();
-            var content2 = new Content();
-            var content3 = new Content();
-            beforeEach(function () {
-                setFixtures('<div id="hub-map-view"></div>');
-
-                content1.id = 1;
-                content1._annotations = { 
-                    geocode: { latitude: 37.77, longitude: -122.42 }
-                };
-                content2.id = 2;
-                content2._annotations = { 
-                    geocode: { latitude: 37.77, longitude: -122.42 }
-                };
-                content3.id = 1;
-                content3._annotations = { 
-                    geocode: { latitude: 37.77, longitude: -122.42 }
-                };
-            });
-
-            afterEach(function () {
-                $('.hub-modal').remove();
-                $('svg').remove();
-            });
-
-
-            xit ('draws an appropriate ClusteredContentMarkerView on the map', function () {
-                var view = new ContentMapView({
-                    el: $('#hub-map-view')
-                });
-                view.add(content1);
-                view.add(content2);
-                view.add(content3);
-
-                $('.hub-map-content-marker').trigger('focusDataPoint.hub', { data: [content1, content2, content3] });
-
-                expect($('body > .hub-modals')).toBe('div');
-                expect($('body > .hub-modals')).toContain('.streamhub-content-list-view');
-                expect($('body > .hub-modals .hub-content-container').length).toBe(3);
-            });
-        });
+    it('uses default values for mapboxTileOptions if not specified', function() {
+      map.configureInternal({});
+      expect(map._opts.mapboxTileOptions.mapId).to.equal('livefyre.hknm2g26');
+      map.configureInternal({mapboxTileOptions: {mapId: 'abc'}});
+      expect(map._opts.mapboxTileOptions.mapId).to.equal('abc');
     });
+
+    it('supports using custom map tiles', function() {
+      map.configureInternal({customMapTiles: 'xyz'});
+      expect(map._opts.mapboxTileOptions.mapId).to.equal('xyz');
+    });
+
+    it('supports setting initial lat/lng and zoom levels', function() {
+      map.configureInternal({mapConfig: {lat: 123, lng: 456, zoom: 10}});
+      expect(map._opts.leafletMapOptions.center).to.deep.equal([123, 456]);
+      expect(map._opts.leafletMapOptions.zoom).to.equal(10);
+    });
+
+    it('supports enabling/disabling whether content is opened in a modal', function() {
+      map.configureInternal({openModalOnClick: true});
+      expect(map._controller._contentMapView.modal).to.be.an.instanceof(ModalView);
+      map.configureInternal({openModalOnClick: false});
+      expect(map._controller._contentMapView.modal).to.be.false;
+    });
+
+    it('supports enabling/disabling the ability to zoom', function() {
+      map.configureInternal({zoomControl: false});
+      expect(map._controller._map.zoomControl).to.be.null;
+      expect(map._controller._map.touchZoom.enabled()).to.be.false;
+      expect(map._controller._map.doubleClickZoom.enabled()).to.be.false;
+      expect(map._controller._map.scrollWheelZoom.enabled()).to.be.false;
+      expect(map._controller._map.boxZoom.enabled()).to.be.false;
+      map.configureInternal({zoomControl: true});
+      expect(map._controller._map.zoomControl).to.not.be.null;
+      expect(map._controller._map.touchZoom.enabled()).to.be.true;
+      expect(map._controller._map.doubleClickZoom.enabled()).to.be.true;
+      expect(map._controller._map.scrollWheelZoom.enabled()).to.be.true;
+      expect(map._controller._map.boxZoom.enabled()).to.be.true;
+    });
+
+    it('supports enabling/disabling the ability to pan', function() {
+      map.configureInternal({allowPanning: false});
+      expect(map._controller._map.dragging.enabled()).to.be.false;
+      map.configureInternal({allowPanning: true});
+      expect(map._controller._map.dragging.enabled()).to.be.true;
+    });
+
+    it('supports enabling/disabling the clustering of content', function() {
+      map.configureInternal({allowClustering: false});
+      expect(map._controller._contentMapView._markers).to.be.an.instanceof(L.FeatureGroup);
+      expect(map._controller._contentMapView._markers._featureGroup).to.be.undefined;
+      map.configureInternal({allowClustering: true});
+      expect(map._controller._contentMapView._markers).to.be.an.instanceof(L.MarkerClusterGroup);
+      expect(map._controller._contentMapView._markers._featureGroup).to.not.be.undefined;
+    });
+
+    it('assumes clustering is enabled by default', function() {
+      expect(map._controller._contentMapView._markers).to.be.an.instanceof(L.MarkerClusterGroup);
+      expect(map._controller._contentMapView._markers._featureGroup).to.not.be.undefined;
+    });
+
+    it('applies a theme to the app', function() {
+      var spy = sinon.spy(map, 'applyTheme');
+      map.configureInternal({allowClustering: false});
+      expect(spy.callCount).to.equal(1);
+      spy.restore();
+    });
+  });
 });

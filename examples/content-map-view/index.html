@@ -18,32 +18,29 @@
     </style>
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <link rel="stylesheet" href="../../dev/style.css" />
+    <link rel="stylesheet" href="../../lib/streamhub-sdk/src/css/style.css" />
 </head>
     <body>
         <h2>A stream showcasing various types of attachments</h2>
         <div id="feed1"></div>
 
         <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
-        <script src="../../lib/requirejs/require.js" type="text/javascript"></script>
         <script src="/requirejs.conf.js" type="text/javascript"></script>
         <script>
-        require([
-            'streamhub-sdk/collection',
-            'streamhub-map'
-        ], function (
-            Collection,
-            ContentMapView) {
-            var collection = window.collection = new Collection({
-                "network": "strategy-prod.fyre.co",
-                "siteId": "340628",
-                "articleId": "custom-1389845009515"
-            });
+        require(['livefyre-map'], function(App) {
+          window.app = new App({
+            collection: {
+              "network": "client-solutions-uat.fyre.co",
+              "siteId": "305422",
+              "articleId": "custom-1426611745405",
+              "environment": "t402.livefyre.com"
+            },
+            el: document.getElementById('feed1')
 
-            var mapView = window.mapView = new ContentMapView({
-                el: document.getElementById('feed1')
-            });
-
-            collection.pipe(mapView);
+            // openModalOnClick: false,
+            // zoomControl: false
+          });
         });
         </script>
     </body>

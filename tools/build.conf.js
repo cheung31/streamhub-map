@@ -5,14 +5,15 @@
     almond: 'lib/almond/almond'
   },
   baseUrl: '..',
-  name: "streamhub-map",
+  name: "livefyre-map",
   include: [
-    'almond'
+    'almond',
+    'css!dist/temp/style',
+    'css!lib/streamhub-sdk/src/css/style'
   ],
   buildCSS: true,
-  separateCSS: true,
   stubModules: ['text', 'hgn', 'json'],
-  out: "../dist/streamhub-map.min.js",
+  out: "../dist/livefyre-map.min.js",
   pragmasOnSave: {
     excludeHogan: true,
     excludeRequireCss: true
