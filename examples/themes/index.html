@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+    #view {
+      height: 800px;
+    }
+    .hub-metric-list{
+        padding: 2em;
+        float: left;
+    }
+    button {
+        margin-bottom: 20px;
+    }
+    </style>
+    <script type="text/javascript">
+        var lightTheme = {customMapTiles: 'examples.map-i86nkdio'};
+        var darkTheme = {customMapTiles: 'jennberney.0ebcb366'};
+    </script>
+    <link rel="stylesheet" href="../../dev/style.css" />
+</head>
+<body>
+    <h1>streamhub-trending example</h1>
+    Map theme:
+    <button class="light">Light</button>
+    <button class="dark">Dark</button>
+    <br>
+    <button class="zoom-0">0</button>
+    <button class="zoom-2">2</button>
+    <button class="zoom-5">5</button>
+    <button class="zoom-10">10</button>
+    <button class="zoom-15">15</button>
+    <br>
+    <button class="modal-yes">Modal</button>
+    <button class="modal-no">No modal</button>
+    <br>
+    <button class="sf">San Francisco</button>
+    <button class="boston">Boston</button>
+    <button class="london">London</button>
+    <br>
+    Brand color:
+    <button class="badgeColorRed">Red</button>
+    <button class="badgeColorBlack">Black</button>
+    <button class="badgeColorBlue">Blue</button>
+    <br>
+    Text theme:
+    <button class="textLight">Light</button>
+    <button class="textDark">Dark</button>
+    <br>
+    Zoom:
+    <button class="disableZoom">Disable</button>
+    <button class="enableZoom">Enable</button>
+    <br>
+    Pan
+    <button class="disablePan">Disable</button>
+    <button class="enablePan">Enable</button>
+    <br>
+    Cluster
+    <button class="disableCluster">Disable</button>
+    <button class="enableCluster">Enable</button>
+
+    <div id="view" class="ps4"></div>
+<!-- Scripts -->
+<script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
+<script src="/requirejs.conf.js" type="text/javascript"></script>
+<script>
+require([
+    'jquery',
+    'livefyre-map'],
+function ($, App) {
+    var el = document.getElementById('view');
+    var mapComponent = window.view = new App({
+      collection: {
+        "network": "livefyre.com",
+        "siteId": "286470",
+        "articleId": "geo-col",
+        "environment": "fyre"
+      },
+      el: document.getElementById('view')
+      // customMapTiles: 'jennberney.0ebcb366'
+      // mapCenter: [37.774, -122.4],
+      // openModalOnClick: false,
+      // mapZoom: 8
+      // zoomControl: false
+    });
+
+    mapComponent.on('zoom', function() {
+      console.log('zoom');
+    });
+
+    mapComponent.on('clusterclick', function() {
+      console.log('cluster');
+    });
+
+    mapComponent.on('markerclick', function() {
+      console.log('marker');
+    });
+
+    mapComponent.on('openmodal', function() {
+      console.log('modal');
+    });
+
+    $('button').click(function(evt) {
+        var theme;
+        var $elem = $(evt.target);
+        if ($elem.hasClass('light')) {
+            theme = lightTheme;
+        }
+        if ($elem.hasClass('dark')) {
+            theme = darkTheme;
+        }
+        if ($elem.hasClass('zoom-0')) {
+            theme = {mapZoom: 0};
+        }
+        if ($elem.hasClass('zoom-2')) {
+            theme = {mapZoom: 2};
+        }
+        if ($elem.hasClass('zoom-5')) {
+            theme = {mapZoom: 5};
+        }
+        if ($elem.hasClass('zoom-10')) {
+            theme = {mapZoom: 10};
+        }
+        if ($elem.hasClass('zoom-15')) {
+            theme = {mapZoom: 15};
+        }
+        if ($elem.hasClass('modal-yes')) {
+            theme = {openModalOnClick: true};
+        }
+        if ($elem.hasClass('modal-no')) {
+            theme = {openModalOnClick: false};
+        }
+        if ($elem.hasClass('sf')) {
+            theme = {mapConfig: {lat: 37.774, lng: -122.4}};
+        }
+        if ($elem.hasClass('boston')) {
+            theme = {mapConfig: {lat: 42.3133735, lng: -71.0571571}};
+        }
+        if ($elem.hasClass('london')) {
+            theme = {mapConfig: {lat: 51.5286416, lng: -0.1015987}};
+        }
+        if ($elem.hasClass('badgeColorRed')) {
+            theme = {badgeColor: '#f00'};
+        }
+        if ($elem.hasClass('badgeColorBlack')) {
+            theme = {badgeColor: '#000'};
+        }
+        if ($elem.hasClass('badgeColorBlue')) {
+            theme = {badgeColor: '#0f98ec'};
+        }
+        if ($elem.hasClass('textLight')) {
+            theme = {badgeTextColor: '#fff'};
+        }
+        if ($elem.hasClass('textDark')) {
+            theme = {badgeTextColor: '#000'};
+        }
+        if ($elem.hasClass('disableZoom')) {
+            theme = {zoomControl: false};
+        }
+        if ($elem.hasClass('enableZoom')) {
+            theme = {zoomControl: true};
+        }
+        if ($elem.hasClass('disablePan')) {
+            theme = {allowPanning: false};
+        }
+        if ($elem.hasClass('enablePan')) {
+            theme = {allowPanning: true};
+        }
+        if ($elem.hasClass('disableCluster')) {
+            theme = {allowClustering: false};
+        }
+        if ($elem.hasClass('enableCluster')) {
+            theme = {allowClustering: true};
+        }
+
+        mapComponent.configure(theme);
+    });
+});
+</script>
+</body>
+</html>

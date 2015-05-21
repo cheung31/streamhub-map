@@ -18,6 +18,8 @@
     </style>
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <link rel="stylesheet" href="../../dev/style.css" />
+    <link rel="stylesheet" href="../../lib/streamhub-sdk/src/css/style.css" />
 </head>
     <body>
         <h2>A stream showcasing various types of attachments</h2>
@@ -27,7 +29,7 @@
         <script src="/requirejs.conf.js" type="text/javascript"></script>
         <script>
         require([
-            'streamhub-map/views/collection-map-view',
+            'livefyre-map/views/collection-map-view',
             'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections'
         ], function (CollectionMapView,
                      MockHotCollectionsStream) {
