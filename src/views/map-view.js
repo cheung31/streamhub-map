@@ -1,233 +1,185 @@
-define([
-    'streamhub-sdk/modal',
-    'streamhub-sdk/content/views/content-list-view',
-    'streamhub-hot-collections/streams/collection-to-heat-metric',
-    'text!streamhub-map/css/style.css',
-    'streamhub-sdk/jquery',
-    'streamhub-map/leaflet',
-    'streamhub-map/package-attribute',
-    'inherits'
-], function (
-    ModalView,
-    ContentListView,
-    CollectionToHeatMetric,
-    MapViewCss,
-    $,
-    L,
-    PackageAttribute,
-    inherits
-) {
-    'use strict';
+'use strict';
 
-    var STYLE_EL;
-    var SVG_TEMPLATES_EL;
+var $ = require('streamhub-sdk/jquery');
+var ContentListView = require('streamhub-sdk/content/views/content-list-view');
+var forEach = require('mout/array/forEach');
+var inherits = require('inherits');
+var L = require('livefyre-map/leaflet/main');
+var PackageAttribute = require('livefyre-map/package-attribute');
 
-    /**
-     * A view to visualize StreamHub content on a map
-     * @constructor
-     * @param [opts] {Object} Configuration options for the MapView
-     * @param [opts.leafletMapOptions] {Object} An object representing the options passed into the creation of a Leaflet Map (L.Map)
-     * @param [opts.mapboxTileOptions] {Number} The mapbox map id and other tile options
-     */
-    var MapView = function (opts) {
-        opts = opts || {};
+/**
+ * A view to visualize StreamHub content on a map.
+ * @constructor
+ * @param [opts] {Object} Configuration options for the MapView
+ * @param [opts.leafletMapOptions] {Object} An object representing the options
+ *   passed into the creation of a Leaflet Map (L.Map)
+ * @param [opts.mapboxTileOptions] {number} The mapbox map id and other tile options
+ */
+function MapView(opts) {
+  opts = opts || {};
 
-        this._id = new Date().getTime();
-        this._mapboxTileOptions = opts.mapboxTileOptions || {};
-        this._mapboxTileOptions.mapId = this._mapboxTileOptions.mapId || 'livefyre.hknm2g26';
-        this._mapboxTileOptions.format = this._mapboxTileOptions.format || 'png';
-        this._mapboxTileOptions.accessToken = this._mapboxTileOptions.accessToken || null;
-        this._leafletMapOptions = opts.leafletMapOptions || {};
+  this._id = new Date().getTime();
+  this._mapboxTileOptions = opts.mapboxTileOptions || {};
+  this._mapboxTileOptions.mapId = this._mapboxTileOptions.mapId || 'examples.map-i86nkdio';
+  this._mapboxTileOptions.format = this._mapboxTileOptions.format || 'png';
+  this._leafletMapOptions = opts.leafletMapOptions || {};
 
-        this._overlayViews = [];
-        this._dataPoints = [];
-        this.elId = this.elClass+'-'+this._id;
+  this._overlayViews = [];
+  this._dataPoints = [];
+  this._elClass = 'hub-map-view hub-map-view-' + this._id;
 
-        ContentListView.call(this, opts);
+  ContentListView.call(this, opts);
 
-        if(this.el){
-            PackageAttribute.decorate(this.el);
-        }
+  this.el && PackageAttribute.decorate(this.el);
 
-        if(this.modal) {
-            PackageAttribute.decorateModal(this.modal);
-        }
+  if (this.modal) {
+    PackageAttribute.decorateModal(this.modal);
+    this.modal.$el.attr(opts.prefix, opts.uuid);
+  }
 
-        if (!STYLE_EL) {
-            $('<style id="'+this.elId+'-style"></style>')
-                .text('.'+this.elId+MapViewCss)
-                .prependTo('head');
-        }
+  this._drawMap();
+};
+inherits(MapView, ContentListView);
 
-        this._drawMap();
-    };
-    inherits(MapView, ContentListView);
+/**
+ * The URL for tile images being loaded.
+ * @const {string}
+ */
+var TILE_URL = 'https://{s}.tiles.mapbox.com/{version}/{mapId}/{z}/{x}/{y}.{format}';
 
-    MapView.prototype.mapClassName = 'hub-map';
-    MapView.prototype.mapOverlayLayerClassName = 'hub-map-overlays';
-    MapView.prototype.mapLayerClassName = 'hub-map-layer';
-    MapView.prototype.mapLandClassName = 'hub-map-land';
-    MapView.prototype.mapWaterClassName = 'hub-map-water';
-    MapView.prototype.mapGraticuleClassName = 'hub-map-graticule';
-    MapView.prototype.mapSvgTemplatesClassName = 'hub-map-svg-templates';
-    MapView.prototype.elClass = 'hub-map-view';
+/**
+ * Draw the map and add a tile layer.
+ * @private
+ */
+MapView.prototype._drawMap = function() {
+  this._map = new L.Map(this.el, this._leafletMapOptions).setView(
+    this._leafletMapOptions.center || [0,0],
+    this._leafletMapOptions.zoom || 2
+  );
 
-    MapView.prototype.setElement = function (el) {
-        ContentListView.prototype.setElement.call(this, el);
-        this.$el.addClass(this.elId);
+  this._map.attributionControl
+    .setPrefix('')
+    .addAttribution("<a href='https://www.openstreetmap.org/copyright' target='_blank'>&copy; OpenStreetMap</a>");
 
-        var self = this;
+  this._tileLayer = new L.TileLayer(this._getVersionedTileURL(), {
+    mapId: this._mapboxTileOptions.mapId,
+    format: this._mapboxTileOptions.format
+  }).addTo(this._map);
+};
 
-        this.$el.on('imageError.hub', function (e) {
-            var badImageSrc = $(e.target).attr('src');
-            var dataPoint;
-            self._dataPoints.forEach(function (dataPoint) {
-                if (typeof dataPoint.getContent !== 'function') {
-                    return;
-                }
-                var content = dataPoint.getContent() || {};
-                var attachments = content.attachments || [];
-                var firstAttachment = attachments[0] || {};
-                // Remove datapoint of image is broken
-                if (firstAttachment.thumbnail_url === badImageSrc) {
-                    self._removeDataPoint(dataPoint);
-                }
-            });
-        });
+/**
+ * Create a LagLng object from a point.
+ * @param {ContentPoint} point The point to convert.
+ * @return {L.LatLng}
+ * @private
+ */
+MapView.prototype._getLatLngFromPoint = function(point) {
+  return new L.LatLng(point.lat, point.lon);
+};
 
-        this.$el.on('addDataPoint.hub', function (e, dataPoint) {
-            self._drawMarker(dataPoint);
-        });
-    };
+/**
+ * Gets a versioned tile URL based on the config options.
+ * @return {string}
+ * @private
+ */
+MapView.prototype._getVersionedTileURL = function() {
+  var accessToken = this._mapboxTileOptions.accessToken;
+  if (!accessToken) {
+    return TILE_URL.replace('{version}', 'v3');
+  }
+  return [TILE_URL.replace('{version}', 'v4'), '?access_token=', accessToken].join('');
+};
 
-    MapView.prototype._drawMarker = function (dataPoint) {
-        var marker = this._createMarker(dataPoint);
-        if (marker) {
-            this._addMarkerToMap(marker);
-        }
-        return marker;
-    };
+/**
+ * Add a Point instance to be visualized on the map
+ * @param {Point} point The point to be visualized on the map
+ */
+MapView.prototype.add = function(point) {
+  this._dataPoints.push(point);
+  this.$el.trigger('addDataPoint.hub', point);
+};
 
-    MapView.prototype._createMarker = function (dataPoint) {
-        return new L.Marker(this._getLatLngFromPoint(dataPoint));
-    };
+/**
+ * Add the marker to the map.
+ * @param {L.Marker} marker The marker to add to the map.
+ */
+MapView.prototype.addMarkerToMap = function(marker) {
+  marker.addTo(this._map);
+};
 
-    MapView.prototype._addMarkerToMap = function (marker) {
-        marker.addTo(this._map);
-    };
+/**
+ * Create a marker for a specific data point.
+ * @param {ContentPoint} dataPoint The point to create.
+ * @return {L.Marker} The marker based on the data point.
+ */
+MapView.prototype.createMarker = function(dataPoint) {
+  return new L.Marker(this._getLatLngFromPoint(dataPoint));
+};
 
-    MapView.prototype._getLatLngFromPoint = function (point) {
-        return new L.LatLng(point.lat, point.lon);
-    };
+/** @override */
+MapView.prototype.destroy = function() {
+  this._map && this._map.remove();
+  this._map = null;
+  ContentListView.prototype.destroy.call(this);
+};
 
-    MapView.prototype._getMapDimensions = function () {
-        this._width = this.$el.width();
-        this._height = this.$el.height();
-        return { width: this._width, height: this._height };
-    };
+/**
+ * Draw the marker on the map.
+ * @param {ContentPoint} dataPoint The data point to draw on the map.
+ * @return {L.Marker}
+ */
+MapView.prototype.drawMarker = function(dataPoint) {
+  var marker = this.createMarker(dataPoint);
+  marker && this.addMarkerToMap(marker);
+  return marker;
+};
 
-    /**
-     * Add a layer that may contain any number of views
-     * @param name {String} The name of the layer. Adds a className on the
-     *                      associated svg:g element.
-     * @returns {SVGGElement} The svg:g element representing the layer
-     */
-    MapView.prototype.addLayer = function (name) {
-        return this._mapContext.svg.append('svg:g')
-            .attr('class', this.mapLayerClassName)
-            .attr('class', name);
-    };
+/**
+ * Remove a data point from the map.
+ * @param {ContentPoint} dataPoint The data point to remove.
+ */
+MapView.prototype.removeDataPoint = function(dataPoint) {
+  var index = this._dataPoints.indexOf(dataPoint);
+  if (index === -1) {
+    return;
+  }
+  this._dataPoints.splice(index, 1);
+  this.$el.trigger('removeDataPoint.hub');
+};
 
-    MapView.prototype._addDataPoint = function (dataPoint) {
-        this._dataPoints.push(dataPoint);
-        this.$el.trigger('addDataPoint.hub', dataPoint);
-    };
+/**
+ * Set the element that the map view will use.
+ * @param {Element} el The element to set.
+ * @override
+ */
+MapView.prototype.setElement = function(el) {
+  ContentListView.prototype.setElement.call(this, el);
+  this.$el.addClass(this._elClass);
 
-    MapView.prototype._removeDataPoint = function (dataPoint) {
-        var index = this._dataPoints.indexOf(dataPoint);
-        if (index >= 0) {
-            this._dataPoints.splice(index, 1);
-            this.$el.trigger('removeDataPoint.hub');
-        }
-    };
+  var self = this;
 
-    MapView.prototype._createOverlayView = (function () {
-        var maxMetricValue = 0;
+  this.$el.on('imageError.hub', function (evt) {
+    var badImageSrc = $(evt.target).attr('src');
+    var dataPoint;
+    forEach(self._dataPoints, function (dataPoint) {
+      if (!dataPoint || typeof dataPoint.getContent !== 'function') {
+        return;
+      }
+      var content = dataPoint.getContent() || {};
+      var author = content.author || {};
+      var attachments = content.attachments || [];
+      var firstAttachment = attachments[0] || {};
+      // Either the attachment or the avatar is bad. Check the bad image src
+      // against both of them and remove if one of them match.
+      if ([firstAttachment.thumbnail_url, author.avatar].indexOf(badImageSrc) > -1) {
+        self.removeDataPoint(dataPoint);
+      }
+    });
+  });
 
-        return function (dataPoint) {
-            var overlayView;
+  this.$el.on('addDataPoint.hub', function (evt, dataPoint) {
+    self.drawMarker(dataPoint);
+  });
+};
 
-            // Check if it is cluster set
-            if (dataPoint.length) {
-                if (dataPoint.length > 1) {
-                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
-                } else {
-                    overlayView = this._overlayViewFactory.createOverlayView(dataPoint[0]);
-                }
-                return overlayView;
-            }
-
-            // Check if it is not a CollectionPoint
-            if (! this.isCollectionPoint(dataPoint)) {
-                overlayView = this._overlayViewFactory.createOverlayView(dataPoint);
-                return overlayView;
-            }
-
-            // Otherwise it's a CollectionPoint
-            var collection = dataPoint.getCollection();
-            var metric = CollectionToHeatMetric.transform(collection);
-            var metricValue = metric.getValue();
-            if (metricValue > maxMetricValue) {
-                maxMetricValue = metricValue;
-            }
-            overlayView = new SymbolView(dataPoint, {
-                mapContext: this._mapContext,
-                maxMetricValue: function () { return maxMetricValue; },
-                notifyStream: dataPoint.getCollection()
-            });
-
-            return overlayView;
-        };
-    }());
-
-    /**
-     * A helper function to check whether a Point instance is of type CollectionPoint
-     * @param dataPoint {Point} The point instance to be checked
-     */
-    MapView.prototype.isCollectionPoint = function (dataPoint) {
-        return dataPoint._collection !== undefined;
-    };
-
-    MapView.prototype._drawMap = function () {
-        var urlTemplate;
-
-        this._map = new L.Map(this.el, this._leafletMapOptions).setView(
-            this._leafletMapOptions.center || [0,0],
-            this._leafletMapOptions.zoom || 2
-        );
-
-        this._map.attributionControl
-            .setPrefix('')
-            .addAttribution("<a href='https://www.openstreetmap.org/copyright' target='_blank'>&copy; OpenStreetMap</a>");
-
-        // No Mapbox accessToken, use Mapbox v3
-        if (this._mapboxTileOptions.accessToken == null) {
-            urlTemplate = "https://{s}.tiles.mapbox.com/v3/"+this._mapboxTileOptions.mapId+"/{z}/{x}/{y}."+this._mapboxTileOptions.format;
-        } else {
-            // Mapbox accessToken supplied, use Mapbox v4
-            urlTemplate = "https://{s}.tiles.mapbox.com/v4/"+this._mapboxTileOptions.mapId+"/{z}/{x}/{y}."+this._mapboxTileOptions.format+"?access_token="+this._mapboxTileOptions.accessToken;
-        }
-        new L.TileLayer(urlTemplate)
-            .addTo(this._map);
-    };
-
-    /**
-     * Add a Point instance to be visualized on the map
-     * @param dataPoint {Point} The point to be visualized on the map
-     */
-    MapView.prototype.add = function (point) {
-        this._addDataPoint(point);
-    };
-
-    return MapView;
-});
+module.exports = MapView;
