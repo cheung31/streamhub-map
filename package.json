@@ -1,34 +1,39 @@
 {
-  "name": "streamhub-map",
+  "name": "livefyre-map",
   "description": "A map visualization for content with a geographic context",
   "author": {
-    "name": "cheung31"
+    "name": "markdoten"
   },
-  "version": "1.4.0",
+  "version": "2.0.3",
   "devDependencies": {
     "bower": "1.3.8",
+    "gulp": "*",
+    "gulp-less": "*",
+    "gulp-nodemon": "1.0.4",
+    "gulp-rework": "~1.0.2",
+    "gulp-util": "*",
     "http-server": "*",
-    "jasmine-node": "*",
-    "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
-    "jshint": "~1.1.0",
+    "requirejs": "2.1.9",
     "less": "~1.3.3",
-    "lfcdn": "^0.3.0",
-    "phantom": "*",
-    "phantomjs": "~1.9.2-2",
+    "jshint": "~1.1.0",
+    "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
+    "karma": "~0.10.5",
+    "karma-cajon": "0.0.1",
+    "karma-chai": "0.0.2",
+    "karma-mocha": "0.1.0",
+    "karma-mocha-reporter": "^0.3.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "lfcdn": "git://github.com/Livefyre/lfcdn",
+    "mocha": "1.18.2",
+    "mocha-phantomjs": "~2.0.3",
+    "phantomjs": "1.9.2-2",
     "requirejs": "2.1.9",
     "rework": "git://github.com/gobengo/rework"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install",
-    "start": "./node_modules/http-server/bin/http-server .",
-    "build": "./node_modules/requirejs/bin/r.js -o ./build-prod.js",
-    "build-dev": "./node_modules/requirejs/bin/r.js -o ./build-dev.js",
-    "hint": "./node_modules/jshint/bin/jshint src/*.js; echo",
-    "hint-jenkins": "./node_modules/jshint/bin/jshint --reporter=jslint src/*.js > lint.log; echo",
-    "test": "node tests/runner.js",
-    "test-jenkins": "node tests/runner.js > tests.log",
+    "start": "gulp",
+    "test": "./node_modules/karma/bin/karma start tools/karma.conf.js --singleRun=true",
     "build-version": "node tools/build_version.js",
-    "jsdoc": "rm -rf docs/api && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json",
-    "lessc": "./node_modules/less/bin/lessc --yui-compress src/css/style.less src/css/style.css"
+    "jsdoc": "rm -rf docs/api && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json"
   }
 }
