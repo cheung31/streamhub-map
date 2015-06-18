@@ -263,6 +263,9 @@ MapController.prototype.configureMap = function(opts) {
     this._contentMapView._tileLayer.options.mapId = opts.mapboxTileOptions.mapId;
     this._contentMapView._tileLayer.redraw();
   }
+
+  var enableKeyboard = this._map.dragging.enabled() && this._map.zoomControl;
+  enableKeyboard ? this._map.keyboard.enable() : this._map.keyboard.disable();
 };
 
 /**
