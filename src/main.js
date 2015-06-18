@@ -54,6 +54,12 @@ inherits(MapComponent, AppBase);
 var DEFAULT_HEIGHT = 400;
 
 /**
+ * Default width of the map.
+ * @const {number}
+ */
+var DEFAULT_WIDTH = 600;
+
+/**
  * Passes through DOM events to the EventEmitter emit flow.
  * @param {Event} evt The DOM event to pass through.
  * @param {Object=} opt_data Optional data object.
@@ -75,11 +81,18 @@ MapComponent.prototype._handleSizing = function() {
   }
   this.containerEl = $(rootAppEl);
 
-  if (!this.containerEl.height()) {
-    this.containerEl.height(DEFAULT_HEIGHT);
+  // There is a height on the container, so resize the map to fit and poll for
+  // changes to the size of the container.
+  if (this.containerEl.height()) {
+    this._controller.relayoutMap();
+    this._pollForResize();
+    return;
   }
 
-  this._pollForResize();
+  // There is no height on the container. Use the height and width provided by
+  // designer or use the default height and width.
+  this.containerEl.height(this._opts.mapHeight || DEFAULT_HEIGHT);
+  this.containerEl.width(this._opts.mapWidth || DEFAULT_WIDTH);
   this._controller.relayoutMap();
 };
 
@@ -113,7 +126,6 @@ MapComponent.prototype._pollForResize = function() {
     var newHeight = parentEl.height();
     if (newHeight !== self.currentHeight) {
       self.currentHeight = newHeight;
-      self.containerEl.height(newHeight);
       self._controller.relayoutMap();
     }
   }, 500);
