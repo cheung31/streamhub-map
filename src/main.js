@@ -77,9 +77,9 @@ MapComponent.prototype._handleSizing = function() {
 
   if (!this.containerEl.height()) {
     this.containerEl.height(DEFAULT_HEIGHT);
-    this._pollForResize();
   }
 
+  this._pollForResize();
   this._controller.relayoutMap();
 };
 
