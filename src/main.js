@@ -79,11 +79,12 @@ MapComponent.prototype._handleSizing = function() {
   if (!rootAppEl.length) {
     rootAppEl = $(this.el);
   }
-  this.containerEl = $(rootAppEl);
+  this.rootAppEl = $(rootAppEl);
+  this.containerEl = this.rootAppEl.parent();
 
   // There is a height on the container, so resize the map to fit and poll for
   // changes to the size of the container.
-  if (this.containerEl.height()) {
+  if (this.rootAppEl.height()) {
     this._controller.relayoutMap();
     this._pollForResize();
     return;
@@ -91,8 +92,8 @@ MapComponent.prototype._handleSizing = function() {
 
   // There is no height on the container. Use the height and width provided by
   // designer or use the default height and width.
-  this.containerEl.height(this._opts.mapHeight || DEFAULT_HEIGHT);
-  this.containerEl.width(this._opts.mapWidth || DEFAULT_WIDTH);
+  this.rootAppEl.height(this._opts.mapHeight || DEFAULT_HEIGHT);
+  this.rootAppEl.width(this._opts.mapWidth || DEFAULT_WIDTH);
   this._controller.relayoutMap();
 };
 
@@ -119,11 +120,9 @@ MapComponent.prototype._initializeDOM = function(opts) {
  * @private
  */
 MapComponent.prototype._pollForResize = function() {
-  var parentEl = this.containerEl.parent();
   var self = this;
-
   this._resizePoll = setInterval(function() {
-    var newHeight = parentEl.height();
+    var newHeight = self.containerEl.height();
     if (newHeight !== self.currentHeight) {
       self.currentHeight = newHeight;
       self._controller.relayoutMap();
