@@ -48,6 +48,12 @@ function MapComponent(opts) {
 inherits(MapComponent, AppBase);
 
 /**
+ * Default height of the map.
+ * @const {number}
+ */
+var DEFAULT_HEIGHT = 400;
+
+/**
  * Passes through DOM events to the EventEmitter emit flow.
  * @param {Event} evt The DOM event to pass through.
  * @param {Object=} opt_data Optional data object.
@@ -56,6 +62,25 @@ inherits(MapComponent, AppBase);
 MapComponent.prototype._eventPassthrough = function(evt, opt_data) {
   evt.stopPropagation();
   this.emit(evt.type, opt_data);
+};
+
+/**
+ * Handle sizing of the map within the container.
+ * @private
+ */
+MapComponent.prototype._handleSizing = function() {
+  var rootAppEl = $(this.el).parents('.lf-app-embed');
+  if (!rootAppEl.length) {
+    rootAppEl = $(this.el);
+  }
+  this.containerEl = $(rootAppEl);
+
+  if (!this.containerEl.height()) {
+    this.containerEl.height(DEFAULT_HEIGHT);
+    this._pollForResize();
+  }
+
+  this._controller.relayoutMap();
 };
 
 /**
@@ -69,8 +94,29 @@ MapComponent.prototype._initializeDOM = function(opts) {
   if (this.el.childNodes.length > 0) {
     return;
   }
+
   opts.el = document.createElement('div');
   this.el.appendChild(opts.el);
+  setTimeout($.proxy(this._handleSizing, this), 10);
+};
+
+/**
+ * Poll the container element for it to resize, then resize the map relayout
+ * the map afterwards.
+ * @private
+ */
+MapComponent.prototype._pollForResize = function() {
+  var parentEl = this.containerEl.parent();
+  var self = this;
+
+  this._resizePoll = setInterval(function() {
+    var newHeight = parentEl.height();
+    if (newHeight !== self.currentHeight) {
+      self.currentHeight = newHeight;
+      self.containerEl.height(newHeight);
+      self._controller.relayoutMap();
+    }
+  }, 500);
 };
 
 /** @override */
@@ -149,6 +195,7 @@ MapComponent.prototype.configureInternal = function(opts) {
 MapComponent.prototype.destroy = function() {
   AppBase.prototype.destroy.call(this);
   this.$antenna.off();
+  this._resizePoll && clearInterval(this._resizePoll);
 };
 
 /**
