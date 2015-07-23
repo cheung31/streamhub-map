@@ -248,12 +248,10 @@ MapController.prototype._setZoomControl = function(opt_enabled) {
  */
 MapController.prototype.configureMap = function(opts) {
   var center = opts.leafletMapOptions.center || this._map.getCenter();
-  // Needs to be set within a timeout in order for it to reposition properly.
-  setTimeout(bind(this._map.setView, this._map, center), 0);
+  var zoom = opts.leafletMapOptions.zoom || this._map.getZoom();
 
-  if (opts.leafletMapOptions.zoom) {
-    this._map.setZoom(opts.leafletMapOptions.zoom);
-  }
+  // Needs to be set within a timeout in order for it to reposition properly.
+  setTimeout(bind(this._map.setView, this._map, center, zoom), 10);
 
   this._setModal(opts.modal);
   this._setPan(opts.allowPanning);
