@@ -12,7 +12,7 @@ requirejs.config({
     inherits: 'lib/inherits/inherits',
     jquery: 'lib/jquery/jquery',
     json: 'lib/requirejs-plugins/src/json',
-    leaflet: 'lib/leaflet/dist/leaflet',
+    leaflet: 'lib/leaflet/dist/leaflet-src',
     'leaflet-css': 'lib/leaflet/dist/leaflet.css',
     'leaflet-markercluster': 'lib/leaflet-markercluster/dist/leaflet.markercluster-src',
     'leaflet-markercluster-css': 'lib/leaflet-markercluster/dist/MarkerCluster.css',
