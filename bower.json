@@ -12,7 +12,7 @@
     "hogan": "latest",
     "inherits": "git://github.com/Livefyre/inherits.git",
     "jquery": "~1.10.1",
-    "leaflet": "http://leaflet-cdn.s3.amazonaws.com/build/leaflet-0.7.1.zip",
+    "leaflet": "git://github.com/Leaflet/Leaflet.git#~0.7.1",
     "leaflet-markercluster": "git://github.com/Leaflet/Leaflet.markercluster.git",
     "leaflet-tilelayer-geojson": "git://github.com/glenrobertson/leaflet-tilelayer-geojson.git",
     "mout": "~0.11.0",
