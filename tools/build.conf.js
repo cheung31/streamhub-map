@@ -8,8 +8,7 @@
   name: "livefyre-map",
   include: [
     'almond',
-    'css!dist/temp/style',
-    'css!lib/streamhub-sdk/src/css/style'
+    'css!dist/temp/style'
   ],
   buildCSS: true,
   stubModules: ['text', 'hgn', 'json'],
