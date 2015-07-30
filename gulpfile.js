@@ -13,7 +13,13 @@ var SRC_LESS = 'src/css/style.less';
 function lessify(src, dest, prefix, minify) {
   var appName = packageJson.name;
   var paths = [ __dirname, path.join(__dirname, 'lib') ];
-  var proc = gulp.src(src).pipe(less({ paths: paths }).on('error', util.log));
+
+  var proc = gulp.src(src)
+    .pipe(less({
+      paths: paths,
+      relativeUrls: true
+    }))
+    .on('error', util.log);
   var version = packageJson.version;
 
   if (prefix) {
