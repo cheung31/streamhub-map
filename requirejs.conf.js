@@ -1,10 +1,5 @@
 requirejs.config({
   baseUrl: '/',
-  include: [
-    'livefyre-map/views/collection-map-view',
-    'streamhub-hot-collections-tests/mocks/streams/mock-hot-collections',
-    'json!streamhub-hot-collections-tests/mocks/clients/hot-collections-response.json'
-  ],
   paths: {
     'app-base': 'lib/app-base/main',
     base64: 'lib/base64/base64',
@@ -17,8 +12,8 @@ requirejs.config({
     inherits: 'lib/inherits/inherits',
     jquery: 'lib/jquery/jquery',
     json: 'lib/requirejs-plugins/src/json',
-    leaflet: 'lib/leaflet/leaflet-src',
-    'leaflet-css': 'lib/leaflet/leaflet.css',
+    leaflet: 'lib/leaflet/dist/leaflet-src',
+    'leaflet-css': 'lib/leaflet/dist/leaflet.css',
     'leaflet-markercluster': 'lib/leaflet-markercluster/dist/leaflet.markercluster-src',
     'leaflet-markercluster-css': 'lib/leaflet-markercluster/dist/MarkerCluster.css',
     'leaflet-tilelayer-geojson': 'lib/leaflet-tilelayer-geojson/TileLayer.GeoJSON',
