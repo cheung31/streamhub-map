@@ -20,7 +20,6 @@ function MapView(opts) {
 
   this._id = new Date().getTime();
   this._mapboxTileOptions = opts.mapboxTileOptions || {};
-  this._mapboxTileOptions.mapId = this._mapboxTileOptions.mapId || 'bengoering.f7a2fe08';
   this._mapboxTileOptions.format = this._mapboxTileOptions.format || 'png';
   this._leafletMapOptions = opts.leafletMapOptions || {};
 
