@@ -1,6 +1,6 @@
 {
   "name": "livefyre-map",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "main": [
     "./src/main.js"
   ],
@@ -52,6 +52,8 @@
     "event-emitter": "0.1.0",
     "auth": "~0.2",
     "livefyre-theme-styler": "~1.3.0",
-    "streamhub-sdk": "streamhub-map-protocol-fix"
+    "streamhub-sdk": "streamhub-map-protocol-fix",
+    "streamhub-ui": "~0.1.3",
+    "streamhub-share": "0.1.5"
   }
 }
