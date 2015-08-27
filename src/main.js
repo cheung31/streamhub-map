@@ -5,6 +5,7 @@ var AppBase = require('app-base');
 var bind = require('mout/function/bind');
 var Collection = require('streamhub-sdk/collection');
 var events = require('./events');
+var getEnvironment = require('./util').getEnvironment;
 var inherits = require('inherits');
 var isArray = require('mout/lang/isArray');
 var isBoolean = require('mout/lang/isBoolean');
@@ -142,11 +143,12 @@ MapComponent.prototype.configureInternal = function(opts) {
 
   this._opts.leafletMapOptions = this._opts.leafletMapOptions || {};
   this._opts.mapboxTileOptions = this._opts.mapboxTileOptions || {
-    mapId: 'livefyre.hknm2g26'
+    accessToken: 'pk.eyJ1IjoibWFya2RvdGVuIiwiYSI6ImQ5MDM1MzcyZTVmNzUxODkxOTg0ZDlmN2QxOTEwNjU2In0.j7v-cYLZSYIFCGYPBLHEEA',
+    mapId: 'markdoten.n7lg09ia'
   };
 
   if (opts.customMapTiles) {
-    this._opts.mapboxTileOptions = { mapId: opts.customMapTiles };
+    this._opts.mapboxTileOptions.mapId = opts.customMapTiles;
   }
 
   if (opts.accessToken) {
@@ -192,6 +194,12 @@ MapComponent.prototype.configureInternal = function(opts) {
     return;
   }
 
+  // If this is a production environment, we need to get the real mapId to show
+  // to users.
+  if (getEnvironment(this._opts.collection.environment) === 'production') {
+    this._opts.mapboxTileOptions.mapId = this.getMapId(this._opts.mapboxTileOptions.mapId);
+  }
+
   if (resetController || !this._controller) {
     this._controller && this._controller.destroy();
     this._initializeDOM(this._opts);
@@ -214,6 +222,19 @@ MapComponent.prototype.destroy = function() {
  */
 MapComponent.prototype.enteredView = function() {
   this._controller && this._controller.relayoutMap();
+};
+
+/**
+ * Get the production map id. If it is a custom mapId, use it, otherwise use
+ * the livefyre version.
+ * @param {string} mapId
+ * @return {string}
+ */
+MapComponent.prototype.getMapId = function(mapId) {
+  if (mapId === 'markdoten.n7lg09ia') {
+    return 'livefyre.hknm2g26';
+  }
+  return mapId;
 };
 
 /** @override */
