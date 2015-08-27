@@ -196,7 +196,7 @@ MapComponent.prototype.configureInternal = function(opts) {
 
   // If this is a production environment, we need to get the real mapId to show
   // to users.
-  if (getEnvironment(opts.collection.environment) === 'production') {
+  if (getEnvironment(this._opts.collection.environment) === 'production') {
     this._opts.mapboxTileOptions.mapId = this.getMapId(this._opts.mapboxTileOptions.mapId);
   }
 
