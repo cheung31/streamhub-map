@@ -154,12 +154,16 @@ describe('src/map-controller.js', function() {
       stub.restore();
     });
 
-    it('updates the map zoom level', function() {
-      var spy = sinon.spy(controller._map, 'setZoom');
+    it('updates the map zoom level', function(done) {
+      var spy = sinon.spy(controller._map, 'setView');
       controller.configureMap({ leafletMapOptions: { zoom: 3 } });
-      expect(spy.callCount).to.equal(1);
-      expect(spy.calledWith(3)).to.be.true;
-      spy.restore();
+      setTimeout(function () {
+        expect(spy.callCount).to.equal(1);
+        expect(spy.lastCall.args[1], controller._map.getCenter());
+        expect(spy.lastCall.args[2], 3);
+        spy.restore();
+        done();
+      }, 15);
     });
 
     it('updates the mapId and redraws the tilelayer', function(done) {
