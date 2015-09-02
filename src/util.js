@@ -22,6 +22,8 @@ var ENV_MAP = {
 var MAP_IDS = {
   LIGHT: 'markdoten.n7lg09ia',
   DARK: 'jennberney.0ebcb366',
+  LIGHT_DEV: 'livefyredev.3d29367a',
+  DARK_DEV: 'livefyredev.nbbfhing',
   LIGHT_PROD: 'livefyre.hknm2g26',
   DARK_PROD: 'livefyre.nbb9o5m9'
 };
@@ -32,15 +34,19 @@ var MAP_IDS = {
  */
 var DEV_TO_PROD_MAP = {};
 DEV_TO_PROD_MAP[MAP_IDS.LIGHT] = MAP_IDS.LIGHT_PROD;
+DEV_TO_PROD_MAP[MAP_IDS.LIGHT_DEV] = MAP_IDS.LIGHT_PROD;
 DEV_TO_PROD_MAP[MAP_IDS.DARK] = MAP_IDS.DARK_PROD;
+DEV_TO_PROD_MAP[MAP_IDS.DARK_DEV] = MAP_IDS.DARK_PROD;
 
 /**
  * Map of production map ids to dev map ids.
  * @type {Object}
  */
 var PROD_TO_DEV_MAP = {};
-PROD_TO_DEV_MAP[MAP_IDS.LIGHT_PROD] = MAP_IDS.LIGHT;
-PROD_TO_DEV_MAP[MAP_IDS.DARK_PROD] = MAP_IDS.DARK;
+PROD_TO_DEV_MAP[MAP_IDS.LIGHT] = MAP_IDS.LIGHT_DEV;
+PROD_TO_DEV_MAP[MAP_IDS.LIGHT_PROD] = MAP_IDS.LIGHT_DEV;
+PROD_TO_DEV_MAP[MAP_IDS.DARK] = MAP_IDS.DARK_DEV;
+PROD_TO_DEV_MAP[MAP_IDS.DARK_PROD] = MAP_IDS.DARK_DEV;
 
 module.exports = {
   /**
