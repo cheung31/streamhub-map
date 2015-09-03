@@ -23,9 +23,9 @@ var MAP_IDS = {
   LIGHT: 'markdoten.n7lg09ia',
   DARK: 'jennberney.0ebcb366',
   LIGHT_DEV: 'livefyredev.3d29367a',
-  DARK_DEV: 'livefyredev.nbbfhing',
+  DARK_DEV: 'livefyredev.0e3fbdf3',
   LIGHT_PROD: 'livefyre.hknm2g26',
-  DARK_PROD: 'livefyre.nbb9o5m9'
+  DARK_PROD: 'livefyre.ml6m9529'
 };
 
 /**
