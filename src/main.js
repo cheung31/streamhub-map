@@ -5,7 +5,6 @@ var AppBase = require('app-base');
 var bind = require('mout/function/bind');
 var Collection = require('streamhub-sdk/collection');
 var events = require('./events');
-var getEnvironment = require('./util').getEnvironment;
 var inherits = require('inherits');
 var isArray = require('mout/lang/isArray');
 var isBoolean = require('mout/lang/isBoolean');
@@ -14,6 +13,7 @@ var MapController = require('livefyre-map/map-controller');
 var merge = require('mout/object/merge');
 var packageJson = require('json!../package.json');
 var themableCss = require('text!livefyre-map/css/theme.css');
+var util = require('./util');
 var values = require('mout/object/values');
 
 /**
@@ -194,11 +194,8 @@ MapComponent.prototype.configureInternal = function(opts) {
     return;
   }
 
-  // If this is a production environment, we need to get the real mapId to show
-  // to users.
-  if (getEnvironment(this._opts.collection.environment) === 'production') {
-    this._opts.mapboxTileOptions.mapId = this.getMapId(this._opts.mapboxTileOptions.mapId);
-  }
+  var env = util.getEnvironment(this._opts.collection.environment);
+  this._opts.mapboxTileOptions.mapId = util.getMapId(this._opts.mapboxTileOptions.mapId, env);
 
   if (resetController || !this._controller) {
     this._controller && this._controller.destroy();
