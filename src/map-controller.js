@@ -199,7 +199,12 @@ MapController.prototype._setModal = function(opt_modal) {
   if (!isBoolean(opt_modal)) {
     return;
   }
-  this._contentMapView.modal = opt_modal ? (new ModalView()) : false;
+  // If the modal should be active, only set it if it's not already set.
+  if (opt_modal) {
+    this._contentMapView.modal || (this._contentMapView.modal = new ModalView());
+    return;
+  }
+  this._contentMapView.modal = null;
 };
 
 /**
