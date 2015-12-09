@@ -10,8 +10,8 @@ var LEAFLET_STYLE;
 if (!LEAFLET_STYLE) {
   var styleEl = document.createElement('style');
   styleEl.innerHTML = LeafletCss;
-  document.getElementsByTagName('head')[0].appendChild(styleEl)
-};
+  document.getElementsByTagName('head')[0].appendChild(styleEl);
+}
 
 L.Icon.Default.imagePath = '/lib/leaflet/images/';
 

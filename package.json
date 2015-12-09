@@ -16,6 +16,7 @@
     "http-server": "*",
     "requirejs": "2.1.9",
     "less": "1.3.3",
+    "lfeslint": "git+ssh://git@github.com/Livefyre/lfeslint.git",
     "jshint": "~1.1.0",
     "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
     "karma": "~0.10.5",
@@ -36,5 +37,9 @@
     "test": "./node_modules/karma/bin/karma start tools/karma.conf.js --singleRun=true",
     "build-version": "node tools/build_version.js",
     "jsdoc": "rm -rf docs/api && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json"
+  },
+  "lfeslint": {
+    "ignore": ["lib/**", "tools/build.conf.js"],
+    "global": ["requirejs", "define"]
   }
 }

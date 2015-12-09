@@ -10,6 +10,6 @@ if (!LEAFLET_STYLE) {
   var styleEl = document.createElement('style');
   styleEl.innerHTML = LeafletCss;
   document.getElementsByTagName('head')[0].appendChild(styleEl);
-};
+}
 
 module.exports = MarkerCluster;
