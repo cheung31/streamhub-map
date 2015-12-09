@@ -5,9 +5,7 @@ all: build
 build: node_modules lib dist
 
 clean:
-	./node_modules/.bin/bower cache clean
 	rm -rf node_modules lib dist
-	npm cache clean
 
 env=dev
 deploy: dist
