@@ -33,5 +33,5 @@ run: build
 test: build
 	./node_modules/karma/bin/karma start tools/karma.conf.js --singleRun=true
 
-hint:
+lint:
 	./node_modules/.bin/lfeslint

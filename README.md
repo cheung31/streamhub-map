@@ -108,6 +108,9 @@ To see Jasmine tests:
 
     npm run test
 
+### Lint Code
+    make lint
+
 # StreamHub
 
 [Livefyre StreamHub](http://www.livefyre.com/streamhub/) is used by the world's biggest brands and publishers to power their online Content Communities. StreamHub turns your site into a real-time social experience. Curate images, videos, and Tweets from across the social web, right into live blogs, chats, widgets, and dashboards. Want StreamHub? [Contact Livefyre](http://www.livefyre.com/contact/).
