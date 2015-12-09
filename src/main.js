@@ -210,7 +210,8 @@ MapComponent.prototype.configureInternal = function (opts) {
 MapComponent.prototype.destroy = function () {
   AppBase.prototype.destroy.call(this);
   this.$antenna.off();
-  this._resizePoll && clearInterval(this._resizePoll);
+  clearInterval(this._resizePoll);
+  this._resizePoll = null;
 };
 
 /**

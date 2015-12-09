@@ -53,17 +53,17 @@ describe('src/main.js', function () {
   });
 
   describe('configureInternal', function () {
+    var element;
     var map;
 
     beforeEach(function () {
-      var element = document.createElement('div');
+      element = document.createElement('div');
       map = new Map({collection: {articleId: '123'}, el: element});
     });
 
     afterEach(function () {
-      if (map) {
-        map.destroy();
-      }
+      map.destroy();
+      element = null;
     });
 
     it('uses default values for mapboxTileOptions if not specified', function () {
@@ -98,6 +98,7 @@ describe('src/main.js', function () {
       expect(map._controller._map.doubleClickZoom.enabled()).to.be.false;
       expect(map._controller._map.scrollWheelZoom.enabled()).to.be.false;
       expect(map._controller._map.boxZoom.enabled()).to.be.false;
+
       map.configureInternal({zoomControl: true});
       expect(map._controller._map.zoomControl).to.not.be.null;
       expect(map._controller._map.touchZoom.enabled()).to.be.true;
@@ -117,6 +118,7 @@ describe('src/main.js', function () {
       map.configureInternal({allowClustering: false});
       expect(map._controller._contentMapView._markers).to.be.an.instanceof(L.FeatureGroup);
       expect(map._controller._contentMapView._markers._featureGroup).to.be.undefined;
+
       map.configureInternal({allowClustering: true});
       expect(map._controller._contentMapView._markers).to.be.an.instanceof(L.MarkerClusterGroup);
       expect(map._controller._contentMapView._markers._featureGroup).to.not.be.undefined;
