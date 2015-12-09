@@ -1,5 +1,7 @@
 # livefyre-map
 
+[![Circle CI](https://circleci.com/gh/Livefyre/streamhub-map.svg?style=svg)](https://circleci.com/gh/Livefyre/streamhub-map)
+
 livefyre-map is a [StreamHub App](http://apps.livefyre.com) that displays social content on a geographical map.
 
 ## Getting Started
@@ -71,9 +73,9 @@ Out of the box, the map tiles are powered by [Mapbox](http://www.mapbox.com). To
         });
 
   **mapId**: The Map ID of your Mapbox Studio project.
-   
+
   **format:** The [Mapbox image format](https://www.mapbox.com/developers/api/maps/#format) your tiles should use.
-   
+
   **accessToken:** Your [Mapbox public access token](https://www.mapbox.com/developers/api/#access-tokens).
 
 To use a custom map tiles, [create a Mapbox account](https://www.mapbox.com/plans/).
@@ -105,7 +107,7 @@ You can now visit [http://localhost:8080/](http://localhost:8080/) to see an exa
 To see Jasmine tests:
 
     npm run test
-    
+
 # StreamHub
 
 [Livefyre StreamHub](http://www.livefyre.com/streamhub/) is used by the world's biggest brands and publishers to power their online Content Communities. StreamHub turns your site into a real-time social experience. Curate images, videos, and Tweets from across the social web, right into live blogs, chats, widgets, and dashboards. Want StreamHub? [Contact Livefyre](http://www.livefyre.com/contact/).
