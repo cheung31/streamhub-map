@@ -17,16 +17,16 @@
     "leaflet-tilelayer-geojson": "git://github.com/Livefyre/leaflet-tilelayer-geojson.git#1.0",
     "mout": "~0.11.0",
     "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#streamhub-map-protocol-fix",
-    "require-css": "~0.1.8",
-    "requirejs": "~2.1.5",
-    "requirejs-text": "~2.0.5",
-    "requirejs-hogan-plugin": "git://github.com/millermedeiros/requirejs-hogan-plugin.git#~0.2.1",
+    "require-css": "0.1.8",
+    "requirejs": "2.1.5",
+    "requirejs-text": "2.0.5",
+    "requirejs-hogan-plugin": "git://github.com/millermedeiros/requirejs-hogan-plugin.git#0.2.1",
     "stream": "git://github.com/Livefyre/stream.git"
   },
   "devDependencies": {
-    "almond": "~0.2.9",
+    "almond": "0.2.9",
     "chai": "1.8.1",
-    "chai-jquery": "~2.0.0",
+    "chai-jquery": "2.0.0",
     "sinon-chai": "2.4.0",
     "sinonjs": "1.7.3",
     "streamhub-multiview": "git://github.com/cheung31/sh-multiview.git",
@@ -52,6 +52,9 @@
     "event-emitter": "0.1.0",
     "auth": "~0.2",
     "streamhub-sdk": "streamhub-map-protocol-fix",
-    "streamhub-ui": "~0.1.3"
+    "streamhub-ui": "~0.1.3",
+    "requirejs": "2.1.9",
+    "livefyre-theme-styler": "~1.3.0",
+    "streamhub-share": "0.1.5"
   }
 }

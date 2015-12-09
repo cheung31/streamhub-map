@@ -61,7 +61,9 @@ describe('src/main.js', function () {
     });
 
     afterEach(function () {
-      map.destroy();
+      if (map) {
+        map.destroy();
+      }
     });
 
     it('uses default values for mapboxTileOptions if not specified', function () {
@@ -86,7 +88,7 @@ describe('src/main.js', function () {
       map.configureInternal({openModalOnClick: true});
       expect(map._controller._contentMapView.modal).to.be.an.instanceof(ModalView);
       map.configureInternal({openModalOnClick: false});
-      expect(map._controller._contentMapView.modal).to.be.false;
+      expect(map._controller._contentMapView.modal).to.be.null;
     });
 
     it('supports enabling/disabling the ability to zoom', function () {

@@ -92,7 +92,7 @@ describe('src/map-controller.js', function () {
     it('removes the modal value if disabled', function () {
       expect(controller._contentMapView.modal).to.be.an.instanceof(ModalView);
       controller._setModal(false);
-      expect(controller._contentMapView.modal).to.be.false;
+      expect(controller._contentMapView.modal).to.be.null;
     });
   });
 
