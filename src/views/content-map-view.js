@@ -54,7 +54,7 @@ inherits(ContentMapView, MapView);
  */
 ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
   var modalContentView;
-  if (! this.modal || ! contentItems || ! contentItems.length) {
+  if (!this.modal || !contentItems || !contentItems.length) {
     return;
   }
   modalContentView = new ContentListView();
@@ -119,7 +119,7 @@ ContentMapView.prototype._initializeMarkerCluster = function () {
  * @override
  */
 ContentMapView.prototype.add = function (content) {
-  if (! content.geocode || ! content.geocode.latitude || ! content.geocode.longitude ) {
+  if (!content.geocode || !content.geocode.latitude || !content.geocode.longitude) {
     return;
   }
   MapView.prototype.add.call(this, new ContentPoint(content));
