@@ -8,6 +8,6 @@ var L = require('leaflet');
  * add the content to the MarkerClusterGroup.
  * @override
  */
-L.GeoJSON.prototype.addLayer = function(layer) {
+L.GeoJSON.prototype.addLayer = function (layer) {
   $(this._map._container).trigger('addPoint.hub', layer.feature.properties);
 };

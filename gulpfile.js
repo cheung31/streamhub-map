@@ -12,7 +12,7 @@ var SRC_LESS = 'src/css/style.less';
 
 function lessify(src, dest, prefix, minify) {
   var appName = packageJson.name;
-  var paths = [ __dirname, path.join(__dirname, 'lib') ];
+  var paths = [__dirname, path.join(__dirname, 'lib')];
 
   var proc = gulp.src(src)
     .pipe(less({
@@ -31,17 +31,17 @@ function lessify(src, dest, prefix, minify) {
   proc.pipe(gulp.dest(dest));
 }
 
-gulp.task('default', function() {
+gulp.task('default', function () {
 
   /**
    * Run the server
    */
-  nodemon({ script: 'node_modules/http-server/bin/http-server' });
+  nodemon({script: 'node_modules/http-server/bin/http-server'});
 
   /**
    * Watch for less file changes.
    */
-  gulp.watch('src/**/*.less', function(event) {
+  gulp.watch('src/**/*.less', function (event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     lessify(event.path);
   });
@@ -53,6 +53,6 @@ gulp.task('default', function() {
 /**
  * Prefix all selectors in the CSS file with the app version.
  */
-gulp.task('prefix', function() {
+gulp.task('prefix', function () {
   lessify(SRC_LESS, 'dist/temp', true, true);
 });

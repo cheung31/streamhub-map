@@ -5,20 +5,20 @@
     almond: 'lib/almond/almond'
   },
   baseUrl: '..',
-  name: "livefyre-map",
+  name: 'livefyre-map',
   include: [
     'almond',
     'css!dist/temp/style'
   ],
   buildCSS: true,
   stubModules: ['text', 'hgn', 'json'],
-  out: "../dist/livefyre-map.min.js",
+  out: '../dist/livefyre-map.min.js',
   pragmasOnSave: {
     excludeHogan: true,
     excludeRequireCss: true
   },
   cjsTranslate: true,
-  optimize: "uglify2",
+  optimize: 'uglify2',
   preserveLicenseComments: false,
   uglify2: {
     compress: {
@@ -31,10 +31,10 @@
     endFile: 'wrap-end.frag'
   },
   generateSourceMaps: true,
-  onBuildRead: function(moduleName, path, contents) {
+  onBuildRead: function (moduleName, path, contents) {
     switch (moduleName) {
-      case "jquery":
-        contents = "define([], function(require, exports, module) {" + contents + "});";
+      case 'jquery':
+        contents = 'define([], function(require, exports, module) {' + contents + '});';
     }
     return contents;
   }

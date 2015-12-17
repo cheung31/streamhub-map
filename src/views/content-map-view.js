@@ -40,11 +40,11 @@ function ContentMapView(opts) {
   // The cluster function is determined by the config option.
   var clusterFn = isBoolean(opts.allowClustering) && !opts.allowClustering
     ? this._initializeFeatureGroup
-    : this._initializeMarkerCluster
+    : this._initializeMarkerCluster;
 
   clusterFn.call(this);
   MapView.call(this, opts);
-};
+}
 inherits(ContentMapView, MapView);
 
 /**
@@ -52,9 +52,9 @@ inherits(ContentMapView, MapView);
  * @param {Array.<>} contentItems The content items to show.
  * @private
  */
-ContentMapView.prototype._displayDataPointDetails = function(contentItems) {
+ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
   var modalContentView;
-  if (! this.modal || ! contentItems || ! contentItems.length) {
+  if (!this.modal || !contentItems || !contentItems.length) {
     return;
   }
   modalContentView = new ContentListView();
@@ -70,7 +70,7 @@ ContentMapView.prototype._displayDataPointDetails = function(contentItems) {
  * the same events that the cluster group does.
  * @private
  */
-ContentMapView.prototype._initializeFeatureGroup = function() {
+ContentMapView.prototype._initializeFeatureGroup = function () {
   this._markers = L.featureGroup();
 };
 
@@ -79,13 +79,13 @@ ContentMapView.prototype._initializeFeatureGroup = function() {
  * added so that it can be grouped together.
  * @private
  */
-ContentMapView.prototype._initializeMarkerCluster = function() {
+ContentMapView.prototype._initializeMarkerCluster = function () {
   this._markers = new L.MarkerClusterGroup({
     showCoverageOnHover: false,
     zoomToBoundsOnClick: true,
     maxClusterRadius: 100,
     spiderfyOnMaxZoom: false,
-    iconCreateFunction: function(cluster) {
+    iconCreateFunction: function (cluster) {
       var $clusterIcon;
       var childMarker;
       var childMarkers = cluster.getAllChildMarkers();
@@ -102,10 +102,10 @@ ContentMapView.prototype._initializeMarkerCluster = function() {
       }
 
       $clusterIcon = $(clusterIconHtml);
-      $clusterIcon.append(markerBadgeTemplate({ markers: childMarkers.length }));
+      $clusterIcon.append(markerBadgeTemplate({markers: childMarkers.length}));
       return new L.ContentDivIcon({
         className: 'hub-map-collection-marker',
-        html: markerIconTemplate({ clusterIcon: $clusterIcon.html() }),
+        html: markerIconTemplate({clusterIcon: $clusterIcon.html()}),
         iconSize: defaultIconSize,
         iconAnchor: defaultIconAnchor
       });
@@ -118,8 +118,8 @@ ContentMapView.prototype._initializeMarkerCluster = function() {
  * @param {Object} content The content to be added.
  * @override
  */
-ContentMapView.prototype.add = function(content) {
-  if (! content.geocode || ! content.geocode.latitude || ! content.geocode.longitude ) {
+ContentMapView.prototype.add = function (content) {
+  if (!content.geocode || !content.geocode.latitude || !content.geocode.longitude) {
     return;
   }
   MapView.prototype.add.call(this, new ContentPoint(content));
@@ -130,7 +130,7 @@ ContentMapView.prototype.add = function(content) {
  * @param {L.Marker} marker The marker to add to the map.
  * @override
  */
-ContentMapView.prototype.addMarkerToMap = function(marker) {
+ContentMapView.prototype.addMarkerToMap = function (marker) {
   this._markers.addLayer(marker);
   this._map.addLayer(this._markers);
 };
@@ -141,7 +141,7 @@ ContentMapView.prototype.addMarkerToMap = function(marker) {
  * @return {L.Marker} The marker based on the data point.
  * @override
  */
-ContentMapView.prototype.createMarker = function(dataPoint) {
+ContentMapView.prototype.createMarker = function (dataPoint) {
   var thumbnail_url;
   var contentItem = dataPoint.getContent();
   var hasAttachments = contentItem.attachments && contentItem.attachments.length;
@@ -174,7 +174,7 @@ ContentMapView.prototype.createMarker = function(dataPoint) {
  * @return {L.Marker}
  * @override
  */
-ContentMapView.prototype.drawMarker = function(dataPoint) {
+ContentMapView.prototype.drawMarker = function (dataPoint) {
   var marker = MapView.prototype.drawMarker.call(this, dataPoint);
   this._contentToMarkerMap[dataPoint.getContent().id] = marker;
   return marker;
@@ -184,7 +184,7 @@ ContentMapView.prototype.drawMarker = function(dataPoint) {
  * Get the map object.
  * @return {L.Map} The map object.
  */
-ContentMapView.prototype.getMap = function() {
+ContentMapView.prototype.getMap = function () {
   return this._map;
 };
 
@@ -201,7 +201,7 @@ ContentMapView.prototype.removeDataPoint = function (dataPoint) {
  * Set the element that the map view will use.
  * @param {Element} el The element to set.
  */
-ContentMapView.prototype.setElement = function(el) {
+ContentMapView.prototype.setElement = function (el) {
   MapView.prototype.setElement.apply(this, arguments);
 
   var self = this;
@@ -215,7 +215,7 @@ ContentMapView.prototype.setElement = function(el) {
   this._markers.on('click', function (e) {
     var content = e.layer.options.icon.options.content;
     self.$antenna.trigger(events.MARKER_CLICK);
-    self.$el.trigger('focusDataPoint.hub', { contentItems: [content] });
+    self.$el.trigger('focusDataPoint.hub', {contentItems: [content]});
   });
 
   // Listen for the click event on marker clusters
@@ -228,7 +228,7 @@ ContentMapView.prototype.setElement = function(el) {
     for (var i=0; i < e.layer._markers.length; i++) {
       content.push(e.layer._markers[i].options.icon.options.content);
     }
-    self.$el.trigger('focusDataPoint.hub', { contentItems: content });
+    self.$el.trigger('focusDataPoint.hub', {contentItems: content});
   });
 };
 

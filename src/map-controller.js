@@ -5,7 +5,6 @@ var bind = require('mout/function/bind');
 var Collection = require('streamhub-sdk/collection');
 var ContentMapView = require('livefyre-map/views/content-map-view');
 var delegate = require('view/delegate');
-var Duplex = require('stream/duplex');
 var events = require('./events');
 var forEach = require('mout/array/forEach');
 var isBoolean = require('mout/lang/isBoolean');
@@ -94,7 +93,7 @@ MapController.prototype.events = {
  * Set up event handlers for this controller.
  * @private
  */
-MapController.prototype._delegateEvents = function() {
+MapController.prototype._delegateEvents = function () {
   delegate.delegateEvents(this.$antenna, this.events, this._uid, this);
 };
 
@@ -103,7 +102,7 @@ MapController.prototype._delegateEvents = function() {
  * @return {string}
  * @private
  */
-MapController.prototype._getTileUrl = function() {
+MapController.prototype._getTileUrl = function () {
   return [
     this._bootstrapClient._getUrlBase({
       network: this._collection.network,
@@ -123,7 +122,7 @@ MapController.prototype._getTileUrl = function() {
  * @param {Object} state
  * @private
  */
-MapController.prototype._handleNewContent = function(evt, state) {
+MapController.prototype._handleNewContent = function (evt, state) {
   var authors = {};
   var updater = this._collection._updater || this._collection.createUpdater();
   // Ensure that content doesn't get added multiple times.
@@ -144,8 +143,8 @@ MapController.prototype._handleNewContent = function(evt, state) {
  * @param {Event} evt The zoomend event.
  * @private
  */
-MapController.prototype._handleZoomEvent = function(evt) {
-  this.$antenna.trigger(events.ZOOM, { zoom: evt.target.getZoom() });
+MapController.prototype._handleZoomEvent = function (evt) {
+  this.$antenna.trigger(events.ZOOM, {zoom: evt.target.getZoom()});
 };
 
 /**
@@ -153,7 +152,7 @@ MapController.prototype._handleZoomEvent = function(evt) {
  * and set up the event handlers.
  * @private
  */
-MapController.prototype._initialize = function() {
+MapController.prototype._initialize = function () {
   if (!this._collection) {
     return;
   }
@@ -168,7 +167,7 @@ MapController.prototype._initialize = function() {
  * map as a layer.
  * @private
  */
-MapController.prototype._initializeGeoJsonLayer = function() {
+MapController.prototype._initializeGeoJsonLayer = function () {
   // Should be possible to pass an invalid collection or a mock collection that
   // doesn't have any of this data. Don't want to have a ton of errors.
   if (!this._collection.network ||
@@ -195,7 +194,7 @@ MapController.prototype._initializeGeoJsonLayer = function() {
  * @param {boolean=} opt_modal To show the modal or not.
  * @private
  */
-MapController.prototype._setModal = function(opt_modal) {
+MapController.prototype._setModal = function (opt_modal) {
   if (!isBoolean(opt_modal)) {
     return;
   }
@@ -212,7 +211,7 @@ MapController.prototype._setModal = function(opt_modal) {
  * @param {boolean=} opt_pan To enable or disable panning.
  * @private
  */
-MapController.prototype._setPan = function(opt_pan) {
+MapController.prototype._setPan = function (opt_pan) {
   if (!isBoolean(opt_pan)) {
     return;
   }
@@ -224,7 +223,7 @@ MapController.prototype._setPan = function(opt_pan) {
  * @param {boolean=} enabled To enable or disable the zoom control button.
  * @private
  */
-MapController.prototype._setZoomControl = function(opt_enabled) {
+MapController.prototype._setZoomControl = function (opt_enabled) {
   if (!isBoolean(opt_enabled)) {
     return;
   }
@@ -234,7 +233,7 @@ MapController.prototype._setZoomControl = function(opt_enabled) {
   var self = this;
 
   // Enable/disable all zoom attributes based on the argument.
-  forEach(ZOOM_ATTRS, function(attr) { self._map[attr][action](); });
+  forEach(ZOOM_ATTRS, function (attr) { self._map[attr][action](); });
 
   if (opt_enabled && !this._map.zoomControl) {
     this._map.zoomControl = new L.control.zoom();
@@ -251,7 +250,7 @@ MapController.prototype._setZoomControl = function(opt_enabled) {
  * Configure the map with the provided config object.
  * @param {Object} opts
  */
-MapController.prototype.configureMap = function(opts) {
+MapController.prototype.configureMap = function (opts) {
   var center = opts.leafletMapOptions.center || this._map.getCenter();
   var zoom = opts.leafletMapOptions.zoom || this._map.getZoom();
 
@@ -274,7 +273,7 @@ MapController.prototype.configureMap = function(opts) {
 /**
  * Destroy all child components.
  */
-MapController.prototype.destroy = function() {
+MapController.prototype.destroy = function () {
   delegate.undelegateEvents(this.$antenna, this._uid);
   this._collection && this._collection.unpipe(this._contentMapView);
   this._contentMapView && this._contentMapView.destroy();
@@ -286,7 +285,7 @@ MapController.prototype.destroy = function() {
 /**
  * Re-layout the map to make sure it looks good in the current view.
  */
-MapController.prototype.relayoutMap = function() {
+MapController.prototype.relayoutMap = function () {
   this._map.invalidateSize(false);
 };
 
