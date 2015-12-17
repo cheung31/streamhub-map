@@ -58,11 +58,13 @@ ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
     return;
   }
   modalContentView = new ContentListView();
+
+  this.$antenna.trigger(events.OPEN_MODAL);
+  this.modal.show(modalContentView);
+
   for (var i=0; i < contentItems.length; i++) {
     modalContentView.more.write(contentItems[i]);
   }
-  this.$antenna.trigger(events.OPEN_MODAL);
-  this.modal.show(modalContentView);
 };
 
 /**
