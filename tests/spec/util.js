@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var util = require('livefyre-map/util');
 
-describe('src/util.js', function() {
+describe('src/util.js', function () {
   it('getEnvironment', function () {
     assert.equal(util.getEnvironment('fyre'), 'dev');
     assert.equal(util.getEnvironment('qa-ext.livefyre.com'), 'qa');

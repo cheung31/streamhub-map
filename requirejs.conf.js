@@ -28,73 +28,73 @@ requirejs.config({
     tinycolor: 'lib/tinycolor/tinycolor'
   },
   packages: [{
-    name: "streamhub-sdk",
-    location: "lib/streamhub-sdk/src"
+    name: 'streamhub-sdk',
+    location: 'lib/streamhub-sdk/src'
   },{
-    name: "streamhub-sdk/auth",
-    location: "lib/streamhub-sdk/src/auth"
+    name: 'streamhub-sdk/auth',
+    location: 'lib/streamhub-sdk/src/auth'
   },{
-    name: "streamhub-sdk/collection",
-    location: "lib/streamhub-sdk/src/collection"
+    name: 'streamhub-sdk/collection',
+    location: 'lib/streamhub-sdk/src/collection'
   },{
-    name: "streamhub-sdk/content",
-    location: "lib/streamhub-sdk/src/content"
+    name: 'streamhub-sdk/content',
+    location: 'lib/streamhub-sdk/src/content'
   },{
-    name: "streamhub-sdk/modal",
-    location: "lib/streamhub-sdk/src/modal"
+    name: 'streamhub-sdk/modal',
+    location: 'lib/streamhub-sdk/src/modal'
   },{
-    name: "streamhub-sdk-tests",
-    location: "lib/streamhub-sdk/tests"
+    name: 'streamhub-sdk-tests',
+    location: 'lib/streamhub-sdk/tests'
   },{
-    name: "stream",
-    location: "lib/stream/src"
+    name: 'stream',
+    location: 'lib/stream/src'
   },{
-    name: "livefyre-map",
-    location: "src"
+    name: 'livefyre-map',
+    location: 'src'
   },{
-    name: "livefyre-map-resources",
-    location: "src/resources"
+    name: 'livefyre-map-resources',
+    location: 'src/resources'
   },{
-    name: "streamhub-metrics",
-    location: "lib/streamhub-metrics/src"
+    name: 'streamhub-metrics',
+    location: 'lib/streamhub-metrics/src'
   },{
     name: 'streamhub-share',
     location: 'lib/streamhub-share/src',
     main: 'share-button.js'
   },{
-    name: "livefyre-bootstrap",
-    location: "lib/livefyre-bootstrap/src"
+    name: 'livefyre-bootstrap',
+    location: 'lib/livefyre-bootstrap/src'
   },{
     name: 'livefyre-theme-styler',
     location: 'lib/livefyre-theme-styler/src'
   },{
-    name: "auth",
-    location: "lib/auth/src"
+    name: 'auth',
+    location: 'lib/auth/src'
   },{
-    name: "view",
-    location: "lib/view/src",
-    main: "view"
+    name: 'view',
+    location: 'lib/view/src',
+    main: 'view'
   },{
-    name: "css",
-    location: "lib/require-css",
-    main: "css"
+    name: 'css',
+    location: 'lib/require-css',
+    main: 'css'
   }],
   shim: {
     jquery: {
-        exports: '$'
+      exports: '$'
     },
     leaflet: {
-        exports: 'L'
+      exports: 'L'
     },
     'leaflet-markercluster': {
-        deps: ['leaflet']
+      deps: ['leaflet']
     },
     'leaflet-tilelayer-geojson': {
-        deps: ['leaflet']
+      deps: ['leaflet']
     },
     sinon: {
-        exports: 'sinon'
+      exports: 'sinon'
     }
   },
-  urlArgs: "_=" +  (new Date()).getTime()
+  urlArgs: '_=' +  (new Date()).getTime()
 });

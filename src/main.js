@@ -3,7 +3,6 @@
 var $ = require('jquery');
 var AppBase = require('app-base');
 var bind = require('mout/function/bind');
-var Collection = require('streamhub-sdk/collection');
 var events = require('./events');
 var inherits = require('inherits');
 var isArray = require('mout/lang/isArray');
@@ -66,7 +65,7 @@ var DEFAULT_WIDTH = 600;
  * @param {Object=} opt_data Optional data object.
  * @private
  */
-MapComponent.prototype._eventPassthrough = function(evt, opt_data) {
+MapComponent.prototype._eventPassthrough = function (evt, opt_data) {
   evt.stopPropagation();
   this.emit(evt.type, opt_data);
 };
@@ -75,7 +74,7 @@ MapComponent.prototype._eventPassthrough = function(evt, opt_data) {
  * Handle sizing of the map within the container.
  * @private
  */
-MapComponent.prototype._handleSizing = function() {
+MapComponent.prototype._handleSizing = function () {
   var rootAppEl = $(this.el).parents('.lf-app-embed');
   if (!rootAppEl.length) {
     rootAppEl = $(this.el);
@@ -105,7 +104,7 @@ MapComponent.prototype._handleSizing = function() {
  * @param {Object} opts The app configuration options.
  * @private
  */
-MapComponent.prototype._initializeDOM = function(opts) {
+MapComponent.prototype._initializeDOM = function (opts) {
   if (this.el.childNodes.length > 0) {
     return;
   }
@@ -120,9 +119,9 @@ MapComponent.prototype._initializeDOM = function(opts) {
  * the map afterwards.
  * @private
  */
-MapComponent.prototype._pollForResize = function() {
+MapComponent.prototype._pollForResize = function () {
   var self = this;
-  this._resizePoll = setInterval(function() {
+  this._resizePoll = setInterval(function () {
     var newHeight = self.containerEl.height();
     if (newHeight !== self.currentHeight) {
       self.currentHeight = newHeight;
@@ -132,7 +131,7 @@ MapComponent.prototype._pollForResize = function() {
 };
 
 /** @override */
-MapComponent.prototype.configureInternal = function(opts) {
+MapComponent.prototype.configureInternal = function (opts) {
   this._opts = merge(this._opts, opts, {
     prefix: this.getPrefix(),
     uuid: this._uuid
@@ -208,16 +207,17 @@ MapComponent.prototype.configureInternal = function(opts) {
 };
 
 /** @override */
-MapComponent.prototype.destroy = function() {
+MapComponent.prototype.destroy = function () {
   AppBase.prototype.destroy.call(this);
   this.$antenna.off();
-  this._resizePoll && clearInterval(this._resizePoll);
+  clearInterval(this._resizePoll);
+  this._resizePoll = null;
 };
 
 /**
  * Called when the app enters the view. This is called by app-embed.
  */
-MapComponent.prototype.enteredView = function() {
+MapComponent.prototype.enteredView = function () {
   this._controller && this._controller.relayoutMap();
 };
 
@@ -227,7 +227,7 @@ MapComponent.prototype.enteredView = function() {
  * @param {string} mapId
  * @return {string}
  */
-MapComponent.prototype.getMapId = function(mapId) {
+MapComponent.prototype.getMapId = function (mapId) {
   if (mapId === 'markdoten.n7lg09ia') {
     return 'livefyre.hknm2g26';
   }
@@ -235,22 +235,22 @@ MapComponent.prototype.getMapId = function(mapId) {
 };
 
 /** @override */
-MapComponent.prototype.getPackageJson = function() {
+MapComponent.prototype.getPackageJson = function () {
   return packageJson;
 };
 
 /** @override */
-MapComponent.prototype.getPrefix = function() {
+MapComponent.prototype.getPrefix = function () {
   return 'lf-maps-uuid';
 };
 
 /** @override */
-MapComponent.prototype.getThemableCss = function() {
+MapComponent.prototype.getThemableCss = function () {
   return themableCss;
 };
 
 /** @override */
-MapComponent.prototype.unconfigureInternal = function() {
+MapComponent.prototype.unconfigureInternal = function () {
   this._controller && this._controller.destroy();
   this._controller = null;
 };
