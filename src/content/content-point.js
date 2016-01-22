@@ -15,7 +15,7 @@ function ContentPoint(content, opts) {
   opts.lon = content.geocode.longitude;
 
   Point.call(this, opts);
-};
+}
 inherits(ContentPoint, Point);
 
 ContentPoint.prototype.getContent = function () {

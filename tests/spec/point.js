@@ -5,15 +5,15 @@ var Point = require('livefyre-map/point');
 
 describe('src/point.js', function () {
   describe('can be constructed', function () {
-    it ("with no options", function () {
+    it('with no options', function () {
       var point = new Point();
       expect(point).to.not.be.undefined;
     });
-    it ("with empty options", function () {
+    it('with empty options', function () {
       var point = new Point({});
       expect(point).to.not.be.undefined;
     });
-    it ("with 'lat' and 'lon' options", function () {
+    it('with \'lat\' and \'lon\' options', function () {
       var point = new Point({
         lat: 49,
         lon: -30

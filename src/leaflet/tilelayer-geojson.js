@@ -1,5 +1,6 @@
 'use strict';
 
+var L = require('livefyre-map/leaflet/main');
 var LivefyreHttpClient = require('streamhub-sdk/collection/clients/http-client');
 var merge = require('mout/object/merge');
 var toLookup = require('mout/array/toLookup');
@@ -39,7 +40,7 @@ module.exports = L.TileLayer.GeoJSON.extend({
   _loadTile: function (tile, tilePoint) {
     var self = this;
     this._adjustTilePoint(tilePoint);
-    this._client._request({ url: this.getTileUrl(tilePoint) }, function(err, data) {
+    this._client._request({url: this.getTileUrl(tilePoint)}, function (err, data) {
       if (err) {
         return;
       }
@@ -55,7 +56,7 @@ module.exports = L.TileLayer.GeoJSON.extend({
    * @param {TilePoint} tilePoint
    * @private
    */
-  _processPaging: function(paging, tilePoint) {
+  _processPaging: function (paging, tilePoint) {
     var self = this;
 
     // If there is no paging object, there aren't any more results, or
@@ -70,7 +71,7 @@ module.exports = L.TileLayer.GeoJSON.extend({
       // TODO: Create button
     }
 
-    this._showMoreEl.show().click(function() {
+    this._showMoreEl.show().click(function () {
       self._handleShowMore(paging, tilePoint);
     });
   },
@@ -79,7 +80,7 @@ module.exports = L.TileLayer.GeoJSON.extend({
    * Remove the "show more" button and the event listener.
    * @private
    */
-  _removeShowMore: function() {
+  _removeShowMore: function () {
     if (!this._showMoreEl) {
       return;
     }
@@ -88,7 +89,7 @@ module.exports = L.TileLayer.GeoJSON.extend({
   },
 
   /** @override */
-  _tileLoaded: function(tile, tilePoint) {
+  _tileLoaded: function (tile, tilePoint) {
     L.TileLayer.Ajax.prototype._tileLoaded.apply(this, arguments);
     if (tile.datum === null) { return null; }
 
@@ -96,7 +97,7 @@ module.exports = L.TileLayer.GeoJSON.extend({
     // adding individual tile data. This is one master lookup object that gets
     // updated whenever new authors are added.
     if (tile.datum.authors) {
-      this._authors = merge(this._authors, toLookup(tile.datum.authors, function(author) {
+      this._authors = merge(this._authors, toLookup(tile.datum.authors, function (author) {
         return author.id;
       }));
     }
@@ -104,7 +105,7 @@ module.exports = L.TileLayer.GeoJSON.extend({
   },
 
   /** @override */
-  addTileData: function(geojson, tilePoint) {
+  addTileData: function (geojson, tilePoint) {
     if (geojson.type === 'Feature') {
       geojson.properties.content.author = this._authors[geojson.properties.content.authorId];
     }
@@ -115,16 +116,16 @@ module.exports = L.TileLayer.GeoJSON.extend({
   },
 
   /** @override */
-  getTileUrl: function(tilePoint) {
+  getTileUrl: function (tilePoint) {
     var tileUrl = L.TileLayer.GeoJSON.prototype.getTileUrl.call(this, tilePoint);
     // TODO: Add paging params to the URL
     return tileUrl;
   },
 
   /** @override */
-  initialize: function(url, options, geojsonOptions) {
+  initialize: function (url, options, geojsonOptions) {
     L.TileLayer.GeoJSON.prototype.initialize.apply(this, arguments);
-    this._client = new LivefyreHttpClient({ serviceName: 'bootstrap' });
+    this._client = new LivefyreHttpClient({serviceName: 'bootstrap'});
   }
 
 });

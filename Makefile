@@ -5,9 +5,7 @@ all: build
 build: node_modules lib dist
 
 clean:
-	./node_modules/.bin/bower cache clean
 	rm -rf node_modules lib dist
-	npm cache clean
 
 env=dev
 deploy: dist
@@ -34,3 +32,6 @@ run: build
 
 test: build
 	./node_modules/karma/bin/karma start tools/karma.conf.js --singleRun=true
+
+lint:
+	./node_modules/.bin/lfeslint

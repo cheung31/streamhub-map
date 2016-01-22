@@ -4,7 +4,7 @@
   "author": {
     "name": "markdoten"
   },
-  "version": "2.0.14",
+  "version": "2.0.16",
   "devDependencies": {
     "bower": "1.3.8",
     "gulp": "3.9.0",
@@ -16,17 +16,19 @@
     "http-server": "*",
     "requirejs": "2.1.9",
     "less": "1.3.3",
-    "jshint": "~1.1.0",
+    "lfeslint": "git+ssh://git@github.com/Livefyre/lfeslint.git",
+    "jshint": "1.1.0",
     "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
-    "karma": "~0.10.5",
+    "karma": "0.10.5",
     "karma-cajon": "0.0.1",
+    "karma-coffee-preprocessor": "0.1.0",
     "karma-chai": "0.0.2",
     "karma-mocha": "0.1.0",
-    "karma-mocha-reporter": "^0.3.0",
-    "karma-phantomjs-launcher": "~0.1.0",
+    "karma-mocha-reporter": "0.3.0",
+    "karma-phantomjs-launcher": "0.1.0",
     "lfcdn": "git://github.com/Livefyre/lfcdn",
     "mocha": "1.18.2",
-    "mocha-phantomjs": "~2.0.3",
+    "mocha-phantomjs": "2.0.3",
     "phantomjs": "1.9.2-2",
     "requirejs": "2.1.9",
     "rework": "git://github.com/gobengo/rework"
@@ -36,5 +38,9 @@
     "test": "./node_modules/karma/bin/karma start tools/karma.conf.js --singleRun=true",
     "build-version": "node tools/build_version.js",
     "jsdoc": "rm -rf docs/api && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json"
+  },
+  "lfeslint": {
+    "ignore": ["lib/**", "tools/build.conf.js"],
+    "global": ["requirejs", "define"]
   }
 }

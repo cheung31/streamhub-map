@@ -37,7 +37,7 @@ function MapView(opts) {
   }
 
   this._drawMap();
-};
+}
 inherits(MapView, ContentListView);
 
 /**
@@ -50,7 +50,7 @@ var TILE_URL = 'https://{s}.tiles.mapbox.com/{version}/{mapId}/{z}/{x}/{y}.{form
  * Draw the map and add a tile layer.
  * @private
  */
-MapView.prototype._drawMap = function() {
+MapView.prototype._drawMap = function () {
   this._map = new L.Map(this.el, this._leafletMapOptions).setView(
     this._leafletMapOptions.center || [0,0],
     this._leafletMapOptions.zoom || 2
@@ -58,7 +58,7 @@ MapView.prototype._drawMap = function() {
 
   this._map.attributionControl
     .setPrefix('')
-    .addAttribution("<a href='https://www.openstreetmap.org/copyright' target='_blank'>&copy; OpenStreetMap</a>");
+    .addAttribution('<a href=\'https://www.openstreetmap.org/copyright\' target=\'_blank\'>&copy; OpenStreetMap</a>');
 
   this._tileLayer = new L.TileLayer(this._getVersionedTileURL(), {
     mapId: this._mapboxTileOptions.mapId,
@@ -72,7 +72,7 @@ MapView.prototype._drawMap = function() {
  * @return {L.LatLng}
  * @private
  */
-MapView.prototype._getLatLngFromPoint = function(point) {
+MapView.prototype._getLatLngFromPoint = function (point) {
   return new L.LatLng(point.lat, point.lon);
 };
 
@@ -81,7 +81,7 @@ MapView.prototype._getLatLngFromPoint = function(point) {
  * @return {string}
  * @private
  */
-MapView.prototype._getVersionedTileURL = function() {
+MapView.prototype._getVersionedTileURL = function () {
   var accessToken = this._mapboxTileOptions.accessToken;
   if (!accessToken) {
     return TILE_URL.replace('{version}', 'v3');
@@ -93,7 +93,7 @@ MapView.prototype._getVersionedTileURL = function() {
  * Add a Point instance to be visualized on the map
  * @param {Point} point The point to be visualized on the map
  */
-MapView.prototype.add = function(point) {
+MapView.prototype.add = function (point) {
   this._dataPoints.push(point);
   this.$el.trigger('addDataPoint.hub', point);
 };
@@ -102,7 +102,7 @@ MapView.prototype.add = function(point) {
  * Add the marker to the map.
  * @param {L.Marker} marker The marker to add to the map.
  */
-MapView.prototype.addMarkerToMap = function(marker) {
+MapView.prototype.addMarkerToMap = function (marker) {
   marker.addTo(this._map);
 };
 
@@ -111,12 +111,12 @@ MapView.prototype.addMarkerToMap = function(marker) {
  * @param {ContentPoint} dataPoint The point to create.
  * @return {L.Marker} The marker based on the data point.
  */
-MapView.prototype.createMarker = function(dataPoint) {
+MapView.prototype.createMarker = function (dataPoint) {
   return new L.Marker(this._getLatLngFromPoint(dataPoint));
 };
 
 /** @override */
-MapView.prototype.destroy = function() {
+MapView.prototype.destroy = function () {
   this._map && this._map.remove();
   this._map = null;
   ContentListView.prototype.destroy.call(this);
@@ -127,7 +127,7 @@ MapView.prototype.destroy = function() {
  * @param {ContentPoint} dataPoint The data point to draw on the map.
  * @return {L.Marker}
  */
-MapView.prototype.drawMarker = function(dataPoint) {
+MapView.prototype.drawMarker = function (dataPoint) {
   var marker = this.createMarker(dataPoint);
   marker && this.addMarkerToMap(marker);
   return marker;
@@ -137,7 +137,7 @@ MapView.prototype.drawMarker = function(dataPoint) {
  * Remove a data point from the map.
  * @param {ContentPoint} dataPoint The data point to remove.
  */
-MapView.prototype.removeDataPoint = function(dataPoint) {
+MapView.prototype.removeDataPoint = function (dataPoint) {
   var index = this._dataPoints.indexOf(dataPoint);
   if (index === -1) {
     return;
@@ -151,7 +151,7 @@ MapView.prototype.removeDataPoint = function(dataPoint) {
  * @param {Element} el The element to set.
  * @override
  */
-MapView.prototype.setElement = function(el) {
+MapView.prototype.setElement = function (el) {
   ContentListView.prototype.setElement.call(this, el);
   this.$el.addClass(this._elClass);
 
@@ -159,7 +159,7 @@ MapView.prototype.setElement = function(el) {
 
   this.$el.on('imageError.hub', function (evt) {
     var badImageSrc = $(evt.target).attr('src');
-    var dataPoint;
+
     forEach(self._dataPoints, function (dataPoint) {
       if (!dataPoint || typeof dataPoint.getContent !== 'function') {
         return;
