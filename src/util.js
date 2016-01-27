@@ -20,33 +20,25 @@ var ENV_MAP = {
 };
 
 var MAP_IDS = {
-  LIGHT: 'markdoten.n7lg09ia',
-  DARK: 'jennberney.0ebcb366',
-  LIGHT_DEV: 'livefyredev.3d29367a',
   DARK_DEV: 'livefyredev.0e3fbdf3',
-  LIGHT_PROD: 'livefyre.hknm2g26',
-  DARK_PROD: 'livefyre.ml6m9529'
+  DARK_PROD: 'livefyre.ml6m9529',
+  LIGHT_DEV: 'livefyredev.3d29367a',
+  LIGHT_PROD: 'livefyre.hknm2g26'
 };
 
-/**
- * Map of dev map ids to production map ids.
- * @type {Object}
- */
-var DEV_TO_PROD_MAP = {};
-DEV_TO_PROD_MAP[MAP_IDS.LIGHT] = MAP_IDS.LIGHT_PROD;
-DEV_TO_PROD_MAP[MAP_IDS.LIGHT_DEV] = MAP_IDS.LIGHT_PROD;
-DEV_TO_PROD_MAP[MAP_IDS.DARK] = MAP_IDS.DARK_PROD;
-DEV_TO_PROD_MAP[MAP_IDS.DARK_DEV] = MAP_IDS.DARK_PROD;
-
-/**
- * Map of production map ids to dev map ids.
- * @type {Object}
- */
-var PROD_TO_DEV_MAP = {};
-PROD_TO_DEV_MAP[MAP_IDS.LIGHT] = MAP_IDS.LIGHT_DEV;
-PROD_TO_DEV_MAP[MAP_IDS.LIGHT_PROD] = MAP_IDS.LIGHT_DEV;
-PROD_TO_DEV_MAP[MAP_IDS.DARK] = MAP_IDS.DARK_DEV;
-PROD_TO_DEV_MAP[MAP_IDS.DARK_PROD] = MAP_IDS.DARK_DEV;
+var ENV_MAP_IDS = {
+  DARK: [
+    'jennberney.0ebcb366',
+    'livefyredev.0e3fbdf3',
+    'livefyre.ml6m9529',
+    'livefyre.nbb9o5m9'
+  ],
+  LIGHT: [
+    'markdoten.n7lg09ia',
+    'livefyredev.3d29367a',
+    'livefyre.hknm2g26'
+  ]
+};
 
 module.exports = {
   /**
@@ -69,9 +61,31 @@ module.exports = {
    * @return {string}
    */
   getMapId: function (mapId, env) {
-    if (env === ENV.PRODUCTION) {
-      return DEV_TO_PROD_MAP[mapId] || mapId;
+    var isProd = env === ENV.PRODUCTION;
+    var mapTheme;
+    var theme;
+
+    // Loop through all themes (light and dark) within the environment-specific
+    // map-id map and look for the provided `mapId` value within each array. If
+    // its present, grab the theme so that we can use the theme with the current
+    // environment to pick the correct map id.
+    for (theme in ENV_MAP_IDS) {
+      if (!ENV_MAP_IDS.hasOwnProperty(theme)) {
+        continue;
+      }
+      if (ENV_MAP_IDS[theme].indexOf(mapId) > -1) {
+        mapTheme = theme;
+        break;
+      }
+    };
+
+    // `mapId` was not found within the env maps, so return the provided `mapId`.
+    if (!mapTheme) {
+      return mapId;
     }
-    return PROD_TO_DEV_MAP[mapId] || mapId;
+
+    // Use the theme and environment to craft a map key to fetch the correct
+    // environment and theme specific mapId value.
+    return MAP_IDS[mapTheme + '_' + (isProd ? 'PROD' : 'DEV')];
   }
 };

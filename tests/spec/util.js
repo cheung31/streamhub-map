@@ -14,8 +14,10 @@ describe('src/util.js', function () {
       it('converts dev to prod map id', function () {
         assert.equal(util.getMapId('markdoten.n7lg09ia', 'production'), 'livefyre.hknm2g26');
         assert.equal(util.getMapId('livefyredev.3d29367a', 'production'), 'livefyre.hknm2g26');
+        assert.equal(util.getMapId('livefyre.hknm2g26', 'production'), 'livefyre.hknm2g26');
         assert.equal(util.getMapId('jennberney.0ebcb366', 'production'), 'livefyre.ml6m9529');
         assert.equal(util.getMapId('livefyredev.0e3fbdf3', 'production'), 'livefyre.ml6m9529');
+        assert.equal(util.getMapId('livefyre.nbb9o5m9', 'production'), 'livefyre.ml6m9529');
       });
 
       it('returns custom map id', function () {
@@ -33,6 +35,9 @@ describe('src/util.js', function () {
         assert.equal(util.getMapId('livefyre.ml6m9529', 'dev'), 'livefyredev.0e3fbdf3');
         assert.equal(util.getMapId('livefyre.ml6m9529', 'qa'), 'livefyredev.0e3fbdf3');
         assert.equal(util.getMapId('livefyre.ml6m9529', 'staging'), 'livefyredev.0e3fbdf3');
+        assert.equal(util.getMapId('livefyre.nbb9o5m9', 'dev'), 'livefyredev.0e3fbdf3');
+        assert.equal(util.getMapId('livefyre.nbb9o5m9', 'qa'), 'livefyredev.0e3fbdf3');
+        assert.equal(util.getMapId('livefyre.nbb9o5m9', 'staging'), 'livefyredev.0e3fbdf3');
       });
 
       it('converts lower than dev map ids to dev map ids', function () {
