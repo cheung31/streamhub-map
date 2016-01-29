@@ -142,7 +142,7 @@ MapComponent.prototype.configureInternal = function (opts) {
 
   this._opts.leafletMapOptions = this._opts.leafletMapOptions || {};
   this._opts.mapboxTileOptions = this._opts.mapboxTileOptions || {
-    accessToken: 'pk.eyJ1IjoibWFya2RvdGVuIiwiYSI6ImQ5MDM1MzcyZTVmNzUxODkxOTg0ZDlmN2QxOTEwNjU2In0.j7v-cYLZSYIFCGYPBLHEEA',
+    accessToken: 'pk.eyJ1IjoibGl2ZWZ5cmVkZXYiLCJhIjoiZWY0NWM2ODZmMTk4M2Y1Mzk1NzNmNzI2YjZkYmMyYzgifQ.0gv8fupj_iCRA1eYwlTPiQ',
     mapId: 'markdoten.n7lg09ia'
   };
 
