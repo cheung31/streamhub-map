@@ -42,6 +42,18 @@ var ENV_MAP_IDS = {
 
 module.exports = {
   /**
+   * Get an access token based on the environment.
+   * @param {string} env
+   * @return {string}
+   */
+  getAccessToken: function (env) {
+    if (env === ENV.PRODUCTION) {
+      return 'pk.eyJ1IjoibGl2ZWZ5cmUiLCJhIjoiNm4zY3lzbyJ9.Iu21uK2Du2i7fQlSG9CLfA';
+    }
+    return 'pk.eyJ1IjoibGl2ZWZ5cmVkZXYiLCJhIjoiZWY0NWM2ODZmMTk4M2Y1Mzk1NzNmNzI2YjZkYmMyYzgifQ.0gv8fupj_iCRA1eYwlTPiQ';
+  },
+
+  /**
    * Get an environment value that is more useful than the ones that are sent
    * in the collection object. If there is no environment provided, it defaults
    * to production.
@@ -56,14 +68,19 @@ module.exports = {
    * Get a map id based on the current map id and the environment that it is
    * being loaded in. This switches between environments if it needs to so
    * that only production map ids are used on production.
-   * @param {string} mapId
    * @param {string} env
+   * @param {string=} opt_mapId
    * @return {string}
    */
-  getMapId: function (mapId, env) {
+  getMapId: function (env, opt_mapId) {
     var isProd = env === ENV.PRODUCTION;
     var mapTheme;
     var theme;
+
+    // If the mapId isn't set, use light as the default.
+    if (!opt_mapId) {
+      return MAP_IDS['LIGHT_' + (isProd ? 'PROD' : 'DEV')];
+    }
 
     // Loop through all themes (light and dark) within the environment-specific
     // map-id map and look for the provided `mapId` value within each array. If
@@ -73,7 +90,7 @@ module.exports = {
       if (!ENV_MAP_IDS.hasOwnProperty(theme)) {
         continue;
       }
-      if (ENV_MAP_IDS[theme].indexOf(mapId) > -1) {
+      if (ENV_MAP_IDS[theme].indexOf(opt_mapId) > -1) {
         mapTheme = theme;
         break;
       }
@@ -81,7 +98,7 @@ module.exports = {
 
     // `mapId` was not found within the env maps, so return the provided `mapId`.
     if (!mapTheme) {
-      return mapId;
+      return opt_mapId;
     }
 
     // Use the theme and environment to craft a map key to fetch the correct

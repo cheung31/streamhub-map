@@ -141,10 +141,7 @@ MapComponent.prototype.configureInternal = function (opts) {
   var resetController = false;
 
   this._opts.leafletMapOptions = this._opts.leafletMapOptions || {};
-  this._opts.mapboxTileOptions = this._opts.mapboxTileOptions || {
-    accessToken: 'pk.eyJ1IjoibGl2ZWZ5cmVkZXYiLCJhIjoiZWY0NWM2ODZmMTk4M2Y1Mzk1NzNmNzI2YjZkYmMyYzgifQ.0gv8fupj_iCRA1eYwlTPiQ',
-    mapId: 'markdoten.n7lg09ia'
-  };
+  this._opts.mapboxTileOptions = this._opts.mapboxTileOptions || {};
 
   if (opts.customMapTiles) {
     this._opts.mapboxTileOptions.mapId = opts.customMapTiles;
@@ -194,7 +191,10 @@ MapComponent.prototype.configureInternal = function (opts) {
   }
 
   var env = util.getEnvironment(this._opts.collection.environment);
-  this._opts.mapboxTileOptions.mapId = util.getMapId(this._opts.mapboxTileOptions.mapId, env);
+  if (!this._opts.mapboxTileOptions.accessToken) {
+    this._opts.mapboxTileOptions.accessToken = util.getAccessToken(env);
+  }
+  this._opts.mapboxTileOptions.mapId = util.getMapId(env, this._opts.mapboxTileOptions.mapId);
 
   if (resetController || !this._controller) {
     this._controller && this._controller.destroy();
@@ -219,19 +219,6 @@ MapComponent.prototype.destroy = function () {
  */
 MapComponent.prototype.enteredView = function () {
   this._controller && this._controller.relayoutMap();
-};
-
-/**
- * Get the production map id. If it is a custom mapId, use it, otherwise use
- * the livefyre version.
- * @param {string} mapId
- * @return {string}
- */
-MapComponent.prototype.getMapId = function (mapId) {
-  if (mapId === 'markdoten.n7lg09ia') {
-    return 'livefyre.hknm2g26';
-  }
-  return mapId;
 };
 
 /** @override */
