@@ -11,7 +11,7 @@ env=dev
 deploy: dist
 	./node_modules/.bin/lfcdn -e $(env)
 
-dist: build src requirejs.conf.js tools
+dist: lint build src requirejs.conf.js tools
 	mkdir -p dist
 	./node_modules/gulp/bin/gulp.js prefix
 	./node_modules/requirejs/bin/r.js -o ./tools/build.conf.js
@@ -30,7 +30,7 @@ package: build
 run: build
 	npm start
 
-test: build
+test: lint build
 	./node_modules/karma/bin/karma start tools/karma.conf.js --singleRun=true
 
 lint:

@@ -66,22 +66,15 @@ describe('src/main.js', function () {
       element = null;
     });
 
-    it('uses default values for mapboxTileOptions if not specified', function () {
-      map.configureInternal({});
-      expect(map._opts.mapboxTileOptions.mapId).to.equal('livefyre.hknm2g26');
-      map.configureInternal({mapboxTileOptions: {mapId: 'abc'}});
-      expect(map._opts.mapboxTileOptions.mapId).to.equal('abc');
-    });
-
     it('supports using custom map tiles', function () {
       map.configureInternal({customMapTiles: 'xyz'});
-      expect(map._opts.mapboxTileOptions.mapId).to.equal('xyz');
+      expect(map.opts.mapboxTileOptions.mapId).to.equal('xyz');
     });
 
     it('supports setting initial lat/lng and zoom levels', function () {
       map.configureInternal({mapConfig: {lat: 123, lng: 456, zoom: 10}});
-      expect(map._opts.leafletMapOptions.center).to.deep.equal([123, 456]);
-      expect(map._opts.leafletMapOptions.zoom).to.equal(10);
+      expect(map.opts.leafletMapOptions.center).to.deep.equal([123, 456]);
+      expect(map.opts.leafletMapOptions.zoom).to.equal(10);
     });
 
     it('supports enabling/disabling whether content is opened in a modal', function () {
@@ -131,7 +124,7 @@ describe('src/main.js', function () {
 
     it('applies a theme to the app', function () {
       var spy = sinon.spy(map, 'applyTheme');
-      map.configureInternal({allowClustering: false});
+      map.configure({allowClustering: false});
       expect(spy.callCount).to.equal(1);
       spy.restore();
     });
