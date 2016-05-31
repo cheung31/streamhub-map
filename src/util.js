@@ -94,7 +94,7 @@ module.exports = {
         mapTheme = theme;
         break;
       }
-    };
+    }
 
     // `mapId` was not found within the env maps, so return the provided `mapId`.
     if (!mapTheme) {
