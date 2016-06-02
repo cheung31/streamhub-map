@@ -1,7 +1,6 @@
 requirejs.config({
   baseUrl: '/',
   paths: {
-    'app-base': 'lib/app-base/main',
     base64: 'lib/base64/base64',
     chai: 'lib/chai/chai',
     'chai-jquery': 'lib/chai-jquery/chai-jquery',
@@ -25,9 +24,13 @@ requirejs.config({
     'sinon-chai': 'lib/sinon-chai/lib/sinon-chai',
     'streamhub-ui': 'lib/streamhub-ui/src',
     text: 'lib/requirejs-text/text',
-    tinycolor: 'lib/tinycolor/tinycolor'
+    tinycolor: 'lib/tinycolor/tinycolor',
+    urnlib: 'lib/urnlib.js/index'
   },
   packages: [{
+    name: 'app-base',
+    location: 'lib/app-base/src'
+  },{
     name: 'streamhub-sdk',
     location: 'lib/streamhub-sdk/src'
   },{
@@ -42,6 +45,10 @@ requirejs.config({
   },{
     name: 'streamhub-sdk/modal',
     location: 'lib/streamhub-sdk/src/modal'
+  },{
+    name: 'streamhub-sdk/i18n',
+    location: 'lib/streamhub-sdk/src',
+    main: 'i18n'
   },{
     name: 'streamhub-sdk-tests',
     location: 'lib/streamhub-sdk/tests'
@@ -78,6 +85,14 @@ requirejs.config({
     name: 'css',
     location: 'lib/require-css',
     main: 'css'
+  },{
+    name: 'activity-streams-vocabulary',
+    location: 'lib/activity-streams-vocabulary/src',
+    main: 'index'
+  },{
+    name: 'insights-emitter',
+    location: 'lib/insights-emitter',
+    main: 'insights-emitter'
   }],
   shim: {
     jquery: {

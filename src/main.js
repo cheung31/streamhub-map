@@ -7,9 +7,9 @@ var events = require('./events');
 var inherits = require('inherits');
 var isArray = require('mout/lang/isArray');
 var isBoolean = require('mout/lang/isBoolean');
+var isNumber = require('mout/lang/isNumber');
 var isObject = require('mout/lang/isObject');
 var MapController = require('livefyre-map/map-controller');
-var merge = require('mout/object/merge');
 var packageJson = require('json!../package.json');
 var themableCss = require('text!livefyre-map/css/theme.css');
 var util = require('./util');
@@ -38,11 +38,10 @@ function MapComponent(opts) {
     return;
   }
 
+  // Initialize the DOM for the app.
   this._initializeDOM(opts);
 
-  /**
-   * Apply the theme to the app.
-   */
+  // Configure the app.
   this.configure(opts);
 }
 inherits(MapComponent, AppBase);
@@ -92,8 +91,8 @@ MapComponent.prototype._handleSizing = function () {
 
   // There is no height on the container. Use the height and width provided by
   // designer or use the default height and width.
-  this.rootAppEl.height(this._opts.mapHeight || DEFAULT_HEIGHT);
-  this.rootAppEl.width(this._opts.mapWidth || DEFAULT_WIDTH);
+  this.rootAppEl.height(this.opts.mapHeight || DEFAULT_HEIGHT);
+  this.rootAppEl.width(this.opts.mapWidth || DEFAULT_WIDTH);
   this._controller.relayoutMap();
 };
 
@@ -132,78 +131,90 @@ MapComponent.prototype._pollForResize = function () {
 
 /** @override */
 MapComponent.prototype.configureInternal = function (opts) {
-  this._opts = merge(this._opts, opts, {
-    prefix: this.getPrefix(),
-    uuid: this._uuid
-  });
-  this._opts.$antenna = this.$antenna;
-
+  var newCollection;
   var resetController = false;
+  this.opts.$antenna = this.$antenna;
 
-  this._opts.leafletMapOptions = this._opts.leafletMapOptions || {};
-  this._opts.mapboxTileOptions = this._opts.mapboxTileOptions || {};
-
-  if (opts.customMapTiles) {
-    this._opts.mapboxTileOptions.mapId = opts.customMapTiles;
-  }
-
-  if (opts.accessToken) {
-    this._opts.mapboxTileOptions.accessToken = opts.accessToken;
-  }
-
-  if (isObject(opts.mapConfig)) {
-    opts.mapCenter = [opts.mapConfig.lat, opts.mapConfig.lng];
-    opts.mapZoom = opts.mapConfig.zoom || 1;
-  }
-
-  if (isArray(opts.mapCenter)) {
-    this._opts.leafletMapOptions.center = opts.mapCenter;
-  }
+  this._configureMap(opts);
 
   if (isBoolean(opts.openModalOnClick)) {
-    this._opts.modal = opts.openModalOnClick;
-  }
-
-  if (opts.mapZoom) {
-    this._opts.leafletMapOptions.zoom = opts.mapZoom || 1;
-  }
-
-  if (isBoolean(opts.zoomControl)) {
-    this._opts.leafletMapOptions.zoomControl = opts.zoomControl;
+    this.opts.modal = opts.openModalOnClick;
   }
 
   if (isBoolean(opts.allowPanning)) {
-    this._opts.allowPanning = opts.allowPanning;
+    this.opts.allowPanning = opts.allowPanning;
   }
 
-  if (opts.collection) {
-    this._opts.collection = opts.collection;
-    resetController = true;
+  if ('collection' in opts) {
+    newCollection = opts.collection;
+    if (newCollection && !this._isSameCollection(newCollection)) {
+      this._setCollection(newCollection);
+      resetController = true;
+    }
   }
 
   if (isBoolean(opts.allowClustering)) {
-    this._opts.allowClustering = opts.allowClustering;
+    this.opts.allowClustering = opts.allowClustering;
     resetController = true;
   }
 
-  if (!this._opts.collection) {
+  if (!this.opts.collection) {
     return;
   }
 
-  var env = util.getEnvironment(this._opts.collection.environment);
-  if (!this._opts.mapboxTileOptions.accessToken) {
-    this._opts.mapboxTileOptions.accessToken = util.getAccessToken(env);
+  var env = util.getEnvironment(this.opts.collection.environment);
+  var mOpts = this.opts.mapboxTileOptions;
+  if (!mOpts.accessToken) {
+    mOpts.accessToken = util.getAccessToken(env);
   }
-  this._opts.mapboxTileOptions.mapId = util.getMapId(env, this._opts.mapboxTileOptions.mapId);
+  mOpts.mapId = util.getMapId(env, mOpts.mapId);
 
   if (resetController || !this._controller) {
     this._controller && this._controller.destroy();
-    this._initializeDOM(this._opts);
-    this._controller = new MapController(this._opts);
+    this._initializeDOM(this.opts);
+    this._controller = new MapController(this.opts);
   }
 
-  this._controller.configureMap(this._opts);
-  this.applyTheme(this._opts);
+  this._controller.configureMap(this.opts);
+};
+
+/**
+ * Configure mapbox and leaflet options.
+ * @param {Object} opts
+ * @private
+ */
+MapComponent.prototype._configureMap = function (opts) {
+  var lOpts = this.opts.leafletMapOptions = this.opts.leafletMapOptions || {};
+  var mOpts = this.opts.mapboxTileOptions = this.opts.mapboxTileOptions || {};
+
+  if (opts.accessToken) {
+    mOpts.accessToken = opts.accessToken;
+  }
+
+  if (opts.customMapTiles) {
+    mOpts.mapId = opts.customMapTiles;
+  }
+
+  if (opts.mapId) {
+    mOpts.mapId = opts.mapId;
+  }
+
+  if (isObject(opts.mapConfig)) {
+    if (isNumber(opts.mapConfig.lat) && isNumber(opts.mapConfig.lng)) {
+      opts.mapCenter = [opts.mapConfig.lat, opts.mapConfig.lng];
+    }
+    opts.mapZoom = opts.mapConfig.zoom;
+  }
+
+  if (isArray(opts.mapCenter)) {
+    lOpts.center = opts.mapCenter;
+  }
+
+  if (isBoolean(opts.zoomControl)) {
+    lOpts.zoomControl = opts.zoomControl;
+  }
+
+  lOpts.zoom = opts.mapZoom || lOpts.zoom || 1;
 };
 
 /** @override */
@@ -222,6 +233,11 @@ MapComponent.prototype.enteredView = function () {
 };
 
 /** @override */
+MapComponent.prototype.getAppName = function () {
+  return 'maps-component';
+};
+
+/** @override */
 MapComponent.prototype.getPackageJson = function () {
   return packageJson;
 };
@@ -237,7 +253,13 @@ MapComponent.prototype.getThemableCss = function () {
 };
 
 /** @override */
+MapComponent.prototype.isViewRendered = function () {
+  return !!this._controller;
+};
+
+/** @override */
 MapComponent.prototype.unconfigureInternal = function () {
+  AppBase.prototype.unconfigureInternal.call(this);
   this._controller && this._controller.destroy();
   this._controller = null;
 };
