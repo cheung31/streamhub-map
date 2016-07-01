@@ -49,12 +49,19 @@ function ContentMapView(opts) {
 inherits(ContentMapView, MapView);
 
 /**
- * Add a piece of content the map view as long as there is geocode data.
+ * Add a piece of content the map view as long as there is geocode data and it
+ * hasn't already been added.
  * @param {Object} content - The content to be added.
  * @override
  */
 ContentMapView.prototype.add = function (content) {
   if (!content.geocode || !content.geocode.latitude || !content.geocode.longitude) {
+    return;
+  }
+  // This protects us against showing the same content multiple times. This can
+  // happen when the content is in bootstrap init AND gets pulled in by the
+  // geojson requests based on map location.
+  if (content.id in this._contentToMarkerMap) {
     return;
   }
   MapView.prototype.add.call(this, new ContentPoint(content));
