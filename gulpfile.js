@@ -5,9 +5,11 @@ var nodemon = require('gulp-nodemon');
 var packageJson = require('./package.json');
 var path = require('path');
 var prefixSelectors = require('rework/lib/plugins/prefix-selectors');
+var replace = require('gulp-replace');
 var rework = require('gulp-rework');
 var util = require('gulp-util');
 
+var LIVEFYRE_BOOTSTRAP_VERSION = '1.4.19';
 var SRC_LESS = 'src/css/style.less';
 
 function lessify(src, dest, prefix, minify) {
@@ -15,10 +17,8 @@ function lessify(src, dest, prefix, minify) {
   var paths = [__dirname, path.join(__dirname, 'lib')];
 
   var proc = gulp.src(src)
-    .pipe(less({
-      paths: paths,
-      relativeUrls: true
-    }))
+    .pipe(less({paths: paths, relativeUrls: true}))
+    .pipe(replace(/livefyre-bootstrap\/v\d\.\d{1,}\.\d{1,}\/fonts/g, 'livefyre-bootstrap/v' + LIVEFYRE_BOOTSTRAP_VERSION + '/fonts'))
     .on('error', util.log);
   var version = packageJson.version;
 
