@@ -118,7 +118,7 @@ ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
   if (!this.modal || !contentItems || !contentItems.length) {
     return;
   }
-  modalContentView = new ContentListView();
+  modalContentView = new ContentListView({modal: this.modal});
 
   this.$antenna.trigger(events.OPEN_MODAL);
   this.modal.show(modalContentView);
