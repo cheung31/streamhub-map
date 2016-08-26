@@ -30,7 +30,6 @@
     "lfcdn": "git://github.com/Livefyre/lfcdn",
     "mocha": "1.18.2",
     "mocha-phantomjs": "2.0.3",
-    "phantomjs": "1.9.2-2",
     "requirejs": "2.1.9",
     "rework": "git://github.com/gobengo/rework"
   },
