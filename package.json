@@ -4,7 +4,7 @@
   "author": {
     "name": "markdoten"
   },
-  "version": "2.2.8",
+  "version": "2.2.9",
   "devDependencies": {
     "bower": "1.3.8",
     "gulp": "3.9.0",
@@ -30,7 +30,6 @@
     "lfcdn": "git://github.com/Livefyre/lfcdn",
     "mocha": "1.18.2",
     "mocha-phantomjs": "2.0.3",
-    "phantomjs": "1.9.2-2",
     "requirejs": "2.1.9",
     "rework": "git://github.com/gobengo/rework"
   },
