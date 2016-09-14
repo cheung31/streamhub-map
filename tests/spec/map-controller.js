@@ -63,7 +63,7 @@ describe('src/map-controller.js', function () {
 
   describe('_getTileUrl', function () {
     it('returns the correct url', function () {
-      expect(controller._getTileUrl()).to.equal('http://bootstrap.test.fyre.co/bs3/v3.1/test.fyre.co/123/YWJj/geojson/{z}/{x}/{y}.json');
+      expect(controller._getTileUrl()).to.equal('https://test.bootstrap.fyre.co/bs3/v3.1/test.fyre.co/123/YWJj/geojson/{z}/{x}/{y}.json');
     });
   });
 
