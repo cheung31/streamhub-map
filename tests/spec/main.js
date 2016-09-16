@@ -28,7 +28,7 @@ describe('src/main.js', function () {
       var spy = sinon.spy(Map.prototype, 'configure');
       new Map({el: element});
       expect(spy.callCount).to.equal(0);
-      new Map({collection: {articleId: '123'}, el: element});
+      new Map({collection: {network: 'test.fyre.co', articleId: '123'}, el: element});
       expect(spy.callCount).to.equal(1);
       spy.restore();
     });
@@ -36,7 +36,7 @@ describe('src/main.js', function () {
     it('listens for events on the antenna', function () {
       var element = document.createElement('div');
       var spy = sinon.spy(Map.prototype, '_eventPassthrough');
-      var map = new Map({collection: {articleId: '123'}, el: element});
+      var map = new Map({collection: {network: 'test.fyre.co', articleId: '123'}, el: element});
       map.$antenna.trigger(events.OPEN_MODAL);
       expect(spy.callCount).to.equal(1);
       spy.restore();
@@ -45,7 +45,7 @@ describe('src/main.js', function () {
     it('configures the app', function () {
       var element = document.createElement('div');
       var spy = sinon.spy(Map.prototype, 'configure');
-      var map = new Map({collection: {articleId: '123'}, el: element});
+      var map = new Map({collection: {network: 'test.fyre.co', articleId: '123'}, el: element});
       expect(spy.callCount).to.equal(1);
       expect(map._controller).to.be.an.instanceof(MapController);
       spy.restore();
@@ -58,7 +58,7 @@ describe('src/main.js', function () {
 
     beforeEach(function () {
       element = document.createElement('div');
-      map = new Map({collection: {articleId: '123'}, el: element});
+      map = new Map({collection: {network: 'test.fyre.co', articleId: '123'}, el: element});
     });
 
     afterEach(function () {
