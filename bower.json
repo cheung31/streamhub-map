@@ -1,6 +1,6 @@
 {
   "name": "livefyre-map",
-  "version": "2.2.12",
+  "version": "2.2.13",
   "main": [
     "./src/main.js"
   ],
