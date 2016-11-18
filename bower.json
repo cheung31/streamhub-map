@@ -1,6 +1,6 @@
 {
   "name": "livefyre-map",
-  "version": "2.2.14",
+  "version": "3.0.0",
   "main": [
     "./src/main.js"
   ],
@@ -57,6 +57,7 @@
     "requirejs": "2.1.9",
     "livefyre-theme-styler": "~1.4.0",
     "streamhub-share": "0.4.0",
-    "mout": "0.11.1"
+    "mout": "0.11.1",
+    "leaflet": ">= 1.0.0"
   }
 }
