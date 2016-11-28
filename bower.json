@@ -1,6 +1,6 @@
 {
   "name": "livefyre-map",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": [
     "./src/main.js"
   ],
@@ -13,7 +13,7 @@
     "inherits": "git://github.com/Livefyre/inherits.git",
     "jquery": "~1.10.1",
     "leaflet": "git://github.com/Leaflet/Leaflet.git#~0.7.1",
-    "leaflet-markercluster": "git://github.com/Leaflet/Leaflet.markercluster.git",
+    "leaflet-markercluster": "git://github.com/Leaflet/Leaflet.markercluster.git#0.5.0",
     "leaflet-tilelayer-geojson": "git://github.com/Livefyre/leaflet-tilelayer-geojson.git#1.0",
     "livefyre-bootstrap": "git://github.com/livefyre/livefyre-bootstrap.git#~1.4.19",
     "mout": "~0.11.0",
@@ -56,7 +56,6 @@
     "streamhub-ui": "~0.3.0",
     "requirejs": "2.1.9",
     "livefyre-theme-styler": "~1.4.0",
-    "mout": "0.11.1",
-    "leaflet": ">= 1.0.0"
+    "mout": "0.11.1"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "main": "livefyre-map",
+  "name": "maps-component",
+  "hasAuth": true,
+  "hasCollection": true,
+  "hasUrl": false,
+  "isHiddenS1": false,
+  "version": "{{VERSION}}",
+  "icons": [{
+    "type": "fycon",
+    "src": "fycon-icon-map"
+    }],
+  "configSchema": {}
+}
