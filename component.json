@@ -1,8 +1,10 @@
 {
   "main": "livefyre-map",
   "name": "maps-component",
+  "urn": "urn:livefyre:service=designer:component=map",
   "hasAuth": true,
   "hasCollection": true,
+  "streamType": "threaded",
   "hasUrl": false,
   "isHiddenS1": false,
   "version": "{{VERSION}}",
@@ -10,5 +12,6 @@
     "type": "fycon",
     "src": "fycon-icon-map"
     }],
-  "configSchema": {}
+  "configSchema": {},
+  "capabilities": ["details", "settings", "stream", "designer"]
 }
