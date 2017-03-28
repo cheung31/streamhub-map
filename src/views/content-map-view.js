@@ -12,6 +12,7 @@ var MapView = require('livefyre-map/views/map-view');
 var markerBadgeTemplate = require('hgn!livefyre-map/views/templates/marker-badge');
 var markerIconTemplate = require('hgn!livefyre-map/views/templates/marker-icon');
 var markerTemplate = require('hgn!livefyre-map/views/templates/marker');
+var util = require('streamhub-sdk/util');
 require('livefyre-map/leaflet/markercluster');
 
 // Default values
@@ -118,13 +119,15 @@ ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
   if (!this.modal || !contentItems || !contentItems.length) {
     return;
   }
-  modalContentView = new ContentListView({modal: this.modal});
+  modalContentView = new ContentListView({modal: this.modal, animate: false});
 
   this.$antenna.trigger(events.OPEN_MODAL);
   this.modal.show(modalContentView);
 
   for (var i=0; i < contentItems.length; i++) {
-    modalContentView.more.write(contentItems[i]);
+    util.raf(function (view) {
+      modalContentView.more.write(view);
+    }.bind(null, contentItems[i]));
   }
 };
 

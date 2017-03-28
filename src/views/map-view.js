@@ -2,10 +2,11 @@
 
 var $ = require('streamhub-sdk/jquery');
 var ContentListView = require('streamhub-sdk/content/views/content-list-view');
-var forEach = require('mout/array/forEach');
+var get = require('mout/object/get');
 var inherits = require('inherits');
 var L = require('livefyre-map/leaflet/main');
 var PackageAttribute = require('livefyre-map/package-attribute');
+var util = require('streamhub-sdk/util');
 
 /**
  * A view to visualize StreamHub content on a map.
@@ -25,6 +26,7 @@ function MapView(opts) {
 
   this._overlayViews = [];
   this._dataPoints = [];
+  this._imgSrcToDataPoint = {};
   this._elClass = 'hub-map-view hub-map-view-' + this._id;
 
   ContentListView.call(this, opts);
@@ -96,6 +98,15 @@ MapView.prototype._getVersionedTileURL = function () {
 MapView.prototype.add = function (point) {
   this._dataPoints.push(point);
   this.$el.trigger('addDataPoint.hub', point);
+
+  var content = point.getContent ? point.getContent() || {} : {};
+  var attachment = (content.attachments || []).length ? content.attachments[0] : {};
+
+  [attachment.thumbnail_url, get(content, 'author.avatar')].forEach(function (url) {
+    if (url) {
+      this._imgSrcToDataPoint[url] = point;
+    }
+  }, this);
 };
 
 /**
@@ -103,7 +114,9 @@ MapView.prototype.add = function (point) {
  * @param {L.Marker} marker The marker to add to the map.
  */
 MapView.prototype.addMarkerToMap = function (marker) {
-  marker.addTo(this._map);
+  util.raf(function (m) {
+    m.addTo(this._map);
+  }.bind(this, marker));
 };
 
 /**
@@ -155,30 +168,17 @@ MapView.prototype.setElement = function (el) {
   ContentListView.prototype.setElement.call(this, el);
   this.$el.addClass(this._elClass);
 
-  var self = this;
-
   this.$el.on('imageError.hub', function (evt) {
     var badImageSrc = $(evt.target).attr('src');
-
-    forEach(self._dataPoints, function (dataPoint) {
-      if (!dataPoint || typeof dataPoint.getContent !== 'function') {
-        return;
-      }
-      var content = dataPoint.getContent() || {};
-      var author = content.author || {};
-      var attachments = content.attachments || [];
-      var firstAttachment = attachments[0] || {};
-      // Either the attachment or the avatar is bad. Check the bad image src
-      // against both of them and remove if one of them match.
-      if ([firstAttachment.thumbnail_url, author.avatar].indexOf(badImageSrc) > -1) {
-        self.removeDataPoint(dataPoint);
-      }
-    });
-  });
+    var dataPoint = this._imgSrcToDataPoint[badImageSrc];
+    if (dataPoint) {
+      this.removeDataPoint(dataPoint);
+    }
+  }.bind(this));
 
   this.$el.on('addDataPoint.hub', function (evt, dataPoint) {
-    self.drawMarker(dataPoint);
-  });
+    this.drawMarker(dataPoint);
+  }.bind(this));
 };
 
 module.exports = MapView;
