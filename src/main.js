@@ -110,7 +110,7 @@ MapComponent.prototype._initializeDOM = function (opts) {
 
   opts.el = document.createElement('div');
   this.el.appendChild(opts.el);
-  setTimeout($.proxy(this._handleSizing, this), 10);
+  setTimeout($.proxy(this._handleSizing, this), 1000 / 60 * 4); // Wait equiv of 4 frames
 };
 
 /**
