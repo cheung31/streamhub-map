@@ -4,11 +4,11 @@
   "author": {
     "name": "markdoten"
   },
-  "version": "3.0.3",
+  "version": "3.1.0",
   "devDependencies": {
     "bower": "1.3.8",
     "gulp": "3.9.0",
-    "gulp-less": "3.0.3",
+    "gulp-less": "^3.0.3",
     "gulp-minify-css": "1.2.0",
     "gulp-nodemon": "1.0.4",
     "gulp-replace": "0.5.4",
@@ -16,7 +16,7 @@
     "gulp-util": "*",
     "http-server": "*",
     "requirejs": "2.1.9",
-    "less": "1.3.3",
+    "less": "^2.7.2",
     "lfeslint": "git+ssh://git@github.com/Livefyre/lfeslint.git",
     "jshint": "1.1.0",
     "jsdoc": "git://github.com/jsdoc3/jsdoc.git",

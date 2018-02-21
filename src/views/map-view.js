@@ -54,7 +54,7 @@ var TILE_URL = 'https://{s}.tiles.mapbox.com/{version}/{mapId}/{z}/{x}/{y}.{form
  */
 MapView.prototype._drawMap = function () {
   this._map = new L.Map(this.el, this._leafletMapOptions).setView(
-    this._leafletMapOptions.center || [0,0],
+    this._leafletMapOptions.center || [0, 0],
     this._leafletMapOptions.zoom || 2
   );
 
