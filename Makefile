@@ -11,7 +11,7 @@ env=dev
 deploy: dist
 	./node_modules/.bin/lfcdn -e $(env)
 
-dist: lint build src requirejs.conf.js tools
+dist: build src requirejs.conf.js tools lint
 	mkdir -p dist
 	./node_modules/gulp/bin/gulp.js prefix
 	./node_modules/requirejs/bin/r.js -o ./tools/build.conf.js
