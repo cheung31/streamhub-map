@@ -131,10 +131,19 @@ MapController.prototype._handleNewContent = function (evt, state) {
   }
   this._seenIds.push(state.content.id);
   authors[state.content.authorId] = state.content.author;
+
+  // Disable the stream functionality during `updater.push` because each time
+  // this method is called, a new stream request is made.
+  var oldStream = updater._stream;
+  updater._stream = function () {};
+
   updater.push.apply(updater, updater._contentsFromStreamData({
     states: [state],
     authors: authors
   }));
+
+  // Re-enable the stream functionality.
+  updater._stream = oldStream;
 };
 
 /**

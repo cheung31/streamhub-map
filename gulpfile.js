@@ -18,8 +18,8 @@ function lessify(src, dest, prefix, minify) {
 
   var proc = gulp.src(src)
     .pipe(less({paths: paths, relativeUrls: true}))
-    .pipe(replace(/livefyre-bootstrap\/v\d\.\d{1,}\.\d{1,}\/fonts/g, 'livefyre-bootstrap/v' + LIVEFYRE_BOOTSTRAP_VERSION + '/fonts'))
-    .on('error', util.log);
+    .on('error', util.log)
+    .pipe(replace(/livefyre-bootstrap\/v\d\.\d{1,}\.\d{1,}\/fonts/g, 'livefyre-bootstrap/v' + LIVEFYRE_BOOTSTRAP_VERSION + '/fonts'));
   var version = packageJson.version;
 
   if (prefix) {
