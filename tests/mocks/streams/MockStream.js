@@ -23,7 +23,7 @@ function (Hub, LivefyreContent, $) {
   MockStream.prototype._createMockContent = function () {
     this._mockContentId = this._mockContentId || 0;
     var state = {
-      event: Date.now()*1000 + this._mockContentId,
+      event: Date.now() * 1000 + this._mockContentId,
       ancestorId: null,
       annotations: {},
       author: this._createMockAuthor(this._mockContentId),

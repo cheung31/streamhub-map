@@ -119,12 +119,18 @@ ContentMapView.prototype._displayDataPointDetails = function (contentItems) {
   if (!this.modal || !contentItems || !contentItems.length) {
     return;
   }
-  modalContentView = new ContentListView({modal: this.modal, animate: false});
+  modalContentView = new ContentListView({
+    animate: false,
+    doNotTrack: this.opts.doNotTrack,
+    modal: this.modal,
+    showMask: true,
+    spectrum: true
+  });
 
   this.$antenna.trigger(events.OPEN_MODAL);
   this.modal.show(modalContentView);
 
-  for (var i=0; i < contentItems.length; i++) {
+  for (var i = 0; i < contentItems.length; i++) {
     util.raf(function (view) {
       modalContentView.more.write(view);
     }.bind(null, contentItems[i]));
@@ -177,7 +183,7 @@ ContentMapView.prototype._initializeMarkerCluster = function () {
       var childMarkers = cluster.getAllChildMarkers();
       var clusterIconHtml;
 
-      for (var i=0; i < childMarkers.length; i++) {
+      for (var i = 0; i < childMarkers.length; i++) {
         childMarker = childMarkers[i];
         clusterIconHtml = childMarker._icon ?
           childMarker._icon.innerHTML :
@@ -244,7 +250,7 @@ ContentMapView.prototype._onClusterClick = function (evt) {
   }
 
   // Build up the content array of items to show in the modal.
-  for (var i=0; i < markers.length; i++) {
+  for (var i = 0; i < markers.length; i++) {
     content.push(markers[i].options.icon.options.content);
   }
   this.$el.trigger('focusDataPoint.hub', {contentItems: content});
