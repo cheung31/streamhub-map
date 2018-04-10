@@ -1,6 +1,6 @@
 {
   "name": "livefyre-map",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "main": [
     "./src/main.js"
   ],
@@ -17,7 +17,7 @@
     "leaflet-tilelayer-geojson": "git://github.com/Livefyre/leaflet-tilelayer-geojson.git#1.0",
     "livefyre-bootstrap": "git://github.com/livefyre/livefyre-bootstrap.git#~1.4.19",
     "mout": "~0.11.0",
-    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~2.30.7",
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~2.30.10",
     "require-css": "0.1.8",
     "requirejs": "2.1.5",
     "requirejs-text": "2.0.5",
@@ -58,7 +58,7 @@
     "rework": "~0.21.1",
     "streamhub-editor": "1.3.2",
     "streamhub-input": "0.10.2",
-    "streamhub-sdk": "~2.30.7",
+    "streamhub-sdk": "~2.30.10",
     "streamhub-share": "0.4.2",
     "streamhub-ui": "0.4.6",
     "view": "~1.4.1"
