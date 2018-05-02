@@ -18,14 +18,14 @@ requirejs.config({
     'leaflet-tilelayer-geojson': 'lib/leaflet-tilelayer-geojson/TileLayer.GeoJSON',
     'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main',
     mout: 'lib/mout/src',
-    'node-uuid': 'lib/node-tiny-uuid/index',
     rework: 'lib/rework/rework',
     sinon: 'lib/sinonjs/sinon',
     'sinon-chai': 'lib/sinon-chai/lib/sinon-chai',
     'streamhub-ui': 'lib/streamhub-ui/src',
     text: 'lib/requirejs-text/text',
     tinycolor: 'lib/tinycolor/tinycolor',
-    urnlib: 'lib/urnlib.js/index'
+    urnlib: 'lib/urnlib.js/index',
+    uuid: 'lib/pure-uuid/uuid'
   },
   packages: [{
     name: 'app-base',
