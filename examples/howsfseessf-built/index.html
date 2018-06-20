@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
-        #controls { display: none; margin: 20px 0; }
-        h2 { display: none; }
+        #controls {
+            display: none;
+            margin: 20px 0;
+        }
+
+        h2 {
+            display: none;
+        }
+
         body {
             position: absolute;
             width: 100%;
             height: 100%;
             margin: 0;
         }
+
         #feed1 {
             position: absolute;
             width: 100%;
@@ -22,33 +31,62 @@
     <link rel="stylesheet" href="../../dev/style.css" />
     <link rel="stylesheet" href="../../lib/streamhub-sdk/src/css/style.css" />
 </head>
-    <body>
-        <h2>A stream showcasing various types of attachments</h2>
-        <div id="feed1"></div>
 
-        <script src="../../dist/livefyre-map.min.js"></script>
-        <script>
-            var ContentMapView = Livefyre['livefyre-map'];
+<body>
+    <h2>A stream showcasing various types of attachments</h2>
+    <div id="feed1"></div>
 
-            var opts = {
-                "network": "strategy-prod.fyre.co",
-                "siteId": "340628",
-                "articleId": "custom-1389845009515"
-            };
+    <script src="../../dist/livefyre-map.min.js"></script>
+    <script>
+        var ContentMapView = Livefyre['livefyre-map'];
 
-            var mapView = window.mapView = new ContentMapView({
-                el: document.getElementById('feed1'),
-                initial: 100,
-                leafletMapOptions: {
-                    center: [37.774929499038386, -122.41941549873445]
-                    ,zoom: 13
-                    ,maxZoom: 16
-                }
-            });
+        var opts = {
+            "network": "strategy-prod.fyre.co",
+            "siteId": "340628",
+            "articleId": "custom-1389845009515"
+        };
 
-            Livefyre.require(['streamhub-sdk#2'], function (SDK) {
-                new (SDK.Collection)(opts).pipe(mapView);                
-            });
-        </script>
-    </body>
+
+        var productCollection2 = {
+            env: 'qa-ext.livefyre.com',
+            network: 'qa-blank.fyre.co',
+            siteId: '291364',
+            articleId: 'designer-app-1487964533074'
+        };
+
+        var basicCtas = {
+            env: 'qa-ext.livefyre.com',
+            network: "build-validator-qa-s2.fyre.co",
+            siteId: '291417',
+            articleId: 'designer-app-1521743953387'
+        };
+
+        var instagramVideos = {
+            "articleId": "designer-app-1528739440705",
+            "environment": "qa-ext.livefyre.com",
+            "id": "2900882",
+            "network": "build-validator-qa-s2.fyre.co",
+            "siteId": 291417,
+            "title": "Instagram Videos",
+            "url": "http://designer-app.livefyre.com/app/1528739440705",
+            "objectMode": true
+        };
+
+
+        var mapView = window.mapView = new ContentMapView({
+            el: document.getElementById('feed1'),
+            initial: 100,
+            leafletMapOptions: {
+                center: [37.774929499038386, -122.41941549873445]
+                , zoom: 13
+                , maxZoom: 16
+            }
+        });
+
+        Livefyre.require(['streamhub-sdk#2'], function (SDK) {
+            new (SDK.Collection)(instagramVideos).pipe(mapView);
+        });
+    </script>
+</body>
+
 </html>
