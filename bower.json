@@ -53,7 +53,7 @@
     "require-less": "deponcss",
     "requirejs": "2.1.9",
     "rework": "~0.21.1",
-    "streamhub-sdk": "~2.32.8",
+    "streamhub-sdk": "~2.34.0",
     "streamhub-share": "0.5.2",
     "streamhub-ui": "0.4.6",
     "view": "~1.4.1"
