@@ -11,8 +11,13 @@
         height: 100%;
     }
     .hub-place,
-    .hub-map-content-marker {
-        cursor: pointer;
+    .hub-map-content-marker.in {
+        &> * {
+            cursor: pointer;
+            -webkit-backface-visibility: hidden;
+            -webkit-transform: translateY(40px);
+            transition: all 0.3s cubic-bezier(0, 2, 0.1, -0.25);
+        }
     }
     .hub-place {
         stroke: none;
